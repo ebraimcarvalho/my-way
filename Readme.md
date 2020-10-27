@@ -1,33 +1,33 @@
-Engenharia de Dados: 
+## Engenharia de Dados: 
 
--Python
--SQL 
--Modelagem de Data Warehouse 
--Modelagem Multidimensional 
--Formas de Normalização
--Linux e Cronjobs
--Engenharia de Software para criação das rotinas de orquestração
--Ferramenta de orquestração como Airflow ou Luigi seria bom tambem
+- Python
+- SQL 
+- Modelagem de Data Warehouse 
+- Modelagem Multidimensional 
+- Formas de Normalização
+- Linux e Cronjobs
+- Engenharia de Software para criação das rotinas de orquestração
+- Ferramenta de orquestração como Airflow ou Luigi seria bom tambem
 
 
 https://github.com/igorbarinov/awesome-data-engineering
 
-- 1) Databases
+1) Databases
 	- SQL ANSI/92
 	- Relacional: Plano de execução, sistema de caching, indexação, fragmentação de indices, sistema de locking (isolamento de transações) e demais propriedades. 
   PostgreSQL/MySQL e SQLite (https://www.sqlite.org/quirks.html)
 	- Saber em alto nivel caracteristicas e alguns bancos de dados: Key-Value, Colunar e Documento
 	- Estudo: Escolher um banco de dados de um desses tipos e ir um pouco mais a fundo. Ex: Redis (https://github.com/fclesio/learning-space/blob/master/Redis/aula-redis.aula) 
 
-- 2) Batch Processing
+2) Batch Processing
 	- Saber em alto nivel as diferenças entre ferramentas
 	- Estudo: Escolher entre Hadoop ou Spark. Recomendação: Spark - https://spark.apache.org/. Exemplo antigo: https://github.com/fclesio/learning-space/blob/master/Spark%20Structured%20Streaming/default-project/spark-structured-streaming/src/main/scala/com/movile/stream/SparkSQL.scala
 
-- 3) File System
+3) File System
 	- Conhecer o HDFS
 	- Conhecer AWS S3 e o AWS Glacier (https://aws.amazon.com/glacier/)
 
-- 4) Modelagem de banco de dados (Transacional e OLAP)
+4) Modelagem de banco de dados (Transacional e OLAP)
 	- Estudo das 6 formas normais (https://pt.wikipedia.org/wiki/Normaliza%C3%A7%C3%A3o_de_dados)
 	- Integridade Referencial e Modelagem Transacional: http://www.methodsandtools.com/archive/archive.php?id=9
 	- Modelagem Dimensional: 
@@ -35,10 +35,10 @@ https://github.com/igorbarinov/awesome-data-engineering
 	- The Data Warehouse Toolkit: basico para modelagem de DW. https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/books/data-warehouse-dw-toolkit/
 	- ETL: The Data Warehouse ETL Toolkit. https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/books/data-warehouse-dw-etl-toolkit/ 
 
-- 5) Stream Processing
+5) Stream Processing
 	- Spark (https://spark.apache.org/streaming/) ou Flink (https://flink.apache.org/). Recomendação Apache Flink. 
 
-- 6) Testing 
+6) Testing 
 	- Great Expectations: https://greatexpectations.io/
 
 
