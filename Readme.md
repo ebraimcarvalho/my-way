@@ -1,3 +1,28 @@
+Active learning!!!
+Read the code
+Manage time
+Block of study
+Google and documentation things
+
+Data Engineering make data available for the end-user, for the purposes of analyttics, model building, app development, etc.
+
+MOVE/STORE: Reliable Data FLow, Infrastructure, Pipelines, ETL, Structured and Unstructured data storage;
+
+EXPLORE/TRANSFORM: Cleaning, anomaly detection, prep.
+
+Common Activities
+
+- Ingest Data from a data source
+- Build and mantain a data warehouse
+- Create a data pipeline
+- Create an analytics table for a specific use case
+- Migrate data to the cloud
+- Schedule and automate pipelines
+- Backfill data
+- Debug data quality issue
+- Optimize queries
+- Design a database
+
 ## Engenharia de Dados: 
 
 - Python
