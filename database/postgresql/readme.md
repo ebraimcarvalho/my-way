@@ -32,3 +32,7 @@ CREATE TABLE IF NOT EXISTS music_library (album_name varchar, artist_name varcha
 
 INSERT INTO music_library (album_name, artist_name, year) VALUES ("Let It Be", "The Beatles", 1970)
 ```
+
+``` sql
+
+```
