@@ -151,3 +151,94 @@ Online Transactional Processing (OLTP):
 Databases optimized for these workloads allow for less complex queries in large volume. The types of queries for these databases are read, insert, update, and delete.
 
 The key to remember the difference between OLAP and OLTP is analytics (A) vs transactions (T). If you want to get the price of a shoe then you are using OLTP (this has very little or no aggregations). If you want to know the total stock of shoes a particular store sold, then this requires using OLAP (since this will require aggregations).
+
+### Normalization
+
+The process of structuring a relational database in accordance with a series of normal forms in order to reduce data redundancy and increase data integrity
+
+**Normalization** is about trying to increase data integrity by reducing the number of copies of the data. Data that needs to be added or updated will be done in as few places as possible.
+
+Objectives of Normal Form:
+
+- To free the database from unwanted insertions, updates, & deletion dependencies. Update in one place.
+
+- To reduce the need for refactoring the database as new types of data are introduced
+
+- To make the relational model more informative to users
+
+- To make the database neutral to the query statistics
+
+#### How to reach First Normal Form (1NF):
+
+Atomic values: each cell contains unique and single values
+Be able to add data without altering tables
+Separate different relations into different tables
+Keep relationships between tables together with foreign keys
+
+#### Second Normal Form (2NF):
+
+Have reached 1NF
+All columns in the table must rely on the Primary Key
+
+#### Third Normal Form (3NF):
+Must be in 2nd Normal Form
+No transitive dependencies
+
+Remember, transitive dependencies you are trying to maintain is that to get from A-> C, you want to avoid going through B.
+When to use 3NF:
+
+When you want to update data, we want to be able to do in just 1 place. We want to avoid updating the table in the Customers Detail table (in the example in the lecture slide).
+
+### Denormalization
+
+Must be done on read heavy workloads to increase peformance, isn't natural, copy data in differents tables, adding redundant copies of data;
+
+**Denormalization** is trying to increase performance by reducing the number of joins between tables (as joins can be slow). Data integrity will take a bit of a potential hit, as there will be more copies of the data (to reduce JOINS).
+
+Reads will be faster (select)
+Writes will be slower (insert, update, delete)
+
+JOINS on the database allow for outstanding flexibility but are extremely slow. If you are dealing with heavy reads on your database, you may want to think about denormalizing your tables. You get your data into normalized form, and then you proceed with denormalization. So, denormalization comes after normalization.
+
+
+### FACT AND DIMENSION TABLES
+
+Fact tables consists of the measurements, metrics or facts of a business process.
+
+Dimension tables is a structure that categorizes facts and measures in order to enable users to answer business questions.
+Dimensions are people, products, place and time.
+
+it helps to think about the Dimension tables providing the following information:
+
+Where the product was bought? (Dim_Store table)
+When the product was bought? (Dim_Date table)
+What product was bought? (Dim_Product table)
+The Fact table provides the metric of the business process (here Sales).
+
+How many units of products were bought? (Fact_Sales table)
+
+#### Implementing Different Schemas
+
+Two of the most popular data mart schema for data warejouses are:
+
+1. Star Schema
+2. Snowflake Schema
+
+#### Star Schema
+
+Is the simples style of data mart schema. The star schema consists og one of more fact tables referencinf any number of dimensions tables. 
+
+A fact table is at its center and Dimension tables surrounds the fact table representing the star's points.
+
+Benefits:
+
+- Denormalized
+- Simplifies queries
+- Fast Aggregations
+
+Drawbacks:
+
+- Issues that come with denormalization
+- Data Integrity
+- Decrease query flexibility
+- Many to many relationships
