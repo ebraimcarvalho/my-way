@@ -60,3 +60,17 @@ Isolation: Transactions are processed independently and securely, order does not
 
 Durability: Completed transactions are saved to database even in cases of system failure. A commonly cited example includes tracking flight seat bookings. So once the flight booking records a confirmed seat booking, the seat remains booked even if a system failure occurs.
 Source: Wikipedia.
+
+#### When Not To Use A Relational Database
+
+- Have large amounts of data: Relational Databases are not distributed databases and because of this they can only scale vertically by adding more storage in the machine itself. You are limited by how much you can scale and how much data you can store on one machine. You cannot add more machines like you can in NoSQL databases.
+
+- Need to be able to store different data type formats: Relational databases are not designed to handle unstructured data.
+
+- Need high throughput -- fast reads: While ACID transactions bring benefits, they also slow down the process of reading and writing data. If you need very fast reads and writes, using a relational database may not suit your needs.
+
+- Need a flexible schema: Flexible schema can allow for columns to be added that do not have to be used by every row, saving disk space.
+
+- Need high availability: The fact that relational databases are not distributed (and even when they are, they have a coordinator/worker architecture), they have a single point of failure. When that database goes down, a fail-over to a backup system occurs and takes time.
+
+- Need horizontal scalability: Horizontal scalability is the ability to add more machines or nodes to a system to increase performance and space for data.
