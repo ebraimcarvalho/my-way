@@ -122,3 +122,19 @@ Neo4J (Graph Database)
 NoSQL databases and Relational databases do not replace each other for all tasks.
 
 Both do different tasks extremely well, and should be utilized for the use cases they fit best.
+
+### Let's to learn the fundamentals of how to do relational data modeling by focusing on normalization, denormalization, fact/dimension tables, and different schema models.
+
+#### Importance of Relational Databases:
+
+- Standardization of data model: Once your data is transformed into the rows and columns format, your data is standardized and you can query it with SQL
+
+- Flexibility in adding and altering tables: Relational databases gives you flexibility to add tables, alter tables, add and remove data.
+
+- Data Integrity: Data Integrity is the backbone of using a relational database.
+
+- Standard Query Language (SQL): A standard language can be used to access the data with a predefined language.
+
+- Simplicity : Data is systematically stored and modeled in tabular format.
+
+- Intuitive Organization: The spreadsheet format is intuitive but intuitive to data modeling in relational databases.
