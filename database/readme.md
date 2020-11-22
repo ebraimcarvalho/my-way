@@ -434,3 +434,16 @@ Commonly Asked Questions:
 
     In Apache Cassandra, you want to model your data to your queries, and if your business need calls for quickly changing requirements, you need to create a new table to process the data. That is a requirement of Apache Cassandra. If your business needs calls for ad-hoc queries, these are not a strength of Apache Cassandra. However keep in mind that it is easy to create a new table that will fit your new query.
 
+
+Primary Key
+
+    Must be unique
+    The PRIMARY KEY is made up of either just the PARTITION KEY or may also include additional CLUSTERING COLUMNS
+    A Simple PRIMARY KEY is just one column that is also the PARTITION KEY. A Composite PRIMARY KEY is made up of more than one column and will assist in creating a unique value and in your retrieval queries
+    The PARTITION KEY will determine the distribution of data across the system
+
+Clustering Columns:
+
+    The clustering column will sort the data in sorted ascending order, e.g., alphabetical order.
+    More than one clustering column can be added (or none!)
+    From there the clustering columns will sort in order of how they were added to the primary key
