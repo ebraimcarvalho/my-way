@@ -452,3 +452,15 @@ WHERE clause
 
     Data Modeling in Apache Cassandra is query focused, and that focus needs to be on the WHERE clause
     Failure to include a WHERE clause will result in an error
+
+
+What we covered in this lesson:
+
+    Basics of Distributed Database Design
+    Must know your queries and model the tables to your queries
+    Importance of Denormalization
+    Apache Cassandra is a popular NoSQL database
+    CQL and some key differences with SQL
+    Primary Key, Partition Key, and Clustering Column
+    The WHERE clause
+
