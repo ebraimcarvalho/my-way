@@ -403,3 +403,34 @@ When Not to Use SQL:
     - Low Latency: Shorter delay before the data is transferred once the instruction for the transfer has been received.
     - Need fast reads and write
 
+#### CAP theorem
+
+CAP Theorem:
+
+**Consistency**: Every read from the database gets the latest (and correct) piece of data or an error;
+**Availability**: Every request is received and a response is given -- without a guarantee that the data is the latest update;
+**Partition Tolerance**: The system continues to work regardless of losing network connectivity between nodes.
+
+Commonly Asked Questions:
+
+Is Eventual Consistency the opposite of what is promised by SQL database per the ACID principle?
+
+Much has been written about how Consistency is interpreted in the ACID principle and the CAP theorem. Consistency in the ACID principle refers to the requirement that only transactions that abide by constraints and database rules are written into the database, otherwise the database keeps previous state. In other words, the data should be correct across all rows and tables. However, consistency in the CAP theorem refers to every read from the database getting the latest piece of data or an error. 
+
+According to the CAP theorem, a database can actually only guarantee two out of the three in CAP. So supporting Availability and Partition Tolerance makes sense, since Availability and Partition Tolerance are the biggest requirements.
+
+Data Modeling in Apache Cassandra:
+
+    Denormalization is not just okay -- it's a must
+    Denormalization must be done for fast reads
+    Apache Cassandra has been optimized for fast writes
+    ALWAYS think Queries first
+    One table per query is a great strategy
+    Apache Cassandra does not allow for JOINs between tables
+
+Commonly Asked Questions:
+
+    I see certain downsides of this approach, since in a production application, requirements change quickly and I may need to improve my queries later. Isn't that a downside of Apache Cassandra?
+
+    In Apache Cassandra, you want to model your data to your queries, and if your business need calls for quickly changing requirements, you need to create a new table to process the data. That is a requirement of Apache Cassandra. If your business needs calls for ad-hoc queries, these are not a strength of Apache Cassandra. However keep in mind that it is easy to create a new table that will fit your new query.
+
