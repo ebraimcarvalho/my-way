@@ -1,4 +1,4 @@
-### Database
+### Database SQL and noSQL
 
 Databases: A database is a structured repository or collection of data that is stored and retrieved electronically for use in applications. Data can be stored, updated, or deleted from a database.
 
