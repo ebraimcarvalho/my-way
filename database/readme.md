@@ -447,3 +447,8 @@ Clustering Columns:
     The clustering column will sort the data in sorted ascending order, e.g., alphabetical order.
     More than one clustering column can be added (or none!)
     From there the clustering columns will sort in order of how they were added to the primary key
+
+WHERE clause
+
+    Data Modeling in Apache Cassandra is query focused, and that focus needs to be on the WHERE clause
+    Failure to include a WHERE clause will result in an error
