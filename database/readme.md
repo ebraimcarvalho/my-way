@@ -392,4 +392,14 @@ DO UPDATE
     SET customer_street  = EXCLUDED.customer_street;
 `
 
-We recommend checking out these two links to learn other ways to insert data into the tables.
+## No-Relational Database
+
+
+When Not to Use SQL:
+
+    - Need high Availability in the data: Indicates the system is always up and there is no downtime
+    - Have Large Amounts of Data
+    - Need Linear Scalability: The need to add more nodes to the system so performance will increase linearly
+    - Low Latency: Shorter delay before the data is transferred once the instruction for the transfer has been received.
+    - Need fast reads and write
+
