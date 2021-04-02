@@ -10,7 +10,7 @@ file_h = logging.FileHandler('file.log')
 
 # level and the format
 stream_h.setLevel(logging.WARNING)
-file_h.setLevel(logging.ERROR)
+file_h.setLevel(logging.WARNING)
 
 formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
 stream_h.setFormatter(formatter)
