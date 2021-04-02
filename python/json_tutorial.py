@@ -36,9 +36,9 @@ def encode_user(o):
     raise TypeError('Object of type User is not JSON serializable!')
 
 userJSON = json.dumps(user, default=encode_user)
-print(type(userJSON))
+print(userJSON)
 user2 = json.loads(userJSON)
-print(type(user2))
+print(user2['name'])
 
 # with open('user.json', 'w', encoding='utf8') as file:
 #   json.dump(user2, file, ensure_ascii=False, indent=4, sort_keys=True)
