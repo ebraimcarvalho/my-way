@@ -69,35 +69,44 @@
 
 # print(f'Total time spend in this operation: {stop - start}')
 
-try:
-  a = 5 // 0
-  b = a + 'as'
-except ZeroDivisionError as e:
-  print(f'Zero division error: {e}')
-except TypeError as e:
-  print(f'Error Type: {e}')
-else:
-  print('Everithing is fine!')
-finally:
-  print('Cleaning all')
+# try:
+#   a = 5 // 0
+#   b = a + 'as'
+# except ZeroDivisionError as e:
+#   print(f'Zero division error: {e}')
+# except TypeError as e:
+#   print(f'Error Type: {e}')
+# else:
+#   print('Everithing is fine!')
+# finally:
+#   print('Cleaning all')
 
-class ValueTooHigher(Exception):
-  pass
+# class ValueTooHigher(Exception):
+#   pass
 
-class ValueTooSmaller(Exception):
-  def __init__(self, message, value):
-    self.message = message
-    self.value = value
+# class ValueTooSmaller(Exception):
+#   def __init__(self, message, value):
+#     self.message = message
+#     self.value = value
 
-def test_value(x):
-  if x > 100:
-    raise ValueTooHigher("Value is too bigger")
-  if x < 5:
-    raise ValueTooSmaller("Value is too smaller", x)
+# def test_value(x):
+#   if x > 100:
+#     raise ValueTooHigher("Value is too bigger")
+#   if x < 5:
+#     raise ValueTooSmaller("Value is too smaller", x)
 
-try:
-  test_value(2)
-except ValueTooHigher as e:
-  print(e)
-except ValueTooSmaller as e:
-  print(f'{e.message}: {e.value}')
+# try:
+#   test_value(2)
+# except ValueTooHigher as e:
+#   print(e)
+# except ValueTooSmaller as e:
+#   print(f'{e.message}: {e.value}')
+
+import logging
+
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='%m/%d/%Y %H:%M:%S')
+logging.debug('This is a debug message')
+logging.info('This is a info message')
+logging.warning('This is a warning message')
+logging.error('This is a error message')
+logging.critical('This is a critical message')
