@@ -1,8 +1,8 @@
 {
-    "name": "Ebraim",
     "age": 29,
     "city": "João Pessoa",
     "hasChildren": false,
+    "name": "Ebraim",
     "titles": [
         "engineer",
         "programmer"
