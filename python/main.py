@@ -81,34 +81,33 @@
 # finally:
 #   print('Cleaning all')
 
-# class ValueTooHigher(Exception):
-#   pass
-
-# class ValueTooSmaller(Exception):
-#   def __init__(self, message, value):
-#     self.message = message
-#     self.value = value
-
-# def test_value(x):
-#   if x > 100:
-#     raise ValueTooHigher("Value is too bigger")
-#   if x < 5:
-#     raise ValueTooSmaller("Value is too smaller", x)
-
-# try:
-#   test_value(2)
-# except ValueTooHigher as e:
-#   print(e)
-# except ValueTooSmaller as e:
-#   print(f'{e.message}: {e.value}')
-
 import logging
+# logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='%m/%d/%Y %H:%M:%S')
+logging.basicConfig()
+logging.root.setLevel(logging.NOTSET)
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='%m/%d/%Y %H:%M:%S')
-# logging.debug('This is a debug message')
-# logging.info('This is a info message')
-# logging.warning('This is a warning message')
-# logging.error('This is a error message')
-# logging.critical('This is a critical message')
+logging.info('I told you so')
 
-import helper
+class ValueTooHigher(Exception):
+  pass
+
+class ValueTooSmaller(Exception):
+  def __init__(self, message, value):
+    self.message = message
+    self.value = value
+
+def test_value(x):
+  if x > 100:
+    raise ValueTooHigher("Value is too bigger")
+  if x < 5:
+    raise ValueTooSmaller("Value is too smaller", x)
+
+try:
+  logging.warning('I told you so')
+  test_value(2)
+except ValueTooHigher as e:
+  logging.debug('I told you so')
+  print(e)
+except ValueTooSmaller as e:
+  logging.debug('I told you so')
+  print(f'{e.message}: {e.value}')
