@@ -11,7 +11,11 @@ my_tuple = (1,2,3,4)
 my_list = [5,6,7,8]
 my_set = {4,5,6,9,10}
 new_list = [*my_tuple, *my_list, *my_set]
+new_tuple = (*my_tuple, *my_list, *my_set)
+new_set = {*my_tuple, *my_list, *my_set}
 print(new_list)
+print(new_tuple)
+print(new_set)
 
 dict_a = {'a': 1, 'b': 22, 'c': 32}
 dict_b = {'d': 'asas', 'e': 'dalee', 'f': True}
