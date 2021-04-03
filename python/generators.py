@@ -27,10 +27,19 @@ fib = fibonacci(30)
 # for i in fib:
 #   print(i)
 
-print([i for i in fib])
+# print(sys.getsizeof([i for i in fib]))
+# print(sys.getsizeof(list((i for i in fib))))
 
 # a = firstn(1000000)
 # b = firstn_generator(1000000)
 
 # print(sys.getsizeof(firstn(1000000)))
 # print(sys.getsizeof(firstn_generator(1000000)))
+
+gen = (i for i in range(10) if i % 2 == 0)
+for i in gen:
+  print(i)
+
+print(sys.getsizeof([i for i in range(1000000) if i % 2 == 0]))
+print(sys.getsizeof((i for i in range(1000000) if i % 2 == 0)))
+print(gen)
