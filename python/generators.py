@@ -23,6 +23,12 @@ def fibonacci(limit):
     yield a
     a, b = b, a + b
 
+fib = fibonacci(30)
+# for i in fib:
+#   print(i)
+
+print([i for i in fib])
+
 # a = firstn(1000000)
 # b = firstn_generator(1000000)
 
