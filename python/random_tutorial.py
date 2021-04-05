@@ -35,5 +35,5 @@ np.random.shuffle(arr)
 np.random.seed(1)
 print(np.random.rand(3,3))
 
-np.random.seed(1)
+np.random.seed(2)
 print(np.random.rand(3,3))
