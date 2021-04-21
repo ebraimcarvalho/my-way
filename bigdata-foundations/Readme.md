@@ -3,11 +3,13 @@ Data age 2025 by Seagate
 
 A cada dois anos em média, os dados gerados dobram de tamanho. Então pensar se a arquitetura de dados é escalável é algo a ser pesado na construção do projeto. O importante não é apenas o armazenamento, mas o processamento, análise e disponibilidade desses dados.
 
-Facebook recebe 600 terabytes de dados por dia
-Youtube recebe 300 horas de vídeo por minuto
-Google recebe 40 mil consultas de pesquisa por segundo
+- Facebook recebe 600 terabytes de dados por dia
+- Youtube recebe 300 horas de vídeo por minuto
+- Google recebe 40 mil consultas de pesquisa por segundo
 
-Segundo uma pesquisa de 2018 da Dresner aponta que as empresas que usam tecnbologia big data saltou de 18% em 2015 para 59% em 2018. Em contra partida, o percentual das empresas que não planejam usar big data caiu de 36% em 2015 para 9% para 2018.
+Segundo uma pesquisa de 2018 da Dresner aponta que as empresas que usam tecnbologia big data saltou de 17% em 2015 para 59% em 2018. Em contra partida, o percentual das empresas que não planejam usar big data caiu de 36% em 2015 para 9% para 2018.
+
+![alt text](adoption-big-data.jpg "Uso de tecnologias Big data pelas empresas")
 
 ### 3V, 5V, 10V do Big Data
 
