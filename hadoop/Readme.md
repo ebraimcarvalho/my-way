@@ -70,3 +70,25 @@ Então em cada Nó Mestre (NameNode), além do nameNode existe o Jobtracker, com
 Ao nível de Datanode, estará também o tasktracker.
 
 O HDFS responde pelo armazenamento e o MapReduce responde pelo processamento.
+
+### YARN
+
+Yet another resource negotiator
+
+Outro negociador de recursos: Oferece paralelismo de tarefas e divide as funcionalidades de gerenciamento de recursos e agendamento/monitoramento de tarefas em daemons separadas
+
+Versão do mapReduce 2 = MapReduce 1 + YARN
+
+#### Modos do Sistema
+
+1. Modo local: Standalone
+2. Modo pseudo distribuído: Single Node Cluster
+3. Modo distribuído: Multi Node Cluster (mais comum em meio de produção)
+
+#### Estrutura do Yarn
+
+- Daemons para executar um job
+- 1 Resource Manager (RM): Coordenar todas as tarefas executadas no sistema, agenda tarefas para serem executadas nos Nodes Managers
+- 1 Application Master (AM): Monitora os Node Manager para reagendar em caso de falha ou lentidão
+- 1 Timeline Server: Armazenar o histórico de aplciativos
+- N Node Manager: Executam as tarefas nos conteiners e enviam relatorios de progresso para o RM
