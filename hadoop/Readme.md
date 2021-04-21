@@ -54,4 +54,4 @@ Framework que organiza as tarefas de processamento complexas através de cluster
 
 Ele recebe os dados do HDFS, usa o split para pegar o que precisa, mapeia o conteúdo dando saída da chave-valor necessária, isso ao nível do input, ao nível do output, com os dados em chave-valor, faz o shuffle para mergear chaves iguais e então faz o reduce para computar aquele 'resumo' de chave e valor final.
 
-[alt text](mapreduce.jpg 'Funcionamento do MapReduce')
+![alt text](mapreduce.jpg 'Funcionamento do MapReduce')
