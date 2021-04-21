@@ -35,3 +35,23 @@ Arquitetura Mestre Namenode / DataNode
 
 - Namenode: Armazenar metadados dos arquivos, Componente central do HDFS, responsável por saber o que são e onde estão seus dados;
 - Datanode: Armazenar os dados
+
+### Estrutura do HDFS
+
+O client envia o job para o nó mestre (NameNode), aqui ficará as informações de metadados e enviará 3 cópias, uma para cada DataNode.
+
+### MapReduce - Introdução
+
+Framework que organiza as tarefas de processamento complexas através de clusters de computadores, divide o trabalho em conjunto de tarefas independentes
+
+4 processos: 
+- Split
+- Map
+- Shuffle
+- Reduce
+
+#### Funcionamento do MapReduce
+
+Ele recebe os dados do HDFS, usa o split para pegar o que precisa, mapeia o conteúdo dando saída da chave-valor necessária, isso ao nível do input, ao nível do output, com os dados em chave-valor, faz o shuffle para mergear chaves iguais e então faz o reduce para computar aquele 'resumo' de chave e valor final.
+
+[alt text](mapreduce.jpg 'Funcionamento do MapReduce')
