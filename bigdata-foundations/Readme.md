@@ -1,3 +1,4 @@
+![alt text](anualsizebigdata.jpg "Crescimento anual dos dados")
 Data age 2025 by Seagate
 
 A cada dois anos em média, os dados gerados dobram de tamanho. Então pensar se a arquitetura de dados é escalável é algo a ser pesado na construção do projeto. O importante não é apenas o armazenamento, mas o processamento, análise e disponibilidade desses dados.
