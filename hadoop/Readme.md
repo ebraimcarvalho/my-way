@@ -92,3 +92,11 @@ Versão do mapReduce 2 = MapReduce 1 + YARN
 - 1 Application Master (AM): Monitora os Node Manager para reagendar em caso de falha ou lentidão
 - 1 Timeline Server: Armazenar o histórico de aplciativos
 - N Node Manager: Executam as tarefas nos conteiners e enviam relatorios de progresso para o RM
+
+#### Arquitetura do Yarn
+
+1. Envia o job para o Resource Manager
+2. Solicita o container para o Node Manager
+3. Dentro desse container inicial abre um Application Master
+4. Application Master solicita para o Resource manager mais containers para o Job
+5. Todo processamento do MapReduce será executado nos containers criados após o Application Master solicitar
