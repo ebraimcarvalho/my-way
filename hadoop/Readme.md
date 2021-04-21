@@ -52,6 +52,21 @@ Framework que organiza as tarefas de processamento complexas através de cluster
 
 #### Funcionamento do MapReduce
 
-Ele recebe os dados do HDFS, usa o split para pegar o que precisa, mapeia o conteúdo dando saída da chave-valor necessária, isso ao nível do input, ao nível do output, com os dados em chave-valor, faz o shuffle para mergear chaves iguais e então faz o reduce para computar aquele 'resumo' de chave e valor final.
+Ele recebe os dados do HDFS, usa o split para pegar o que precisa, mapeia o conteúdo dando saída em formato chave-valor, com os dados em chave-valor, faz o shuffle para mergear chaves iguais, gerando uma lista com os valores para aquela chave e então faz o reduce dessa lista para cada chave e gera o output com o resultado final também em formato chave-valor.
 
 ![alt text](mapreduce.jpg 'Funcionamento do MapReduce')
+
+
+#### Estrutura do MapReduce
+
+- Daemon para executar um job, divido em dois tipos:
+
+1. 1 JobTracker: Coordena todas as tarefas executadas, agendando tarefas para serem executadas em tasktrackers, monitora as tasktrackers, reagenda se necessário e armazena o histórico de tarefasc oncluídas.
+
+2. N TaskTracker: Executam as tarefas e enviam relatórios de progresso para o jobtracker
+
+Então em cada Nó Mestre (NameNode), além do nameNode existe o Jobtracker, como se fosse um cpu e uma memória de um computador.
+
+Ao nível de Datanode, estará também o tasktracker.
+
+O HDFS responde pelo armazenamento e o MapReduce responde pelo processamento.
