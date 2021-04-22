@@ -126,3 +126,12 @@ Versão do mapReduce 2 = MapReduce 1 + YARN
 - Executa aplicativos de clientes externos
 - Transferidos os dados para o cluster hadoop
 - Ferramenta de gerenciamento
+
+#### Arquitetura do cliente Hadoop
+
+O Job é enviado primeiramente pro Edge node (Sqoop, Hive, Hue...);
+
+É enviado o job para o master node, que está comunicando com seu standby namenode através dos journalnode, se esse no mestre falhar, o standby é ativo.
+
+O secondary node é usado em alguns ambientes, onde é criado checkpoints do master node. Esse secondary node será usado em caso de falha do master node, porém esse é um processo de configuração manual. Não é recomendado, melhor usar standby namenode e master node
+
