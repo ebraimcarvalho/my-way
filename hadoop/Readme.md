@@ -100,3 +100,29 @@ Versão do mapReduce 2 = MapReduce 1 + YARN
 3. Dentro desse container inicial abre um Application Master
 4. Application Master solicita para o Resource manager mais containers para o Job
 5. Todo processamento do MapReduce será executado nos containers criados após o Application Master solicitar
+
+
+### Outros nós
+
+#### Secondary node
+
+- Namenode: Contem dois arquivos, FsImage (armazena informações estruturais dos blocos) e EditLog (armazena todas as alterações ocorridas no metadados dos arquivos)
+
+- Cria checkpoints no Namenode: FsImage.ckpt = FsImage + EditLog
+
+- Em caso de fallover do namenode: precisa recuperar manualmente os dados do namenode secundario
+
+#### Standby Namenode
+
+- Se comunica diretamente com o Namenode através do Journalnode
+- Também é um Namenode, só que em espera
+- em caso de fallover do Namenode, o standby entra automaticamente no seu lugar. O Datanode se comunica com o namenode e standby namenode.
+
+#### Edge Node
+
+- Conhecido como Gateway node tambem
+- interface entre o cluster do Hadoop e sua rede externa
+- Diminuir o uso de recurso do Namenode
+- Executa aplicativos de clientes externos
+- Transferidos os dados para o cluster hadoop
+- Ferramenta de gerenciamento
