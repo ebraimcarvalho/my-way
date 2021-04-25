@@ -418,3 +418,25 @@ create external table e_user(cod int, name string) location "/user/semantix/data
 drop table e_user; // Apaga apenas os metadados, os dados ficam armazenados no sistema de arquivos, usada para compartilhar os dados com outras ferramentas.
 
 
+###### Atributos para criação de tabelas
+
+- Leitura de dados
+
+Definir delimitadores:
+
+- row format delimited fields terminated by '<delimitador>' lines terminated by '<delimitador>'
+- tblproperties("skip.header.line.count"="1") // Pular um numero de linhas de leitura do arquivo
+- location '/user/cloudera/data/client'; // Definir localização dos dados (Tabela Externa)
+
+Exemplo:
+
+create external table user(
+  id int,
+  name String,
+  age int
+)
+row format delimited
+fields terminated by ','
+lines terminated by '\n'
+stored as textfile
+location '/user/cloudera/data/client'
