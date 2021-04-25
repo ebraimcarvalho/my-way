@@ -150,8 +150,8 @@ O secondary node é usado em alguns ambientes, onde é criado checkpoints do mas
 
 Comandos Docker:
 
-- docker -version
-- docker-compose -version
+- docker --version
+- docker-compose --version
 - docker ps // visualizar todos os containers ativos
 - docker ps -a // visualizar todos os containers
 - docker-compose pull // baixar as imagens
@@ -167,7 +167,9 @@ Comandos Docker:
 - docker exec -it hive-server bash // Acessar o hive-server
 - docker exec -it <container> <comando> // Executar comandos no container
 - docker logs <container> // Visualizar os logs
+- docker logs -f <container> // Visualizar os logs atualizando em tempo real
 - docker-compose logs // visualizar os logs
+- docker-compose logs -f // visualizar os logs atualizando quando ocorrer algo
 - docker cp <diretório> <container> :/ <diretorio> // Enviar arquivos
 
 
@@ -190,16 +192,27 @@ docker-compose up -d
 
 4. Listas os containers em execução
 
+- docker ps
+
 5. Verificar os logs dos containers do docker-compose em execução
+
+- docker-compose logs
 
 6. Verificar os logs do container namenode
 
+- docker logs namenode
+
 7.  Acessar o container namenode
+
+- docker exec -it namenode bash
 
 8. Listar  os diretórios do container namenode
 
+- docker exec -it namenode ls /
+
 9. Parar os containers do Cluster de Big Data
 
+- docker-compose stop
 
 ### Sitema HDFS e diretórios
 
