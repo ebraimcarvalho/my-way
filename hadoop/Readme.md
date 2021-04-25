@@ -152,7 +152,8 @@ Comandos Docker:
 
 - docker -version
 - docker-compose -version
-- docker ps
+- docker ps // visualizar todos os containers ativos
+- docker ps -a // visualizar todos os containers
 - docker-compose pull // baixar as imagens
 - docker image ls // listar imagens
 - docker-compose up -d // subir o container em background
@@ -162,3 +163,40 @@ Comandos Docker:
 - docker-compose down // matar os serviços
 - docker volume prune // apagar todos os volumes sem uso
 - docker system prune --all // apagar tudo (imagem, volume, network)
+- docker exec -it namenode bash // Acessar namenode
+- docker exec -it hive-server bash // Acessar o hive-server
+- docker exec -it <container> <comando> // Executar comandos no container
+- docker logs <container> // Visualizar os logs
+- docker-compose logs // visualizar os logs
+- docker cp <diretório> <container> :/ <diretorio> // Enviar arquivos
+
+
+#### Exercício
+
+1. Instalação do docker e docker-compose
+
+Docker: https://docs.docker.com/get-docker/
+Docker-compose: https://docs.docker.com/compose/install/
+
+2. Executar os seguintes comandos, para baixar as imagens do Cluster de Big Data:
+
+git clone https://github.com/rodrigo-reboucas/docker-bigdata.git
+cd docker-bigdata
+docker-compose pull
+
+3. Iniciar o cluster Hadoop através do docker-compose
+
+docker-compose up -d
+
+4. Listas os containers em execução
+
+5. Verificar os logs dos containers do docker-compose em execução
+
+6. Verificar os logs do container namenode
+
+7.  Acessar o container namenode
+
+8. Listar  os diretórios do container namenode
+
+9. Parar os containers do Cluster de Big Data
+
