@@ -350,3 +350,21 @@ delete
 17. Exibir o espaço livre do data e o uso do disco
 
 - hdfs dfs -df -h /user/aluno/ebraim/data
+
+
+### Hive
+
+Criado pelo Facebook em 2007 porque o processamento era lento para as consultas diárias, além de que criar tarefas mapreduce consumia tempo e precisava de pessoas especializadas.
+
+É uma ferramenta que permite fácil acesso aos dados via SQL, é um datawarehouse em cima do hadoop, é uma camada de acesso aos dados armazenados no HDFS. Os dados são armazenados no HDFS.
+
+Possui recursos avançados de particionamento, subdividir os dados, organizando através de colunas, porém, não é usado para fornecer repostas em tempo real, ao contrário do Impala, Spark, Presto.
+
+##### Componentes do Hive
+
+- HCatalog: Camada de gerenciamento de armazenamento para o Hadoop, permite que usuários com diferentes ferramentas de processamento de dados leiam e gravem os dados
+- WebHCat: Servidor web para se conectar com o Metastore Hive
+- HiveServer2: Serviço que permite aos clientes executar consultas Hive, exemplo: beeline
+- Metastore: Todos os metadados das tabelas e partições do hive são acessados através do hive metastore, existem diferentes maneiras de configurar o servidor metastore, como embedded Metastore, Local ou Remote Metastore
+- Beeline: Cliente Hive, faz uso do JDBC para se conectar ao HiveServer2
+
