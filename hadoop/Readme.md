@@ -258,9 +258,95 @@ docker-compose up -d
 - hdfs dfs -expunge // Esvazia a lixeira
 - hdfs dfs -cat <arquivo> // Ver conteúdo do arquivo
 - hdfs dfs -setrep <número de repetições> <arquivo> // Alterar o fator de replicação do arquivo
-- hdfs dfs -touchz <diretorio> // Criar um arquivo de registro comd ata e hora
+- hdfs dfs -touchz <diretorio> // Criar um arquivo de registro comd data e hora
 - hdfs dfs -checksum <arquivo> // Retornar as informações da soma de verificação de um arquivo
 - hdfs dfs -tail <arquivo> // Mostrar o último kb do arquivo no console
 - hdfs dfs -cat <arquivo> | head -n 2 // Mostrar as 2 primeiras linhas do arquivo
 - hdfs dfs -find / -iname Data -print // Procura no diretorio raiz arquivos com nome data case insensitive
 - hdfs dfs -find input/ -name \*.txt -print // Procura no diretorio input arquivos com final .txt
+
+
+#### Exercício
+
+1. Iniciar o cluster de Big Data
+
+cd docker-bigdata
+docker-compose up -d
+
+2. Baixar os dados dos exercícios do treinamento
+
+cd input
+sudo git clone https://github.com/rodrigo-reboucas/exercises-data.git
+
+3. Acessar o container do namenode
+
+- docker exec -it namenode bash
+
+4. Criar a estrutura de pastas apresentada a baixo pelo comando: $ hdfs dfs -ls -R /
+
+user/aluno/
+
+<nome>
+
+data
+
+recover
+
+delete
+
+- hdfs dfs -mkdir -p /user/aluno/ebraim/data
+- hdfs dfs -mkdir /user/aluno/ebraim/recover
+- hdfs dfs -mkdir /user/aluno/ebraim/delete
+
+5. Enviar a pasta “/input/exercises-data/escola” e o arquivo “/input/exercises-data/entrada1.txt” para  data
+
+- hdfs dfs -put /input/exercises-data/escola /user/aluno/ebraim/data
+- hdfs dfs -put /input/exercises-data/entrada1.txt /user/aluno/ebraim/data
+
+6. Mover o arquivo “entrada1.txt” para recover
+
+- hdfs dfs -mv /user/aluno/ebraim/data/entrada1.txt /user/aluno/ebraim/recover
+
+7. Baixar o arquivo do hdfs “escola/alunos.json” para o sistema local /
+
+- hdfs dfs -get /user/aluno/ebraim/data/escola/alunos.json /
+
+8. Deletar a pasta recover
+
+- hdfs dfs -rm -r /user/aluno/ebraim/recover
+
+9. Deletar permanentemente o delete
+
+- hdfs dfs -rm -r -skipTrash /user/aluno/ebraim/delete
+
+10. Procurar o arquivo “alunos.csv” dentro do /user
+
+- hdfs dfs -find /user -name alunos.csv
+
+11. Mostrar o último 1KB do arquivo “alunos.csv”
+
+- hdfs dfs -tail /user/aluno/ebraim/data/escola/alunos.csv
+
+12. Mostrar as 2 primeiras linhas do arquivo “alunos.csv”
+
+- hdfs dfs -cat /user/aluno/ebraim/data/escola/alunos.csv | head -n 2
+
+13. Verificação de soma das informações do arquivo “alunos.csv”
+
+- hdfs dfs -checksum /user/aluno/ebraim/data/escola/alunos.csv
+
+14. Criar um arquivo em branco com o nome de “test” no data
+
+- hdfs dfs -touchz /user/aluno/ebraim/data/test.txt
+
+15. Alterar o fator de replicação do arquivo “test” para 2
+
+- hdfs dfs -setrep 2 /user/aluno/ebraim/data/test.txt
+
+16. Ver as informações do arquivo “alunos.csv”
+
+- hdfs dfs -stat %r /user/aluno/ebraim/data/escola/alunos.csv
+
+17. Exibir o espaço livre do data e o uso do disco
+
+- hdfs dfs -df -h /user/aluno/ebraim/data
