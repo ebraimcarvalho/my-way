@@ -135,3 +135,8 @@ O Job é enviado primeiramente pro Edge node (Sqoop, Hive, Hue...);
 
 O secondary node é usado em alguns ambientes, onde é criado checkpoints do master node. Esse secondary node será usado em caso de falha do master node, porém esse é um processo de configuração manual. Não é recomendado, melhor usar standby namenode e master node
 
+### Docker
+
+Comandos Docker:
+
+- docker ps
