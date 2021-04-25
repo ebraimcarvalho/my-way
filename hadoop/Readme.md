@@ -368,3 +368,53 @@ Possui recursos avançados de particionamento, subdividir os dados, organizando 
 - Metastore: Todos os metadados das tabelas e partições do hive são acessados através do hive metastore, existem diferentes maneiras de configurar o servidor metastore, como embedded Metastore, Local ou Remote Metastore
 - Beeline: Cliente Hive, faz uso do JDBC para se conectar ao HiveServer2
 
+##### formato e Estrutura dos Dados
+
+Não existe um formato Hive, existe conector para vários formatos, exemplo CSV, Parquet, AVRO, JSON...
+
+Você pode salvar os dados estruturados ou semi-estrutudaos
+
+###### Hierarquia dos dados
+
+- Database/Table/Partition/Bucket
+
+Partition: Coluna de armazenamento dos dados no sistema de arquivos (diretorios)
+Bucket: Dados são dividos em uma coluna através de uma Função Hash
+
+- Exemplo de caminho:
+/user/hive/warehouse/banco.db/tabela/data=01012019/0000000_0
+
+Através da Hive Query Language (HiveQL) são instruções SQL que são transformadas internamente em Jobs de MapReduce
+
+##### Banco de dados e tabelas
+
+- show databases; // Listar todos os BD
+- desc database <nomeBD>; // Estrutura sobre o BD
+- show tables; // Listar as tabelas
+- desc <nomeTabela>; // Estrutura da tabela
+- desc formatted <nomeTabela>; // Estrutura da tabela formatada
+- desc extended <nomeTabela>; // Estrutura da tabela extendida
+- create database <nomedoBanco>; // Criar BD
+- create database <nomedoBanco> location "/diretorio"; //Local diferente do conf. Hive ao criar um BD
+- create database <nomeBanco> comment "descrição"; // Adicionar comentário
+- exemplo: create database test location "/user/hive/warehouse/test" comment "banco de dados para treinamento";
+
+##### Tabelas
+
+Tipos interna e Externas
+
+Partição: Não particionada, Particionada: Dinâmico e estático
+
+- Interna:
+
+create table user(cod int, name string); // Cria tabela interna
+
+drop table user; // Apaga os dados e metadados
+
+- Externa:
+
+create external table e_user(cod int, name string) location "/user/semantix/data_users"; // Cria tabela externa mapeando dados do diretorio user/semantix/data_user
+
+drop table e_user; // Apaga apenas os metadados, os dados ficam armazenados no sistema de arquivos, usada para compartilhar os dados com outras ferramentas.
+
+
