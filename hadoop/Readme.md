@@ -231,3 +231,36 @@ docker-compose up -d
 - hdfs dfs -rm -r <src> // excluir um diretório
 - hdfs dfs -rm -r -skipTrash <src> // excluir um diretório permanentemente, sem enviar para a lixeira
 
+##### Local para HDFS
+- hdfs dfs -put <src> <destino> // Enviar arquivo ou diretorio
+- -f (sobrescreve o destino se existir)
+- -l (Força um fator de replicação)
+- hdfs dfs -copyFromLocal <src> <destino> //  Envia arquivo ou diretorio
+- hdfs dfs -moveFromLocal <src> <destino> // Mover o arquivo ou diretorio
+
+##### HDFS para Local
+- hdfs dfs -get <src> <destino> // Receber arquivo ou diretorio 
+- hdfs dfs -getmerge <src> <destino> // Cria um unico arquivo mesclado
+- hdfs dfs -moveToLocal <src> <destino> // Get que deleta a copia da origem HDFS
+
+##### HDFS para HDFS
+- hdfs dfs -cp <src> <destino> // Copia arquivo ou diretorio
+- hdfs dfs -mv <src> <destino> // Mover arquivo ou diretorio
+- hdfs dfs -mv <arquivo1> <arquivo2> <arquivo3> <destino> // Mover vários arquivos
+
+*Não é permitido copiar ou mover arquivos entre sistemas de arquivos*
+
+##### Informações de arquivos e sistema HDFS
+- hdfs dfs -du -h <diretorio> // Mostrar uso do disco
+- hdfs dfs -df -h <diretorio> // Exibe o espaço livre
+- hdfs dfs -stat [%r | %o] <diretorio|arquivo> // Mostrar as informações do diretório
+- hdfs dfs -count -h <diretorio> // Conta o número de diretórios, número de arquivos e tamanho do arquivo
+- hdfs dfs -expunge // Esvazia a lixeira
+- hdfs dfs -cat <arquivo> // Ver conteúdo do arquivo
+- hdfs dfs -setrep <número de repetições> <arquivo> // Alterar o fator de replicação do arquivo
+- hdfs dfs -touchz <diretorio> // Criar um arquivo de registro comd ata e hora
+- hdfs dfs -checksum <arquivo> // Retornar as informações da soma de verificação de um arquivo
+- hdfs dfs -tail <arquivo> // Mostrar o último kb do arquivo no console
+- hdfs dfs -cat <arquivo> | head -n 2 // Mostrar as 2 primeiras linhas do arquivo
+- hdfs dfs -find / -iname Data -print // Procura no diretorio raiz arquivos com nome data case insensitive
+- hdfs dfs -find input/ -name \*.txt -print // Procura no diretorio input arquivos com final .txt
