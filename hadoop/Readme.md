@@ -200,3 +200,21 @@ docker-compose up -d
 
 9. Parar os containers do Cluster de Big Data
 
+
+### Sitema HDFS e diretórios
+
+##### Comandos
+
+- hadoop fs
+- hdfs dfs
+- hdfs dfs -<comando> [argumentos]
+- hdfs dfs -help
+- hdfs dfs -help ls
+- hdfs dfs -mkdir <diretorio> // criar um diretorio
+- hdfs dfs -mkdir -p <diretorio>/<diretorio>/<diretorio> // Criar arvore de diretórios
+- hdfs dfs -ls // Lista os diretórios
+- hdfs dfs -ls -R // Lista os diretórios recursivamente
+- hdfs dfs -rm <src> // excluir um arquivo
+- hdfs dfs -rm -r <src> // excluir um diretório
+- hdfs dfs -rm -r -skipTrash <src> // excluir um diretório permanentemente, sem enviar para a lixeira
+
