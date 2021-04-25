@@ -135,21 +135,30 @@ O Job é enviado primeiramente pro Edge node (Sqoop, Hive, Hue...);
 
 O secondary node é usado em alguns ambientes, onde é criado checkpoints do master node. Esse secondary node será usado em caso de falha do master node, porém esse é um processo de configuração manual. Não é recomendado, melhor usar standby namenode e master node
 
-
 ### Data lake
 
 - Entrada (XML, CSV, SQL, JSON...)
-- Ingestão de dados (Sqoop, Flume, Kafka, Beats, Logstash)
-- Armazenamento (HDFS, HBase, Kudu, Cassandra, Redis, MongoDB, ElasticSearch)
-- Processamento (MapReduce, Spark, Flink)
-- Análise de dados (Hive, Impala)
+
+1. Ingestão de dados (Sqoop, Flume, Kafka, Beats, Logstash)
+2. Armazenamento (HDFS, HBase, Kudu, Cassandra, Redis, MongoDB, ElasticSearch)
+3. Processamento (MapReduce, Spark, Flink)
+4. Análise de dados (Hive, Impala)
+
 - Saída (Grafana, Kibana...)
-
-
-
 
 ### Docker
 
 Comandos Docker:
 
+- docker -version
+- docker-compose -version
 - docker ps
+- docker-compose pull // baixar as imagens
+- docker image ls // listar imagens
+- docker-compose up -d // subir o container em background
+- docker container ls // listar os containers
+- docker-compose stop // parar os serviços
+- docker-compose start // iniciar os serviços
+- docker-compose down // matar os serviços
+- docker volume prune // apagar todos os volumes sem uso
+- docker system prune --all // apagar tudo (imagem, volume, network)
