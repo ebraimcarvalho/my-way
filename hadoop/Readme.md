@@ -440,3 +440,107 @@ fields terminated by ','
 lines terminated by '\n'
 stored as textfile
 location '/user/cloudera/data/client'
+
+
+###### Acessar o Hive
+
+- docker exec -it hive-server bash
+- beeline --help
+- beeline -u jdbc:hive2://localhost:10000
+- show databases;
+
+###### Exercícios
+
+1. Enviar o arquivo local “/input/exercises-data/populacaoLA/populacaoLA.csv” para o diretório no HDFS “/user/aluno/<nome>/data/populacao”
+
+- hdfs dfs -mkdir -p /user/aluno/ebraim/data/populacao
+- hdfs dfs -put '/input/exercises-data/populacaoLA/populacaoLA.csv' '/user/aluno/ebraim/data/populacao'
+
+2. Listar os bancos de dados no Hive
+
+- show databases;
+
+3. Criar o banco de dados <nome>
+
+- create database ebraim;
+
+4. Criar a Tabela Hive no BD <nome>
+
+Tabela interna: pop
+Campos:
+zip_code - int
+total_population - int
+median_age - float
+total_males - int
+total_females - int
+total_households - int
+average_household_size - float
+Propriedades
+Delimitadores: Campo ‘,’ | Linha ‘\n’
+Sem Partição
+Tipo do arquivo: Texto
+tblproperties("skip.header.line.count"="1")’
+
+- use ebraim;
+- create table pop(
+    zip_code int,
+    total_population int,
+    median_age float,
+    total_males int,
+    total_females int,
+    total_households int,
+    average_household_size float
+  )
+  row format delimited
+  fields terminated by ','
+  lines terminated by '\n'
+  stored as textfile
+  tblproperties("skip.header.line.count"='1');
+
+5. Visualizar a descrição da tabela pop
+
+- desc formatted pop;
+
+
+#### Inserrir e carregar dados na tabela
+
+- insert into <nomedaTabela> partition(<partition>='<value>') values(<campo>, <value>),(<campo>, <value>), (<campo>, <value>); // Inserir dados na tabela
+- insert into users select * from cliente; // Inserir dados selecionados da tabela cliente na tabela users
+- load data inpath <diretorio> into table <nomedaTabela>; // Carregar dados no sistema de arquivos local
+- load data local inpath '/home/cloudera/data/test' into table alunos; Carrega dados do local
+- load data inpath '/user/cloudera/data/test' overwrite into table alunos partition(id) // Carrega dados do hdfs numa partição específica
+
+#### Seleção de dados
+
+- select * from <nomedaTabela>
+  <where>
+  <group by>
+  <having>
+  <order by>
+  <limit n>;
+- select * from client where state='sp' group by city having population > 100 order by client limit 10; // Exemplo de uma query
+- select * from a join b on a.valor = b.valor; // Usando join entre duas tabelas
+- create view <nomedaView> as select * from <nomedaTabela>; // Salvar consultas e trata como tabelas, esquema é fixo e se alterar a tabela não altera a view
+
+#### Exercício
+
+1.Visualizar a descrição da tabela pop do banco de dados <nome>
+
+- use ebraim;
+- desc formatted pop;
+
+2.Selecionar os 10 primeiros registros da tabela pop
+
+- select * from pop limit 10;
+
+3.Carregar o arquivo do HDFS “/user/aluno/<nome>/data/população/populacaoLA.csv” para a tabela Hive pop
+
+- load data inpath '/user/aluno/ebraim/data/populacao/populacaoLA.csv' into table pop
+
+4.Selecionar os 10 primeiros registros da tabela pop
+
+- select * from pop limit 10;
+
+5.Contar a quantidade de registros da tabela pop
+
+- select count(*) from pop;
