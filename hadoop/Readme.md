@@ -594,9 +594,19 @@ ii) HDFS: '/user/aluno/<nome>/data/nascimento’
 4.Adicionar partição ano=2015
 
 - alter table nascimento add partition(ano=2015);
+- alter table nascimento add partition(ano=2016);
+- alter table nascimento add partition(ano=2017);
 
 5.Enviar o arquivo local “input/exercises-data/names/yob2015.txt” para o HDFS no diretório /user/aluno/<nome>/data/nascimento/ano=2015
 
+- hdfs dfs -put /input/exercises-data/names/yob2015.txt /user/aluno/aluno/data/nascimento/ano=2015
+- hdfs dfs -put /input/exercises-data/names/yob2016.txt /user/aluno/aluno/data/nascimento/ano=2016
+- hdfs dfs -put /input/exercises-data/names/yob2017.txt /user/aluno/aluno/data/nascimento/ano=2017
+
 6.Selecionar os 10 primeiros registros da tabela nascimento no Hive
+
+- select * from nascimento limit 10;
+- select * from nascimento where ano=2016 limit 10;
+- select * from nascimento where ano=2017 limit 10;
 
 7.Repita o processo do 4 ao 6 para os anos de 2016 e 2017.
