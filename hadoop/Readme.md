@@ -556,6 +556,9 @@ Hive - Criação de Tabela Particionada
 
 2. Criar e usar o Banco de dados <nome>
 
+- create database ebraim;
+- use ebraim;
+
 3. Criar uma tabela externa no Hive com os parâmetros:
 
 a) Tabela: nascimento
@@ -575,6 +578,18 @@ e) Salvar
 i) Tipo do arquivo: texto
 
 ii) HDFS: '/user/aluno/<nome>/data/nascimento’
+
+- create external table nascimento(
+    nome string,
+    sexo string,
+    frequencia int  
+  )
+  partitioned by (ano int)
+  row format delimited
+  fields terminated by ','
+  lines terminated by '\n'
+  stored as textfile
+  location '/user/aluno/ebraim/data/nascimento';
 
 4.Adicionar partição ano=2015
 
