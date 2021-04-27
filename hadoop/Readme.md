@@ -593,6 +593,8 @@ ii) HDFS: '/user/aluno/<nome>/data/nascimento’
 
 4.Adicionar partição ano=2015
 
+- alter table nascimento add partition(ano=2015);
+
 5.Enviar o arquivo local “input/exercises-data/names/yob2015.txt” para o HDFS no diretório /user/aluno/<nome>/data/nascimento/ano=2015
 
 6.Selecionar os 10 primeiros registros da tabela nascimento no Hive
