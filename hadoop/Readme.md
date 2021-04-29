@@ -679,6 +679,7 @@ ii) HDFS: '/user/aluno/<nome>/data/nascimento’
 
 ### Exercicio SQOOP
 
+
 MySQL - Verificar e Instalar os Banco de Dados de testes
 
 1. Copiar os dados do local para o contêiner database
@@ -703,7 +704,9 @@ $ mysql -psecret < sakila-mv-schema.sql
 $ mysql -psecret < sakila-mv-data.sql
 
 
+
 ### Exercicio SQOOP 2
+
 
 Sqoop -  Pesquisa e Criação de Tabelas
 
