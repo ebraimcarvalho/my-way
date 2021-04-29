@@ -648,7 +648,7 @@ ii) HDFS: '/user/aluno/<nome>/data/nascimento’
 
 7. Criar a tabela pop_parquet_snappy no formato parquet com compressão Snappy para ler os dados da tabela pop
 
-- ccreate table pop_parquet_snappy(
+- create table pop_parquet_snappy(
     zip_code int, 
     total_population int, 
     median_age float, 
@@ -675,3 +675,65 @@ ii) HDFS: '/user/aluno/<nome>/data/nascimento’
 11. Comparar as tabelas pop, pop_parquet e pop_parquet_snappy no HDFS.
 
 - hdfs dfs -du -h /user/hive/warehouse/ebraim.db
+
+
+### Exercicio SQOOP
+
+MySQL - Verificar e Instalar os Banco de Dados de testes
+
+1. Copiar os dados do local para o contêiner database
+
+$ docker cp input/exercises-data/db-sql/ database:/
+
+2. Acessar o contêiner database
+
+$ docker exec -it database bash
+
+3. Instalar Banco de Dados de testes
+
+Diretório /db-sql - BD employees (Já existe)
+  $ cd /db-sql  
+
+  $ mysql -psecret < employees.sql
+
+Diretório /db-sql/sakila - BD sakila
+$ cd /db-sql/sakila/
+
+$ mysql -psecret < sakila-mv-schema.sql
+$ mysql -psecret < sakila-mv-data.sql
+
+
+### Exercicio SQOOP 2
+
+Sqoop -  Pesquisa e Criação de Tabelas
+
+Todos os comandos precisam ser executados pelo Sqoop.
+
+1. Mostrar todos os databases
+
+- docker exec -it namenode bash
+- sqoop list-databases --connect jdbc:mysql://database --username root --password secret
+
+2. Mostrar todas as tabelas do bd employees
+
+- sqoop list-tables --connect jdbc:mysql://database/employees --username root --password secret
+
+3. Inserir os valores ('d010', 'BI') na tabela departments do bd employees
+
+- sqoop eval --connect jdbc:mysql://database/employees --username root --password secret --query "insert into departments values('d010', 'BI')"
+
+4. Pesquisar todos os registros da tabela departments
+
+- sqoop jdbc:mysql://database/employees --username root --password secret --query "select * from departments"
+
+5. Criar a tabela benefits(cod int(2)  AUTO_INCREMENT PRIMARY KEY, name varchar(30)) no bd employees
+
+- sqoop eval --connect jdbc:mysql://database/employees --username root --password secret --query "create table benefits(cod int(2) AUTO_INCREMENT PRIMARYKEY, name varchar(30))"
+
+6. Inserir os valores (null,'food vale') na tabela benefits
+
+- sqoop eval --connect jdbc:mysql://database/employees --username root --password secret --query "insert into benefits values(null, 'food vale')"
+
+7. Pesquisar todos os registros da tabela benefits
+
+- sqoop eval --connect jdbc:mysql://database/employees --username root --password secret --query "select * from benefits"
