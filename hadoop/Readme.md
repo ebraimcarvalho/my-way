@@ -776,3 +776,56 @@ Importar o primeiro e o último nome dos funcionários com as linhas separadas p
 * Dica para visualizar no HDFS:
 
 $ hdfs dfs -cat /.../db_test/nomeTabela/part-m-00000 | head -n 5
+
+
+### Ecercício Sqoop 4
+
+Sqoop - Importação BD Employees- Otimização
+
+Realizar com uso do MySQL
+
+1. Criar a tabela cp_titles_date, contendo a cópia da tabela titles com os campos title e to_date
+
+- docker exec -it database bash
+- mysql -psecret
+- create table cp_titles_date select title, to_date from titles;
+
+2. Pesquisar os 15 primeiros registros da tabela cp_titles_date
+
+- select * from cp_titles_date limit 15;
+
+3. Alterar os registros do campo to_date para null da tabela cp_titles_date, quando o título for igual a Staff
+
+- update cp_titles_date set to_date=NULL where title='staff';
+
+Realizar com uso do Sqoop - Importações no warehouse /user/hive/warehouse/db_test_<numero_questao> e visualizar no HDFS
+
+- docker exec -it namenode bash
+
+4. Importar a tabela titles com 8 mapeadores no formato parquet
+
+- sqoop import --table titles --connect jdbc:mysql://database/employees --username root --password secret -m 8 --as-parquetfile --warehouse-dir /user/hive/warehouse/db_test2_4
+- hdfs dfs -ls -h /user/hive/warehouse/db_test2_4/titles
+
+5. Importar a tabela titles com 8 mapeadores no formato parquet e compressão snappy
+
+ - sqoop import --table titles --connect jdbc:mysql://database/employees --username root --password secret -m 8 --as-parquetfile --warehouse-dir /user/hive/warehouse/db_test2_5 --compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec
+ - - hdfs dfs -ls -h /user/hive/warehouse/db_test2_5/titles
+
+6. Importar a tabela cp_titles_date com 4 mapeadores (erro)
+
+- sqoop import --table cp_titles_date --connect jdbc:mysql://database/employees --username root --password secret -m 4 --warehouse-dir /user/hive/warehouse/db_test2_6
+- Erro: Import failed: No primary key could be found for table cp_titles_date. Please specify one with --split-by or perform a sequential import with '-m 1'.
+
+
+Importar a tabela cp_titles_date com 4 mapeadores divididos pelo campo título no warehouse /user/hive/warehouse/db_test2_title
+
+- sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true --table cp_titles_date --connect jdbc:mysql://database/employees --username root --password secret -m 4 --warehouse-dir /user/hive/warehouse/db_test2_title --split-by title
+
+Importar a tabela cp_titles_date com 4 mapeadores divididos pelo campo data no warehouse /user/hive/warehouse/db_test2_date
+
+- sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true --table cp_titles_date --connect jdbc:mysql://database/employees --username root --password secret -m 4 --warehouse-dir /user/hive/warehouse/db_test2_date --split-by to_date
+
+Qual a diferença dos registros nulos entre as duas importações?
+
+- Por title pegou os valores NULL, por to_date não pegou os valores NULL do Staff
