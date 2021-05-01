@@ -836,9 +836,18 @@ Qual a diferença dos registros nulos entre as duas importações?
 
 Sqoop - Importação BD Sakila – Carga Incremental
 
+- docker-compose start
+
 Realizar com uso do MySQL
 
 1. Criar a tabela cp_rental_append, contendo a cópia da tabela rental com os campos rental_id e rental_date
+
+- docker exec -it database bash
+- mysql -psecret
+- show databases;
+- use sakila;
+- select * from rental limit 10;
+
 
 2 .Criar a tabela cp_rental_id e cp_rental_date, contendo a cópia da tabela cp_rental_append
 
