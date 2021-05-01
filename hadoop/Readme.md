@@ -905,3 +905,48 @@ Realizar com uso do Sqoop - Importações no warehouse /user/hive/warehouse/db_t
 st3 -m 1 --incremental lastmodified --merge-key rental_id --check-column rental_date --last-value '2005-08-23 22:50:12.0'
 
 - OBS: Vai unir os novos valores com os antigos num mesmo arquivo, é um processamento mais demorado
+
+
+### SQOOP Exercício 6
+
+
+Sqoop - Importação para o Hive e Exportação - BD Employees
+
+
+1. Importar a tabela employees.titles do MySQL para o diretório /user/aluno/<nome>/data com 1 mapeador.
+
+- docker exec -it namenode bash
+- sqoop import --table titles --connect jdbc:mysql://database/employees --username root --password secret --warehouse-dir /user/aluno/ebraim/data -m 1
+
+2. Importar a tabela employees.titles do MySQL para uma tabela Hive no banco de dados seu nome com 1 mapeador.
+
+- sqoop import --table titles --connect jdbc:mysql://database/employees --username root --password secret --warehouse-dir /user/aluno/ebraim/data -m 1 --hive-import --create-hive-table --hive-table data.titles
+
+3. Selecionar os 10 primeiros registros da tabela titles no Hive.
+
+- docker exec -it hive-server bash
+- beeline
+- show databases;
+- use data;
+- select * from titles limit 10;
+
+4. Deletar os registros da tabela employees.titles do MySQL e verificar se foram apagados, através do Sqoop
+
+- docker exec -it database bash
+- mysql -psecret
+- use employees;
+- drop table titles;
+- docker exec -it namenode bash
+- sqoop eval --connect jdbc:mysql://database/employees --username root --password secret --query "show tables"
+
+5. Exportar os dados do diretório /user/hive/warehouse/<nome>.db/data/titles para a tabela do MySQL  employees.titles.
+
+- docker exec -it database bash
+- mysql -psecret
+- show databases;
+- use data;
+- create table titles
+- docker exec -it namenode bash
+- sqoop export --connect jdbc:mysql://database/data --username root --password secret --export -dir /user/hive/warehouse/ebraim.db/data/titles --update-mode allowinsert --table titles
+
+6. Selecionar os 10 primeiros registros registros da tabela employees.titles do MySQL.
