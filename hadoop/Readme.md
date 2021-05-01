@@ -846,18 +846,30 @@ Realizar com uso do MySQL
 - mysql -psecret
 - show databases;
 - use sakila;
+- show tables;
 - select * from rental limit 10;
+- create table cp_rental_append select rental_id, rental_date from rental;
 
 
 2 .Criar a tabela cp_rental_id e cp_rental_date, contendo a cópia da tabela cp_rental_append
 
- 
+- create table cp_rental_id select * from cp_rental_append
+- create table cp_rental_date select * from cp_rental_append
 
 Realizar com uso do Sqoop - Importações no warehouse /user/hive/warehouse/db_test3 e visualizar no HDFS
 
+- docker exec -it namenode bash
+
 3. Importar as tabelas cp_rental_append, cp_rental_id e cp_rental_date com 1 mapeador
 
- 
+- sqoop import --table cp_rental_append --connect jdbc:mysql://database/sakila --username root --password secret -m 1 --warehouse-dir /user/hive/warehouse/db_test3
+
+- sqoop import --table cp_rental_id --connect jdbc:mysql://database/sakila --username root --password secret -m 1 --warehouse-dir /user/hive/warehouse/db_test3
+
+- sqoop import --table cp_rental_date --connect jdbc:mysql://database/sakila --username root --password secret -m 1 --warehouse-dir /user/hive/warehouse/db_test3
+
+- hdfs dfs -ls -h -R /user/hive/warehouse/db_test3
+- hdfs dfs -tail /user/hive/warehouse/db_test3/cp_rental_append/part-m-00000
 
 Realizar com uso do MySQL
 
