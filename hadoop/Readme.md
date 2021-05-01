@@ -853,8 +853,8 @@ Realizar com uso do MySQL
 
 2 .Criar a tabela cp_rental_id e cp_rental_date, contendo a cópia da tabela cp_rental_append
 
-- create table cp_rental_id select * from cp_rental_append
-- create table cp_rental_date select * from cp_rental_append
+- create table cp_rental_id select * from cp_rental_append;
+- create table cp_rental_date select * from cp_rental_append;
 
 Realizar com uso do Sqoop - Importações no warehouse /user/hive/warehouse/db_test3 e visualizar no HDFS
 
@@ -885,8 +885,23 @@ $ mysql -psecret < insert_rental.sql
 
 Realizar com uso do Sqoop - Importações no warehouse /user/hive/warehouse/db_test3 e visualizar no HDFS
 
+- docker exec -it namenode bash
+
 5. Atualizar a tabela cp_rental_append no HDFS anexando os novos arquivos
+
+- sqoop import --table cp_rental_append --connect jdbc:mysql://database/sakila --username root --password secret --warehouse-dir /user/hive/warehouse/db_test3 -m 1 --append
+
+- OBS: Vai duplicar o arquivo no HDFS
 
 6. Atualizar a tabela cp_rental_id no HDFS de acordo com o último registro de rental_id, adicionando apenas os novos dados.
 
+- sqoop import --table cp_rental_id --connect jdbc:mysql://database/sakila --username root --password secret --warehouse-dir /user/hive/warehouse/db_test3 -m 1 --incremental append --check-column rental_id --last-value 16049
+
+- OBS: Vai criar outro arquivo apenas com o adicional
+
 7. Atualizar a tabela cp_rental_date no HDFS de acordo com o último registro de rental_date, atualizando os registros a partir desta data.
+
+- sqoop import --table cp_rental_date --connect jdbc:mysql://database/sakila --username root --password secret --warehouse-dir /user/hive/warehouse/db_te
+st3 -m 1 --incremental lastmodified --merge-key rental_id --check-column rental_date --last-value '2005-08-23 22:50:12.0'
+
+- OBS: Vai unir os novos valores com os antigos num mesmo arquivo, é um processamento mais demorado
