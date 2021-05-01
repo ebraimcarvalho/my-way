@@ -938,7 +938,7 @@ Sqoop - Importação para o Hive e Exportação - BD Employees
 - sqoop eval --connect jdbc:mysql://database/employees --username root --password secret --query "select * from titles limit 10"
 - sqoop eval --connect jdbc:mysql://database/employees --username root --password secret --query "show tables"
 
-5. Exportar os dados do diretório /user/hive/warehouse/<nome>.db/data/titles para a tabela do MySQL  employees.titles.
+5. Exportar os dados do diretório /user/aluno/<nome>/data/titles para a tabela do MySQL  employees.titles.
 
 - sqoop export --table titles --connect jdbc:mysql://database/employees --username root --password secret --export-dir /user/aluno/ebraim/data/titles
 
