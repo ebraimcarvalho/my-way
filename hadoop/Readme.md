@@ -945,3 +945,6 @@ Sqoop - Importação para o Hive e Exportação - BD Employees
 6. Selecionar os 10 primeiros registros registros da tabela employees.titles do MySQL.
 
 - sqoop eval --connect jdbc:mysql://database/employees --username root --password secret --query "select * from titles limit 10"
+
+
+SQOOP X Hive X HDFS X MySQL
