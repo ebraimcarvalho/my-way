@@ -950,3 +950,5 @@ Sqoop - Importação para o Hive e Exportação - BD Employees
 SQOOP X Hive X HDFS X MySQL
 
 SQOOP: Comunicação entre HDFS e RDBMS
+
+HBASE Apache NoSQL
