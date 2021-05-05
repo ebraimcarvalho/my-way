@@ -1013,3 +1013,6 @@ HBase - Exercícios
 9. Pesquisar toda a tabela controle
 
 - scan 'controle'
+
+
+### SPARK
