@@ -962,20 +962,21 @@ HBase - Exercícios
 1. Criar a tabela ‘controle’ com os dados:
 
 - create 'controle', {NAME=>'produto'}, {NAME=>'fornecedor'}
+
 - put 'controle', '1', 'produto:nome', 'ram'
 - put 'controle', '1', 'produto:qtd', '100'
 - put 'controle', '1', 'fornecedor:nome', 'TIComp'
 - put 'controle', '1', fornecedor:estado', 'SP'
 
-- put 'controle', '1', 'produto:nome', 'hd'
-- put 'controle', '1', 'produto:qtd', '50'
-- put 'controle', '1', 'fornecedor:nome', 'Peças PC'
-- put 'controle', '1', fornecedor:estado', 'MG'
+- put 'controle', '2', 'produto:nome', 'hd'
+- put 'controle', '2', 'produto:qtd', '50'
+- put 'controle', '2', 'fornecedor:nome', 'Peças PC'
+- put 'controle', '2', fornecedor:estado', 'MG'
 
-- put 'controle', '1', 'produto:nome', 'mouse'
-- put 'controle', '1', 'produto:qtd', '150'
-- put 'controle', '1', 'fornecedor:nome', 'Inf Tec'
-- put 'controle', '1', fornecedor:estado', 'SP'
+- put 'controle', '3', 'produto:nome', 'mouse'
+- put 'controle', '3', 'produto:qtd', '150'
+- put 'controle', '3', 'fornecedor:nome', 'Inf Tec'
+- put 'controle', '3', fornecedor:estado', 'SP'
 
 2. Listar as tabelas e verificar a estrutura da tabela ‘controle’
 
@@ -986,21 +987,24 @@ HBase - Exercícios
 
 - count 'controle'
 
-4. Alterar  a família de coluna produto para 3 versões
+4. Alterar a família de coluna produto para 3 versões
 
-- alter table controle, {NAME=>'produto', VERSIONS=>3}
+- alter 'controle', {NAME=>'produto', VERSIONS=>3}
 
 5. Alterar a quantidade para 200 do id 2
 
-- put 'controle', '2', 'produto:quantidade', '200'
+- put 'controle', '2', 'produto:qtd', '200'
 
 6. Pesquisar as versões do id 2 da coluna quantidade
 
-- get 'controle', '2', {COLUMNS=>['produto:quantidade']}
+- get 'controle', '2', {COLUMNS=>['produto:qtd'], VERSIONS=>2}
 
 7. Excluir os id do estado de SP
 
-- ?
+- scan 'controle', {COLUMNS=>'fornecedor:estado', LIMIT => 5}
+- scan 'controle', {COLUMNS=>'fornecedor:estado', FILTER=>"ValueFilter(=, 'binary:SP')"}
+- deleteall 'controle', '1'
+- deleteall 'controle', '3'
 
 8. Deletar a coluna estado da chave 2
 
