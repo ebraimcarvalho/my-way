@@ -1024,30 +1024,68 @@ Spark - Exercícios de DataFrame
 
 1. Enviar o diretório local “/input/exercises-data/juros_selic” para o HDFS em “/user/aluno/<nome>/data”
 
+- hdfs dfs -put /input/exercises-data/juros_selic /user/aluno/ebraim/data
+
 2. Criar o DataFrame jurosDF para ler o arquivo no HDFS “/user/aluno/<nome>/data/juros_selic/juros_selic.json”
+
+- docker exec -it spark bash
+- spark-shell
+- val jurosDF = spark.read.json('/user/aluno/ebraim/data/juros_selic/juros_selic.json')
 
 3. Visualizar o Schema do jurosDF
 
+- jurosDF.printSchema()
+
 4. Mostrar os 5 primeiros registros do jutosDF
+
+- jurosDF.show(5)
+- jurosDF.take(5)
 
 5. Contar a quantidade de registros do jurosDF
 
+- jurosDF.count()
+
 6. Criar o DataFrame jurosDF10 para filtrar apenas os registros com o campo “valor” maior que 10
+
+- val jurosDF10 = jurosDF.where('valor > 10')
 
 7. Salvar o DataFrame jurosDF10  como tabela Hive “<nome>.tab_juros_selic”
 
+- jurosDF10.write.saveAsTable("ebraim.tab_juros_selic")
+
 8. Criar o DataFrame jurosHiveDF para ler a tabela “<nome>.tab_juros_selic”
+
+- val jurosHiveDF = spark.read.table("ebraim.tab_juros_selic")
 
 9. Visualizar o Schema do jurosHiveDF
 
+- jurosHiveDf.printSchema()
+
 10. Mostrar os 5 primeiros registros do jurosHiveDF
+
+- jurosHiveDF.take(5)
+- jurosHiveDF.show(5)
 
 11. Salvar o DataFrame jurosHiveDF no HDFS no diretório “/user/aluno/nome/data/save_juros” no formato parquet
 
+- jurosHiveDF.write.save("/user/aluno/ebraim/data/save_juros")
+
 12. Visualizar o save_juros no HDFS
+
+- docker exec -it namenode bash
+- hdfs dfs -ls /user/aluno/ebraim/data
 
 13. Criar o DataFrame jurosHDFS para ler o diretório do “save_juros” da questão 8
 
+- docker exec -it spark bash
+- spark-shell
+- val jurosHDFS = spark.read.load("/user/aluno/ebraim/data/save_juros")
+
 14. Visualizar o Schema do jurosHDFS
 
+- jurosHDFS.printSchema()
+
 15. Mostrar os 5 primeiros registros do jurosHDFS
+
+- jurosHDFS.take(5)
+- jurosHDFS.show(5)
