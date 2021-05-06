@@ -1024,6 +1024,7 @@ Spark - Exercícios de DataFrame
 
 1. Enviar o diretório local “/input/exercises-data/juros_selic” para o HDFS em “/user/aluno/<nome>/data”
 
+- docker exec -it namenode bash
 - hdfs dfs -put /input/exercises-data/juros_selic /user/aluno/ebraim/data
 
 2. Criar o DataFrame jurosDF para ler o arquivo no HDFS “/user/aluno/<nome>/data/juros_selic/juros_selic.json”
