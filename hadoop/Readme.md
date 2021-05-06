@@ -1090,3 +1090,6 @@ Spark - Exercícios de DataFrame
 
 - jurosHDFS.take(5)
 - jurosHDFS.show(5)
+
+
+### SPARK parte 2
