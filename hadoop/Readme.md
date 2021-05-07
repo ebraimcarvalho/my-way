@@ -1156,7 +1156,7 @@ Realizar os exercícios usando a API Catalog.
 
 2. Definir o banco de dados “seu-nome” como principal
 
-- spark.catalog.setCurrentDatabase(ebraim)
+- spark.catalog.setCurrentDatabase("ebraim")
 
 3. Visualizar todas as tabelas do banco de dados “seu-nome”
 
@@ -1164,8 +1164,41 @@ Realizar os exercícios usando a API Catalog.
 
 4. Visualizar as colunas da tabela tab_alunos
 
-- spark.catalog.listColumns(tab_alunos)
+- spark.catalog.listColumns("tab_alunos")
 
-5.  Visualizar os 10 primeiros registos da tabela "tab_alunos" com uso do spark.sql
+5. Visualizar os 10 primeiros registos da tabela "tab_alunos" com uso do spark.sql
 
--  spark.sql("select * from tab_alunos").show(10)
+- spark.sql("select * from tab_alunos limit 10").show()
+
+
+### Exercícios SPAR 4
+
+
+Spark - Exercícios de SQL Queries vs Operações de DataFrame
+
+Realizar as seguintes consultas usando SQL queries e transformações de DataFrame na tabela “tab_alunos” no banco de dados <nome>
+
+1. Visualizar o id e nome dos 5 primeiros registros
+
+- val DF = spark.read.table("tab_alunos")
+- DF.select("id_discente", "nome").show(5)
+
+- spark.sql("select id, nome from tab_alunos limit 5").show()
+
+2. Visualizar o id, nome e ano quando o ano de ingresso for maior ou igual a 2018
+
+- DF.select("id", "nome", "ano").where("ano >= 2018").show()
+
+- spark.sql("select id, nome, ano from tab_alunos where ano >= 2018")
+
+3. Visualizar por ordem alfabética do nome o id, nome e ano quando o ano de ingresso for maior ou igual a 2018
+
+- DF.select("id", "nome", "ano").where("ano >= 2018").orderBy("nome")
+
+- spark.sql("select  id, nome, ano from tab_alunos where ano >= 2018 order by nome")
+
+4. Contar a quantidade de registros do item anterior
+
+- DF.select("id", "nome", "ano").where("ano >= 2018").orderBy("nome").count()
+
+- spark.sql("select count(id) from tab_alunos where ano >= 2018 order by nome")
