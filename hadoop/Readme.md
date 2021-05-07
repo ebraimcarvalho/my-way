@@ -1171,7 +1171,7 @@ Realizar os exercícios usando a API Catalog.
 - spark.sql("select * from tab_alunos limit 10").show()
 
 
-### Exercícios SPAR 4
+### Exercícios SPARK 4
 
 
 Spark - Exercícios de SQL Queries vs Operações de DataFrame
@@ -1183,22 +1183,27 @@ Realizar as seguintes consultas usando SQL queries e transformações de DataFra
 - val DF = spark.read.table("tab_alunos")
 - DF.select("id_discente", "nome").show(5)
 
-- spark.sql("select id, nome from tab_alunos limit 5").show()
+- spark.sql("select id_discente, nome from tab_alunos limit 5").show()
 
 2. Visualizar o id, nome e ano quando o ano de ingresso for maior ou igual a 2018
 
-- DF.select("id", "nome", "ano").where("ano >= 2018").show()
+- DF.select("id_discente", "nome", "ano_ingresso").where("ano_ingresso >= 2018").show()
 
-- spark.sql("select id, nome, ano from tab_alunos where ano >= 2018")
+- spark.sql("select id_discente, nome, ano_ingresso from tab_alunos where ano_ingresso >= 2018").show()
 
 3. Visualizar por ordem alfabética do nome o id, nome e ano quando o ano de ingresso for maior ou igual a 2018
 
-- DF.select("id", "nome", "ano").where("ano >= 2018").orderBy("nome")
+- DF.select("id_discente", "nome", "ano_ingresso").where("ano_ingresso >= 2018").orderBy("nome").show()
+#### para descendente ordem
+- DF.select("id_discente", "nome", "ano_ingresso").where("ano_ingresso >= 2018").orderBy($"nome".desc).show()
 
-- spark.sql("select  id, nome, ano from tab_alunos where ano >= 2018 order by nome")
+- spark.sql("select id_discente, nome, ano_ingresso from tab_alunos where ano_ingresso >= 2018 order by nome").show()
+
+#### para descendente ordem
+- spark.sql("select id_discente, nome, ano_ingresso from tab_alunos where ano_ingresso >= 2018 order by nome desc").show()
 
 4. Contar a quantidade de registros do item anterior
 
-- DF.select("id", "nome", "ano").where("ano >= 2018").orderBy("nome").count()
+- DF.select("id_discente").where("ano_ingresso >= 2018").count()
 
-- spark.sql("select count(id) from tab_alunos where ano >= 2018 order by nome")
+- spark.sql("select count(id_discente) from tab_alunos where ano_ingresso >= 2018").show()
