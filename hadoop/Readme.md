@@ -1211,130 +1211,130 @@ Realizar as seguintes consultas usando SQL queries e transformações de DataFra
 ### Prova modulo 1
 
 
-Pergunta 10,5 pts
+Pergunta 1 0,5 pts
 O que é o Apache Hadoop?
 Grupo de escolhas da pergunta
 
-Hardware para alto desempenho
+[] Hardware para alto desempenho
 
-Software para analytics
+[] Software para analytics
 
-Hardware para Big Data
+[] Hardware para Big Data
 
-Software para computação distribuída
+[] Software para computação distribuída
  
 Sinalizar pergunta: Pergunta 2
 Pergunta 20,5 pts
 Como é a arquitetura de armazenamento do HDFS?
 Grupo de escolhas da pergunta
 
-Namenode/Datanode
+[] Namenode/Datanode
 
-ResourceManager/NodeManager
+[] ResourceManager/NodeManager
 
-Principal/Secondary
+[] Principal/Secondary
 
-Jobtracker/Tasktracker
+[] Jobtracker/Tasktracker
  
 Sinalizar pergunta: Pergunta 3
 Pergunta 30,5 pts
 A arquitetura do HDFS assume que os datanodes não são 100% confiáveis
 Grupo de escolhas da pergunta
 
-Verdadeiro
+[] Verdadeiro
 
-Falso
+[] Falso
  
 Sinalizar pergunta: Pergunta 4
 Pergunta 40,5 pts
 Quem desenvolveu o modelo de programação MapReduce?
 Grupo de escolhas da pergunta
 
-Microsoft Research
+[] Microsoft Research
 
-IBM Research
+[] IBM Research
 
-Apache Foundation
+[] Apache Foundation
 
-Google
+[] Google
  
 Sinalizar pergunta: Pergunta 5
 Pergunta 50,5 pts
 Quais os componentes do MapReduce para processamento dos jobs?
 Grupo de escolhas da pergunta
 
-ResourceManager/NodeManager
+[] ResourceManager/NodeManager
 
-Principal/Secondary
+[] Principal/Secondary
 
-Namenode/Datanode
+[] Namenode/Datanode
 
-Jobtracker/Tasktracker
+[] Jobtracker/Tasktracker
  
 Sinalizar pergunta: Pergunta 6
 Pergunta 60,5 pts
 Não faz parte do ecossistema Hadoop:
 Grupo de escolhas da pergunta
 
-Hive
+[] Hive
 
-Sqoop
+[] Sqoop
 
-HBase
+[] HBase
 
-Python
+[] Python
  
 Sinalizar pergunta: Pergunta 7
 Pergunta 70,5 pts
 Qual node pode ser instalado em um cluster Hadoop para diminuição do uso de recursos do NameNode?
 Grupo de escolhas da pergunta
 
-Edge Node
+[] Edge Node
 
-Slave Node
+[] Slave Node
 
-Secondary Node
+[] Secondary Node
 
-Standby Node
+[] Standby Node
  
 Sinalizar pergunta: Pergunta 8
 Pergunta 80,5 pts
 Quais são os componentes do YARN para coordenar e executar os jobs?
 Grupo de escolhas da pergunta
 
-Jobtracker/Tasktracker
+[] Jobtracker/Tasktracker
 
-Namenode/Datanode
+[] Namenode/Datanode
 
-Principal/Secondary
+[] Principal/Secondary
 
-ResourceManager/NodeManager
+[] ResourceManager/NodeManager
  
 Sinalizar pergunta: Pergunta 9
 Pergunta 90,5 pts
 O que é Data Lake?
 Grupo de escolhas da pergunta
 
-Repositório de armazenamento para dados Estruturados e Semi estruturados
+[] Repositório de armazenamento para dados Estruturados e Semi estruturados
 
-Repositório de armazenamento e engine para processamento de Big Data
+[] Repositório de armazenamento e engine para processamento de Big Data
 
-Visualização de insight para Big Data
+[] Visualização de insight para Big Data
 
-Ingestão de dados distribuídos e escalável para Big Data
+[] Ingestão de dados distribuídos e escalável para Big Data
  
 Sinalizar pergunta: Pergunta 10
 Pergunta 100,5 pts
 Qual ferramenta não é responsável pela ingestão de dados?
 Grupo de escolhas da pergunta
 
-Sqoop
+[] Sqoop
 
-Kafka
+[] Kafka
 
-Flume
+[] Flume
 
-HBase
+[] HBase
  
 Sinalizar pergunta: Pergunta 11
 Pergunta 110,5 pts
@@ -1344,13 +1344,13 @@ sqoop import --table employees --connect jdbc:mysql://database/employees --usern
 
 Grupo de escolhas da pergunta
 
-A importação irá falhar
+[] A importação irá falhar
 
-A importação irá deletar o diretório existente employees
+[] A importação irá deletar o diretório existente employees
 
-A importação irá deletar o diretório existente db_test
+[] A importação irá deletar o diretório existente db_test
 
-A importação irá adicionar os arquivos juntamente com os arquivos já existentes
+[] A importação irá adicionar os arquivos juntamente com os arquivos já existentes
  
 Sinalizar pergunta: Pergunta 12
 Pergunta 120,5 pts
@@ -1360,13 +1360,13 @@ sqoop import --table titles --connect jdbc:mysql://localhost/sakila --username=r
 
 Grupo de escolhas da pergunta
 
-A importação irá atualizar a tabela titles com os dados novos no período de 20/01/2021 até hoje
+[] A importação irá atualizar a tabela titles com os dados novos no período de 20/01/2021 até hoje
 
-A importação irá anexar apenas os dados do campo id da tabela titles com os dados novos no período de 20/01/2021 até hoje
+[] A importação irá anexar apenas os dados do campo id da tabela titles com os dados novos no período de 20/01/2021 até hoje
 
-A importação irá atualizar apenas o campo id da tabela titles com os dados novos no período de 20/01/2021 até hoje
+[] A importação irá atualizar apenas o campo id da tabela titles com os dados novos no período de 20/01/2021 até hoje
 
-A importação irá anexar os dados novos no diretório db_test no período de 20/01/2021 até hoje
+[] A importação irá anexar os dados novos no diretório db_test no período de 20/01/2021 até hoje
  
 Sinalizar pergunta: Pergunta 13
 Pergunta 130,5 pts
@@ -1374,9 +1374,9 @@ O Hive é um sistema de gerenciamento de banco de dados?
 
 Grupo de escolhas da pergunta
 
-Verdadeiro
+[] Verdadeiro
 
-Falso
+[] Falso
  
 Sinalizar pergunta: Pergunta 14
 Pergunta 140,5 pts
@@ -1384,13 +1384,13 @@ Onde são armazenados os metadados do Hive?
 
 Grupo de escolhas da pergunta
 
-Warehouse
+[] Warehouse
 
-WebHCat
+[] WebHCat
 
-HCatalog
+[] HCatalog
 
-Metastore
+[] Metastore
  
 Sinalizar pergunta: Pergunta 15
 Pergunta 150,5 pts
@@ -1398,13 +1398,13 @@ Quando apagamos uma tabela externa no Hive, ....
 
 Grupo de escolhas da pergunta
 
-os dados são deletados
+[] os dados são deletados
 
-os dados não são deletados
+[] os dados não são deletados
 
-os metadados não são deletados
+[] os metadados não são deletados
 
-os dados são deletados
+[] os dados são deletados
  
 Sinalizar pergunta: Pergunta 16
 Pergunta 160,5 pts
@@ -1412,13 +1412,13 @@ Qual das opções abaixo melhora o tempo de uma consulta no hive de um arquivo .
 
 Grupo de escolhas da pergunta
 
-Comprimir o arquivo para Snappy
+[] Comprimir o arquivo para Snappy
 
-Converter o arquivo para Parquet
+[] Converter o arquivo para Parquet
 
 [x] Nenhuma das opções
 
-Converter o arquivo para Sequence File
+[] Converter o arquivo para Sequence File
  
 Sinalizar pergunta: Pergunta 17
 Pergunta 170,5 pts
@@ -1426,13 +1426,13 @@ Para qual tipo de dados foi criado o armazenamento do HBase?
 
 Grupo de escolhas da pergunta
 
-Dados relacionais
+[] Dados relacionais
 
-Dados semi estruturados
+[] Dados semi estruturados
 
-Dados não relacionais
+[] Dados não relacionais
 
-Dados estruturados
+[] Dados estruturados
  
 Sinalizar pergunta: Pergunta 18
 Pergunta 180,5 pts
@@ -1442,13 +1442,13 @@ get 'cliente','5',{COLUMN=>['pedido:num_pedido'],VERSIONS=>3,LIMIT=>10}
 
 Grupo de escolhas da pergunta
 
-Pesquisar os valores das 3 últimas versões da família de coluna num_pedido da chave 5
+[] Pesquisar os valores das 3 últimas versões da família de coluna num_pedido da chave 5
 
-Pesquisar o valor da 3 versão da coluna num_pedido da chave 5
+[] Pesquisar o valor da 3 versão da coluna num_pedido da chave 5
 
-Pesquisar os valores das 3 últimas versões da coluna num_pedido da chave 5
+[] Pesquisar os valores das 3 últimas versões da coluna num_pedido da chave 5
 
-Pesquisar o valor da 3 versão da família de coluna num_pedido da chave 5
+[] Pesquisar o valor da 3 versão da família de coluna num_pedido da chave 5
  
 Sinalizar pergunta: Pergunta 19
 Pergunta 190,5 pts
@@ -1456,16 +1456,16 @@ Qual opção está incorreta sobre o Spark?
 
 Grupo de escolhas da pergunta
 
-Usado para Machine Learning
+[] Usado para Machine Learning
 
-Usado para processamento batch e stream
+[] Usado para processamento batch e stream
 
-Usado para ETL
+[] Usado para ETL
 
-Usado para criação de gráficos de Big Data
+[] Usado para criação de gráficos de Big Data
  
 Sinalizar pergunta: Pergunta 20
-Pergunta 200,5 pts
+Pergunta 20 - 0,5 pts
 Segue uma parte do arquivo "teste.csv" abaixo:
 
 id, nome, valor
@@ -1477,7 +1477,6 @@ id, nome, valor
 ...
 
 5000, cabo USB, 5.00
-
  
 
 Com uso do spark para leitura do arquivo "teste.csv", como o schema será apresentado com o código abaixo:
@@ -1486,29 +1485,13 @@ val data = spark.read.option("inferSchema", "true").option("header", "true").csv
 
 Grupo de escolhas da pergunta
 
-id: integer (nullable = true)
-
-nome: string (nullable = true)
-
-valor: float (nullable = true)
+[] id: integer (nullable = true) \ nome: string (nullable = true) \ valor: float (nullable = true)
 
 
-id: integer (nullable = true)
-
-nome: string (nullable = true)
-
-valor: double (nullable = true)
+[] id: integer (nullable = true) \ nome: string (nullable = true) \ valor: double (nullable = true)
 
 
-id: string (nullable = true)
-
-nome: string (nullable = true)
-
-valor: string (nullable = true)
+[] id: string (nullable = true) \ nome: string (nullable = true) \ valor: string (nullable = true)
 
 
-id: integer (nullable = true)
-
-nome: string (nullable = true)
-
-valor: integer (nullable = true)
+[] id: integer (nullable = true) \ nome: string (nullable = true) \ valor: integer (nullable = true)
