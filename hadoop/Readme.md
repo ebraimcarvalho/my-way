@@ -1207,3 +1207,6 @@ Realizar as seguintes consultas usando SQL queries e transformações de DataFra
 - DF.select("id_discente").where("ano_ingresso >= 2018").count()
 
 - spark.sql("select count(id_discente) from tab_alunos where ano_ingresso >= 2018").show()
+
+
+### Prova modulo 1
