@@ -1493,3 +1493,6 @@ val data = spark.read.option("inferSchema", "true").option("header", "true").csv
 - [ ] id: string (nullable = true) \ nome: string (nullable = true) \ valor: string (nullable = true)
 
 - [ ] id: integer (nullable = true) \ nome: string (nullable = true) \ valor: integer (nullable = true)
+
+
+RDD vs Dataframe vs Dataset
