@@ -958,6 +958,9 @@ HBASE Apache NoSQL
 
 HBase - Exercícios
 
+- docker exec -it hbase-master bash
+- hbase shell
+
 1. Criar a tabela ‘controle’ com os dados:
 
 - create 'controle', {NAME=>'produto'}, {NAME=>'fornecedor'}
@@ -1346,9 +1349,9 @@ sqoop import --table employees --connect jdbc:mysql://database/employees --usern
 
 - [ ] A importação irá falhar
 
-- [ ] A importação irá deletar o diretório existente employees
+- [x] A importação irá deletar o diretório existente employees
 
-- [x] A importação irá deletar o diretório existente db_test
+- [] A importação irá deletar o diretório existente db_test
 
 - [ ] A importação irá adicionar os arquivos juntamente com os arquivos já existentes
 
@@ -1360,13 +1363,13 @@ sqoop import --table employees --connect jdbc:mysql://database/employees --usern
 sqoop import --table titles --connect jdbc:mysql://localhost/sakila --username=root --password=secret --warehouse-dir db_test -m 1 --incremental lastmodified --merge-key id --check-column date --last-value '2021-01-20'
 
 
-- [x] A importação irá atualizar a tabela titles com os dados novos no período de 20/01/2021 até hoje
+- [ ] A importação irá atualizar a tabela titles com os dados novos no período de 20/01/2021 até hoje
 
 - [ ] A importação irá anexar apenas os dados do campo id da tabela titles com os dados novos no período de 20/01/2021 até hoje
 
 - [ ] A importação irá atualizar apenas o campo id da tabela titles com os dados novos no período de 20/01/2021 até hoje
 
-- [ ] A importação irá anexar os dados novos no diretório db_test no período de 20/01/2021 até hoje
+- [x] A importação irá anexar os dados novos no diretório db_test no período de 20/01/2021 até hoje
 
 
 #### Pergunta 13 | 0,5 pts
