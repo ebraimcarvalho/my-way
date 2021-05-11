@@ -1415,9 +1415,9 @@ sqoop import --table titles --connect jdbc:mysql://localhost/sakila --username=r
 
 - [ ] Comprimir o arquivo para Snappy
 
-- [ ] Converter o arquivo para Parquet
+- [x] Converter o arquivo para Parquet
 
-- [x] Nenhuma das opções
+- [ ] Nenhuma das opções // -> Escolhi essa primeiramente 
 
 - [ ] Converter o arquivo para Sequence File
 
