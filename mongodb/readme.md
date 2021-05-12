@@ -92,24 +92,24 @@ Consulta básica em documentos
 
 a) Nome = mouse
 
-- db.produto.find({"name": "mouse"})
+- db.produto.find( {"nome": "mouse"} )
 
 b) Quantidade = 20 e apresentar apenas o campo nome
 
-- db.produto.find({"qtd": 20}, {"nome": 1})
+- db.produto.find( {"qtd": 20}, {"nome": 1} )
 
 c) Quantidade <= 20 e apresentar apenas os campos nome e qtd
 
-- db.produto.find({"qtd": $lte: 20}}, {"nome": 1, "qtd": 1})
+- db.produto.find( {"qtd": { $lte: 20 }}, {"nome": 1, "qtd": 1} )
 
 d) Quantidade entre 10 e 20
 
-- db.produto.find({"qtd": {$gte: 10}}, "qtd": {$lte: 20}})
+- db.produto.find( {"qtd": {$gte: 10}, "qtd": {$lte: 20}} )
 
 e) Conexão = USB e não apresentar o campo _id e qtd
 
-- db.produto.find({"equipamento.conexao": "USB"}, {"_id": 0, "qtd": 0})
+- db.produto.find({"descricao.conexao": "USB"}, {"_id": 0, "qtd": 0})
 
 f) SO que contenha “Windows” ou “Windows 10”
 
-- db.produto.find({"equipamento.so": {$in: ["Windows", "Windows 10"]}})
+- db.produto.find({"descricao.so": {$in: ["Windows", "Windows 10"]}})
