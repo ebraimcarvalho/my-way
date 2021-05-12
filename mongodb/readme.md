@@ -153,3 +153,6 @@ f) Mostrar apenas os id dos documentos de tenham o atributo conexão = USB ou qu
 - db.produto.find({ $or: [
   {"descricao.conexao": "USB"}, {"qtd": {$lt: 25}}
 ]}, {"_id": 1})
+
+
+## Métodos de atualizar documentos
