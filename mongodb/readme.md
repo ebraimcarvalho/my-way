@@ -231,6 +231,9 @@ Atualização de Documentos
 
 1. Mostrar todos os documentos da collection produto do banco de dados seu nome
 
+- docker-compose start
+- docker exec -it mongo bash
+- mongo
 - use ebraim
 - show collections
 - db.produto.find()
@@ -273,8 +276,11 @@ Atualização de Documentos
 7. Atualizar o valor do campo descricao.conexao para “USB 3.0” de todos os documentos, com o campo descricao.conexao = “USB 2.0” e adicionar o campo “data_modificacao”, com a data da atualização dos documentos
 
 - db.produto.updateMany(
-  {"descricao.conexao": "USB"},
-  {$set: {"descricao.conexao": "USB 2.0"}, {"data_modificacao": Date()}}
+  {"descricao.conexao": "USB 2.0"},
+  {
+    $set: {"descricao.conexao": "USB 3.0"}, 
+    $currentDate: {"data_modificacao": {$type: "date"}}
+  }
 )
 
 8. Atualizar um dos elementos do array descricao.sistema de “Windows” para “Windows 10” do id 3
@@ -293,8 +299,10 @@ Atualização de Documentos
 
 10. Remover o valor “Mac” no array descricao.sistema do id 3 e adicionar o campo “ts_modificacao”, com o timestamp da atualização dos documentos
 
-- db.produto.updateOne(
-  {_id: 3},
-  {$pull: {"descricao.sistema": "Mac"}},
-  {$currentDate: {"ts_modificacao": {$type: "timestamp"}}}
+- db.produto.updateOne( 
+  {_id: 3}, 
+  {  
+    $pull: {"descricao.sistema": "Mac"},  
+    $currentDate: {"ts_modificacao": {$type: "timestamp"}} 
+  } 
 )
