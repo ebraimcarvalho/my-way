@@ -156,3 +156,75 @@ f) Mostrar apenas os id dos documentos de tenham o atributo conexão = USB ou qu
 
 
 ## Métodos de atualizar documentos
+
+
+#### Atualizar documentos
+
+db.<nomeCollection>.updateOne(<filtro>, <atualizacao>)
+db.<nomeCollection>.updateMany(<filtro>, <atualizacao>)
+
+- Atualizar um atributo, caso não existe, é criado:
+db.cliente.updateOne(
+  {_id: 1},
+  {$set: {idade: 25}}
+)
+
+- Remover o atributo
+db.cliente.updateOne(
+  {_id: 1},
+  {$unset: {idade: ""}}
+)
+
+- Atualizar N Documentos
+db.cliente.updateOne(
+  {idade: {$gte: 27}},
+  {$set: {seguro_carro: "baixo"}}
+)
+
+- Atualizar nome do atributo
+db.cliente.updateMany(
+  {},
+  {$rename: {"nome": "nome_completo"}}
+)
+
+#### Documentos com Data
+
+- Date(): Retorna a data atual como string
+- new Date(): Retorna a data atual como objeto de data UTC em formanto ISODate
+- new Date("<YYYY-mm-ddTHH:MM:ssZ>"): Retorna a data informada em formato ISODate
+- new Timestamp(): retorna o timestamp atual
+
+db.cliente.updateMany(
+  {idade: {$gte: 27}},
+  {
+    $set: {seguro_carro: "baixo"},
+    $currentDate: { atualizado: {$type: "timestamp"}}
+  }
+)
+
+$type: "" or "true" or "date" para date
+
+
+### Exercício 5
+
+Atualização de Documentos
+
+1. Mostrar todos os documentos da collection produto do banco de dados seu nome
+
+2. Atualizar o valor do campo nome para “cpu i7” do id 1
+
+3. Atualizar o atributo quantidade para o tipo inteiro do id: 1
+
+4. Atualizar o valor do campo qtd para 30 de todos os documentos, com o campo qtd >= 30
+
+5. Atualizar o nome do campo “descricao.so” para “descricao.sistema” de todos os documentos
+
+6. Atualizar o valor do campo descricao.conexao para “USB 2.0” de todos os documentos, com o campo descricao.conexão = “USB”
+
+7. Atualizar o valor do campo descricao.conexao para “USB 3.0” de todos os documentos, com o campo descricao.conexao = “USB 2.0” e adicionar o campo “data_modificacao”, com a data da atualização dos documentos
+
+8. Atualizar um dos elementos do array descricao.sistema de “Windows” para “Windows 10” do id 3
+
+9. Acrescentar o valor “Linux” no array descricao.sistema do id 4
+
+10. Remover o valor “Mac” no array descricao.sistema do id 3 e adicionar o campo “ts_modificacao”, com o timestamp da atualização dos documentos
