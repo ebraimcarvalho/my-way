@@ -310,21 +310,46 @@ Atualização de Documentos
 
 ### Exercício 6
 
-
 CRUD de Documentos
 
 1. Criar a collection teste no banco de dados seu nome
+
+- use ebraim
+- db.createCollection("teste")
 
 2. Inserir o seguinte documento:
 
 Campo: usuario, valor: Semantix
 Campo: data_acesso, valor: data atual no formato ISODate
+
+- db.teste.insertOne(
+  {
+    usuario: "Semantix",
+    data_acesso: new Date()
+  }
+)
+
 3. Buscar todos os documentos do ano >= 2020
+
+- db.teste.find(
+  {data_acesso : {$gte: ISODate("2020-01-01T00:00:00Z")}}
+)
 
 4. Atualizar o campo “data_acesso” para timestamp com o valor da atualização do usuario Semantix
 
+- db.teste.updateMany(
+  {},
+  {$currentDate: {data_acesso: {$type: "timestamp"} }}
+)
+
 5. Buscar todos os documentos
+
+- db.teste.find()
 
 6. Deletar o documento criado pelo id
 
+- db.teste.deleteOne({_id: 1})
+
 7. Deletar a collection
+
+- db.teste.drop()
