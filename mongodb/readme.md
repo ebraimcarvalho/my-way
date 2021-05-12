@@ -104,6 +104,7 @@ c) Quantidade <= 20 e apresentar apenas os campos nome e qtd
 
 d) Quantidade entre 10 e 20
 
+- db.produto.find( {"qtd": {$gte: 10, $lte: 20}} )
 - db.produto.find( {"qtd": {$gte: 10}, "qtd": {$lte: 20}} )
 
 e) Conexão = USB e não apresentar o campo _id e qtd
@@ -113,3 +114,24 @@ e) Conexão = USB e não apresentar o campo _id e qtd
 f) SO que contenha “Windows” ou “Windows 10”
 
 - db.produto.find({"descricao.so": {$in: ["Windows", "Windows 10"]}})
+
+
+### Exercício 4
+
+Outras Opções com Consultas
+
+1. Mostrar todos os documentos da collection produto
+
+2. Realizar as seguintes pesquisas na collection produto:
+
+a) Mostrar os documentos ordenados pelo nome em ordem alfabética.
+
+b) Mostrar os 3 primeiros documentos ordenados por nome e quantidade.
+
+c) Mostrar apenas 1 documento que tenha o atributo Conexão = USB.
+
+d) Mostrar os documentos de tenham o atributo conexão = USB e quantidade menor que 25.
+
+e) Mostrar os documentos de tenham o atributo conexão = USB ou quantidade menor que 25.
+
+f) Mostrar apenas os id dos documentos de tenham o atributo conexão = USB ou quantidade menor que 25.
