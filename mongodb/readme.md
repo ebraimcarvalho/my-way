@@ -33,6 +33,11 @@
 
 #### Exercícios - Comandos Básicos
 
+- Excluir Collection: db.<nomeCollection>.drop()
+- Excluir Banco de dados: db.dropDatabase()
+- Renomear Collection: db.<nomeCollection>.renameCollection('<novoNomeCollection>')
+
+
 Comando Básicos para BD, Collections e Documentos
 
 1. Criar o banco de dados com seu nome.
