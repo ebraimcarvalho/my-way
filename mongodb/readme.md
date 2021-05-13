@@ -353,3 +353,103 @@ Campo: data_acesso, valor: data atual no formato ISODate
 7. Deletar a collection
 
 - db.teste.drop()
+
+
+## Index MongoDB
+
+Index são estruturas de dados especiais que armazena o valor de um atributo específico ou conjunto de atributos, ordenado pelo valor do atributo. Usa a estrutura de dados B-Tree. É uma forma eficiente de executar as consultas do MongoDB
+
+- Index default: o MongoDB cria um index exclusivo no atributo _id, recomenda-se sempre usar esse default. A aplicação deve garantir a exclusividade dos valores no atributo _id para evitar erros
+
+#### Criação de Index
+
+- Método createIndex: Cria um índice se ainda não existir um índice com a mesma especificação, sintaxe:
+
+- db.<nomeCollection>.createIndex( {<key>, <opções>} )
+- Key: <atributo>:<valor>
+- valor: 1 = Ordenação Ascendente | 2 = Descendente
+
+
+- Exemplo criação de index: db.cliente.createIndex({nome: 1})
+
+- Visualizar indexes: db.cliente.getIndexes()
+
+- Nome padrão do index: <atributo>_<valor>_<atributo>_<valor>...
+- Exemplo: db.cliente.createIndex({nome: 1, item: -1}) = nome_1_item_-1
+- db.cliente.createIndex(
+  {nome: 1, item: -1},
+  {name: "query itens"}
+)
+
+- Index exclusivo: db.cliente.createIndex({user_id: 1}, {unique: true})
+- Index exclusivo: db.cliente.createIndex({user_id: 1, nome: 1}, {unique: true})
+
+
+#### Remover Index
+
+- Excluir um index: db.cliente.dropIndex({nome: 1})
+- Excluir todos os indexes de uma collection: db.cliente.dropIndexes()
+- Alterar um index: Remove e cria novamente
+
+
+#### Método Hint
+
+Serve para forçar o otimizador de consultas do MongoDB fazer uso de um índice específico
+
+- Sintaxe: db.cliente.find().hint({nome: 1})
+
+
+#### Método Explain
+
+Plano de execução, serve para compreender e otimizar consultas. Verificar stage queryPlanner.winningPlan
+
+- COLLSCAN: Collection Scan
+- IXSCAN: Scan com Index keys
+- FETCH: Recuperar documentos
+- SHARD_MERGE: Junção de shards
+- SHARDING_FILTER: Filtrar documentos órfãos em shards
+
+- db.cliente.find().explain()
+
+
+### Exercício 7
+
+Index e plano de execução
+
+1. Mostrar todos os documentos da collection produto do banco de dados seu nome
+
+- use ebraim
+- show collections
+- db.produto.find()
+
+2. Criar o index “query_produto” para pesquisar o campo nome do produto em ordem alfabética
+
+- db.produto.createIndex({query_produto: 1})
+
+3. Pesquisar todos os índices da collection produto
+
+- db.produto.getIndexes()
+
+4. Pesquisar todos os documentos da collection produto
+
+- db.produto.find()
+
+5. Visualizar o plano de execução do exercício 4
+
+- db.produto.find().explain()
+
+6. Pesquisar todos os documentos da collection produto, com uso da index “query_produto”
+
+- db.produto.find({})
+
+7. Visualizar o plano de execução do exercício 7
+
+- db.produto.find({}).explain()
+
+8. Remover o index “query_produto”
+
+- db.produto.dropIndex({query_produto: 1})
+
+9. Pesquisar todos os índices da collection produto
+
+- db.produto.getIndexes()
