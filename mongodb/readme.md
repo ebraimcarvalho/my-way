@@ -424,7 +424,7 @@ Index e plano de execução
 
 2. Criar o index “query_produto” para pesquisar o campo nome do produto em ordem alfabética
 
-- db.produto.createIndex({query_produto: 1})
+- db.produto.createIndex({nome: 1}, {name: "query_produto"})
 
 3. Pesquisar todos os índices da collection produto
 
@@ -440,16 +440,61 @@ Index e plano de execução
 
 6. Pesquisar todos os documentos da collection produto, com uso da index “query_produto”
 
-- db.produto.find({})
+- db.produto.find().hint({nome: 1})
 
 7. Visualizar o plano de execução do exercício 7
 
-- db.produto.find({}).explain()
+- db.produto.find().hint({nome: 1}).explain()
 
 8. Remover o index “query_produto”
 
-- db.produto.dropIndex({query_produto: 1})
+- db.produto.dropIndex({nome: 1})
 
 9. Pesquisar todos os índices da collection produto
 
 - db.produto.getIndexes()
+
+
+### Método REGEX
+
+i: ignorar case-sensitive
+
+m: Combinar várias linhas
+
+#### Retornar os clientes com nome Lucas de forma não case-sensitive
+
+- db.cliente.find({nome: {$regex: "lucas", $options: "i"}})
+- db.cliente.find({nome: {$regex: /lucas/, $options: "i"}})
+- db.cliente.find({nome: {$regex: /lucas/i}})
+
+
+#### Retornar os clientes da cidade de São Paulo, pesquisando por sao paulo
+
+- db.cliente.find({cidade: {$regex: /s.o paulo/i}})
+
+#### Retornar os clientes da cidade que começam com "São"
+
+- db.cliente.find({cidade: {$regex: /^são/i}})
+
+#### Retornar os cpf que contenham letras
+
+- db.cliente.find({cpf: {$regex: /\w*/im}})
+
+
+#### Exercício 8
+
+Consultas com Regex
+
+1. Mostrar todos os documentos da collection produto do banco de dados seu nome
+
+2. Buscar os documentos com o atributo nome,  que contenham a palavra “cpu”
+
+3. Buscar os documentos  com o atributo nome, que começam por “hd” e apresentar os campos nome e qtd
+
+4. Buscar os documentos  com o atributo descricao.armazenamento, que terminam com “GB” ou “gb” e apresentar os campos nome e descricao
+
+5. Buscar os documentos  com o atributo nome, que contenha a palavra memória, ignorando a letra “o”
+
+6. Buscar os documentos  com o atributo qtd  que contenham valores com letras, ao invés de números.
+
+7. Buscar os documentos com o atributo descricao.sistema, que tenha exatamente a palavra “Windows”
