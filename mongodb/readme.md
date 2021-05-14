@@ -708,3 +708,98 @@ Arquivos para Dataset
   {$sort: {ultimo_ano: -1}},
   {$limit: 5}
 ])
+
+
+#### LOOKUP MongoDB
+
+
+##### Agregação Lookup
+
+db.funcionario.aggregate([
+  {$lookup: {
+    from: "vendas"
+    localField: "cod_func"
+    foreignField: "cod_func"
+    as: "vendasFuncionario"
+  }},
+  {$project: {"_id": 0, "cod_func": 1, "vendasFuncionario.cod_cliente": 1}}
+])
+
+db.alunos.aggregate([    
+  {$lookup: {
+    from: "cursos",
+    localField: "id_curso",          foreignField: "id_curso",          
+    as: "JoinIdCurso"
+  }}
+])
+
+db.alunos.aggregate([ 
+  {$lookup: {  
+    from: "cursos",  
+    localField: "id_curso",  
+    foreignField: "id_curso",  
+    as: "curso" 
+  }}, 
+  {$project: {
+    "_id": 0,
+    "id_discente": 1, 
+    "nivel": 1, 
+    "curso.id_curso": 1, 
+    "curso.id_unidade": 1, 
+    "curso.nome": 1
+  }} 
+])
+
+
+##### Exercicio mongo DB Aggregation Lookup
+
+
+Agregação com Lookup e project
+ 
+
+1. Crie a collection cursos no banco de dados escola
+
+- use escola
+- db.createCollection("escola")
+
+2. Importe o arquivo “dataset\cursos.csv” para a collection cursos, com os seguintes atributos:
+
+id_curso: Number
+id_unidade: Number
+nome: String
+nivel: String
+Arquivos do Dataset
+
+- fazer importação pelo compass
+
+3. Realizar o left outer join da collection alunos e cursos, quando o id_curso dos 2 forem o mesmo.
+
+- db.alunos.aggregate([    
+  {$lookup: {
+    from: "cursos",
+    localField: "id_curso",          foreignField: "id_curso",          
+    as: "JoinIdCurso"
+  }}
+])
+
+4. Realizar o left outer join da collection alunos e cursos, quando o id_curso dos 2 forem o mesmo e visualizar apenas os seguintes campos
+
+Alunos: id_discente, nivel
+Cursos: id_curso, id_unidade, nome
+
+- db.alunos.aggregate([ 
+  {$lookup: {  
+    from: "cursos",  
+    localField: "id_curso",  
+    foreignField: "id_curso",  
+    as: "curso" 
+  }}, 
+  {$project: {
+    "_id": 0,
+    "id_discente": 1, 
+    "nivel": 1, 
+    "curso.id_curso": 1, 
+    "curso.id_unidade": 1, 
+    "curso.nome": 1
+  }} 
+])
