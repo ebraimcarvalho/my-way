@@ -569,3 +569,64 @@ nome: João, cidade: São Paulo, data_cadastro: 05/08/2020
 8. Deletar o documento com o nome João
 
 9. Deletar a collection clientes
+
+
+### Introdução a Agregação
+
+Maneiras de realizar agregações:
+
+1. Agregação de propósito único: Mais simples, porém limitadas
+
+2. Função map-reduce: Forma tradicional de realizar agregações em Big Data, faz uso de funções Javascript, tem mais opções de manipulação de dados porém é difícil a implementação
+
+3. Pipeline de agregação: Melhor desempenho que o map-reduce, MongoDB adiciona operadores novos a cada versão: 4.4 lançou o $accumulator e o $function
+
+
+#### Agregação de propósito único
+
+Agregam documentos em uma única coleção. Métodos:
+Count
+
+Distinct
+
+EstimatedDocumentCount // Não usa um filtro de consulta, usa metadados para retornar a contagem de uma coleção
+
+
+##### Sintaxe
+
+- db.<nomeCollection>.count()
+- db.<nomeCollection>.count({<filtro>}) ou db.<nomeCollection>.find( {<filtro>} ).count()
+
+- db.<nomeCollection>.distinct("<atributo>")
+
+- db.<nomeCollection>.estimatedDocumentCount()
+
+
+#### Agregação pipeline
+
+
+Agrupar valores de vários documentos e executar operações nos dados agrupados para retornar um único resultado
+
+##### Sintaxe
+
+- db.<nomeCollection>.aggregate(
+  [
+    {$<estagio>:<parametros>},
+    {$<estagio>:<operadoresExpressao>},
+    {$<estagio>:<parametro>, <operadoresExpressao>},
+  ]
+)
+
+Exemplo:
+
+- db.funcionarios.aggregate([
+  {$match: {status: "Ativo"}},
+  {$group: {
+    _id: "$setor",
+    total: {$sum: "$vendas"},
+    media: {$avg: "$vendas"},
+    quantidade: {$sum: 1}
+  }},
+  {$sort: {_id: 1}},
+  {$limit: 10}
+])
