@@ -682,7 +682,7 @@ Arquivos para Dataset
   {$match: {nivel: "M"}},
   {$group: {
     _id: "$id_curso",
-    ultimo_ano: {$last: "$ano_ingresso"}
+    ultimo_ano: {$max: "$ano_ingresso"}
   }}
 ])
 
@@ -694,7 +694,7 @@ Arquivos para Dataset
     _id: "$id_curso",
     ultimo_ano: {$last: "$ano_ingresso"}
   }},
-  {$sort: {ultimo_ano: 1}}
+  {$sort: {ultimo_ano: -1}}
 ])
 
 10. Visualizar o último ano que teve os 5 últimos cursos (id_curso) dos níveis “M”, ordenados pelos anos mais novos
@@ -705,6 +705,6 @@ Arquivos para Dataset
     _id: "$id_curso",
     ultimo_ano: {$last: "$ano_ingresso"}
   }},
-  {$sort: {ultimo_ano: 1}},
+  {$sort: {ultimo_ano: -1}},
   {$limit: 5}
 ])
