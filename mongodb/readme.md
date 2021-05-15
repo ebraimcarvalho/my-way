@@ -717,9 +717,9 @@ Arquivos para Dataset
 
 db.funcionario.aggregate([
   {$lookup: {
-    from: "vendas"
-    localField: "cod_func"
-    foreignField: "cod_func"
+    from: "vendas",
+    localField: "cod_func",
+    foreignField: "cod_func",
     as: "vendasFuncionario"
   }},
   {$project: {"_id": 0, "cod_func": 1, "vendasFuncionario.cod_cliente": 1}}
@@ -728,7 +728,8 @@ db.funcionario.aggregate([
 db.alunos.aggregate([    
   {$lookup: {
     from: "cursos",
-    localField: "id_curso",          foreignField: "id_curso",          
+    localField: "id_curso",          
+    foreignField: "id_curso",          
     as: "JoinIdCurso"
   }}
 ])
