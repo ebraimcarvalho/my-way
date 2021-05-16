@@ -367,7 +367,7 @@ Index são estruturas de dados especiais que armazena o valor de um atributo esp
 
 - db.<nomeCollection>.createIndex( {<key>, <opções>} )
 - Key: <atributo>:<valor>
-- valor: 1 = Ordenação Ascendente | 2 = Descendente
+- valor: 1 = Ordenação Ascendente | -1 = Descendente
 
 
 - Exemplo criação de index: db.cliente.createIndex({nome: 1})
