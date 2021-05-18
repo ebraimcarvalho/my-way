@@ -71,3 +71,82 @@ Substituir o valor da chave - Default
 Verificar o tamanho do valor
 - STRLEN chave
 // (intenger) 9
+
+String como um inteiro
+
+- INCR chave
+- DECR chave
+- INCRBY chave <incremento>
+- DECRBY chave <incremento>
+
+### Observação: INCR Atômico
+
+Se ao mesmo tempo 2 clientes lerem a chave 10 e ambos incrementarem para 11 o valor final é 12. Por ser aômico, cada comando é executado de uma vez.
+
+### Reduzir latência
+
+Podemos definir e recuperar várias chaves em um comando, reduzindo a latencia, exemplo:
+
+- MSET <chave1> <valor1> <chave2> <valor2> <chave3> <valor3>
+
+- MGET <chave1> <chave2> <chave3>
+
+
+#### Opções com chaves
+
+Verificar se a chave existe
+- exists <chave>
+
+Deletar a chave
+- del <chave>
+
+Tipo da chave
+- type <chave>
+
+
+#### Persistencia de chaves
+
+Definir tempo para a chave expirar.
+
+- expire <chave> <tempo segundos>
+
+- pexpire <chave> <tempo milisegundos>
+
+- set <chave> <valor> ex <tempo segundos>
+
+- set <chave> <valor> px <tempo milisegundos>
+
+Verificar o tempo restante de vida da chave
+
+- ttl <chave> // reposta em segundos
+- pttl <chave> // resposta em milisegundos
+
+Remover tempo para a chave expirar
+
+- persist <chave>
+
+
+### Redis Lista
+
+
+Lista é uma sequencia de elementos ordenados, linked list, tem tempo constante de inserção
+
+Adicionar um elemento no inicio
+
+- lpush <chave> <valor>
+
+Adicionar um elemento no final
+
+- rpush <chave> <valor>
+
+Extrair elementos em um intervalor na lista
+
+- lrange <chave> <inicio> <fim>
+
+Recuperar um elemento e eliminá-lo.
+
+Do início da lista
+- lpop chave
+
+Do final da lista
+-rpop chave
