@@ -42,3 +42,32 @@ volumes:
 - docker exec -it redis bash
 - redis-server --version
 - redis-cli --version
+
+
+#### Redis String
+
+Único tipo de dados Memchached: cache para páginas web
+
+Chaves também são string
+
+Sintaxe:
+
+Definir um valor de string
+- SET <chave> <valor>
+
+Recuperar um valor de string
+- GET <chave>
+
+###### Opções para chave String
+
+Falhar se a chave existir
+- SET chave novoValor nx
+// (nil) a chave já foi definida anteriormente
+
+Substituir o valor da chave - Default
+- SET chave novoValor xx
+// OK
+
+Verificar o tamanho do valor
+- STRLEN chave
+// (intenger) 9
