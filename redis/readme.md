@@ -211,4 +211,71 @@ Do início da lista
 - lpop chave
 
 Do final da lista
--rpop chave
+- rpop chave
+
+
+#### Redis Lista
+
+
+Recuperar um elemento e eliminálo da lista, bloqueando se a lista estiver vazia até o tempo especificado, serve para evitar respostas null e para implementar uma fila de lpush e rpop, por exemplo.
+
+- blop <chave> <tempo>
+
+- brpop <chave> <tempo>
+
+Retornará null quando não existir elementos e o tempo se esgotar
+
+Definir um novo intervalo para a lista, removendo todos os elementos fora do intervalo
+
+- ltrim <chave> <novoinicio> <novofim>
+
+Visualizar o tamanho da lista
+
+- llen <chave>
+
+
+### Redis Exercícios 2 - Listas
+
+
+1. Criar a chave “views:ultimo_usuario" e insira nesta ordem os seguintes valores como lista:
+
+Final da lista “Joao”
+Final da lista “Ana”
+Inicio da lista “Carlos”
+Final da lista “Carol”
+
+- rpush views:ultimo_usuario Joao Ana
+- lpush views:ultimo_usuario Carlos
+- rpush views:ultimo_usuario Carol
+
+2. Visualizar todos os elementos da lista
+
+- lrange views:ultimo_usuario 0 -1
+
+3. Visualizar todos os elementos da lista, com exceção do último
+
+- lrange views:ultimo_usuario 0 -2
+
+4. Visualizar o tamanho da lista
+
+- llen views:ultimo_usuario
+
+5. Redefinir o tamanho da lista, removendo o primeiro elemento (Sem usar o pop)
+
+- ltrim views:ultimo_usuario 1 -1
+
+6. Visualizar o tamanho da lista
+
+- llen views:ultimo_usuario
+
+7. Recuperar os elementos da lista da seguinte ordem:
+
+Primeiro
+Último
+Primeiro com bloqueio de 5 segundos se a lista estiver vazia
+Primeiro com bloqueio de 5 segundos se a lista estiver vazia
+
+- lpop views:ultimo_usuario
+- rpop views:ultimo_usuario
+- blpop views:ultimo_usuario 5
+- blpop views:ultimo_usuario 5
