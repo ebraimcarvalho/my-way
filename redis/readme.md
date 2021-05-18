@@ -11,3 +11,34 @@ Seu armazenamento é em memória, o que lhe permite um acesso rápido aos dados 
 Utiliza um modelo cliente-servidor para troca de informações, onde um cliente envia um comando para um servidor, que retorna uma resposta em seguida.
 Enquanto a resposta não é enviada, aquela porta de entrada é fechada, o que caracteriza uma aplicação single-threaded, um comando por vez e atômicos.
 Seu uso é feito através de uma aplicação, escrita em diversas linguagens ou pelo Redis CLI
+
+
+#### Instalação via docker
+
+- criar estrutura de pastas redis/docker-compose.yml
+
+
+// docker-compose.yml
+version: '3.1'
+
+services:
+
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - data:/data
+    entrypoint: redis-server --appendonly yes
+    restart: always      
+
+volumes:
+  data:
+
+
+- docker pull redis
+- docker-compose up -d
+- docker exec -it redis bash
+- redis-server --version
+- redis-cli --version
