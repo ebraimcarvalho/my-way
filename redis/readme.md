@@ -463,3 +463,19 @@ O score representa a quantidade de pesquisas feitas para aquele produto na aplic
 8. Visualizar todos os produtos
 
 - zrange pesquisa:produto 0 -1 withscores
+
+
+### REDIS Hashes
+
+
+Hashes são pares de valor de campo, serve também para repreentar objetos
+
+Definir o valor de um campo de hash
+- hmset <chave> <campo1> <valor1> <campo2> <valor2>
+
+Obter o valor de um campo ou de vários campos
+- hget <chave> <campo>
+- hmget <chave> <campo1> <campo2>
+
+Obter todos os campos e valores de uma hash
+- hgetall <chave>
