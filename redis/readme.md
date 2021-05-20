@@ -479,3 +479,24 @@ Obter o valor de um campo ou de vários campos
 
 Obter todos os campos e valores de uma hash
 - hgetall <chave>
+
+
+#### Outras opções com Hashes
+
+Incrementar valores nos campos
+- hincrby <chave> <campo> <incremento>
+
+Obter o número de campos
+- hlen <chave>
+
+Obter o tamanho do valor de um campo
+- hstrlen <chave> <campo>
+
+Obter todos os campos da hash
+- hkeys <chave> 
+
+Obter todos os valores da hash
+- hvals <chave>
+
+Deletar o campo
+- hdel <chave> <campo>
