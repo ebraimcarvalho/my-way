@@ -686,6 +686,7 @@ Arquivos para Dataset
   }}
 ])
 
+
 9. Visualizar o último ano que teve cada curso (id_curso) dos níveis “M”, ordenados pelos anos mais novos de cada curso
 
 - db.alunos.aggregate([

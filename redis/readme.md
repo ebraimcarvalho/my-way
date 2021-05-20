@@ -279,3 +279,7 @@ Primeiro com bloqueio de 5 segundos se a lista estiver vazia
 - rpop views:ultimo_usuario
 - blpop views:ultimo_usuario 5
 - blpop views:ultimo_usuario 5
+
+
+### REDIS Sets
+
