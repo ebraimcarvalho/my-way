@@ -283,3 +283,22 @@ Primeiro com bloqueio de 5 segundos se a lista estiver vazia
 
 ### REDIS Sets
 
+Sets são coleções não ordenadas de strings, serve para expressar relações entre objetos
+
+Adicionar elementos
+- sadd <chave> <valor1> <valor2> ...
+
+Retornar todos os elementos
+- smembers <chave>
+
+Recuperar um elemento aleatório e removê-lo do set
+- spop <chave>
+
+Verificar se um elemento existe
+- sismember <chave> <valor>
+
+Visualizar o número de elementos
+- scard <chave>
+
+Remover um elemento
+- srem <chave> <valor>
