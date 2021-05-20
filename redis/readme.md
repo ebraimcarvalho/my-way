@@ -500,3 +500,51 @@ Obter todos os valores da hash
 
 Deletar o campo
 - hdel <chave> <campo>
+
+
+#### Exercícios - Hashes
+
+1. Deletar a chave “usuario:100”
+
+- hdel usuario:100
+- del usuario:100
+
+2. Criar uma chave “usuario:100” do tipo hash com a seguinte estrutura
+
+nome – Augusto
+estado – SP
+views – 10
+
+- hmset usuario:100 nome Augusto estado SP views 10
+
+3. Visualizar todas as chaves e valores
+
+- hgetall usuario:100
+
+4. Contar a quantidade de campos
+
+- hlen usuario:100
+
+5. Visualizar apenas o nome e views
+
+- hmget usuario:100 nome views
+
+6. Contar o tamanho do valor do campo nome
+
+- hstrlen usuario:100 nome
+
+7. Incrementar em 2 o valor do campo views
+
+- hincrby usuario:100 views 2
+
+8. Visualizar apenas os campos
+
+- hkeys usuario:100
+
+9. Visualizar apenas os valores
+
+- hvals usuario:100
+
+10. Deletar o campo estado
+
+- hdel usuario:100 estado
