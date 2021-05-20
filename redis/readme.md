@@ -366,3 +366,80 @@ Criar o set "pesquisa:produto_desconto" com a união entre os 2 sets
 - sinter pesquisa:produto pesquisa:desconto
 - sdiff pesquisa:produto pesquisa:desconto
 - sunionstore pesquisa:produto_desconto pesquisa:produto pesquisa:desconto
+
+
+#### Sets Ordenados
+
+Sorted sets são compostos de elementos de string únicos e não repetitivos, combinação de Set e Hash. Cada elemento é associado a um score, semelhante ao Hash
+
+Adicionar elementos
+- zadd <chave> <score1> <valor1> <score2> <valor2>
+
+Visualizar elementos em um intervalo na lista
+
+Crescente
+- zrange <chave> <inicio> <fim> [withscores]
+
+Descrescente
+- zrevrange <chave> <inicio> <fim> [withscores]
+
+
+#### Outras funções
+
+Recuperar um elemento e remove-lo do set
+
+Maior score
+- zpopmax <chave>
+
+Menor score
+- zpopmin <chave>
+
+Bloquear se o set estiver vazio até um determinado tempo t
+
+Maior score
+- bzpopmax <chave> <t>
+
+Menor score
+- bzpopmin <chave> <t>
+
+Visualizar a posição de um elemento
+- zrank <chave> <valor>
+- zrevrank <chave> <valor>
+
+Visualizar o score de um elemento
+- zscore <chave> <valor>
+
+Visualizar o número de elementos
+- zcard <chave>
+
+Remover um elemento específico
+- zrem <chave> <valor>
+
+
+#### Exercício REDIS - Sets Ordenados
+
+1. Deletar a chave "pesquisa:produto"
+
+2. Criar a chave "pesquisa:produto" do tipo set ordenado com os seguintes valores:
+
+Valor: monitor, Score: 100
+Valor: HD, Score: 20
+Valor: mouse, Score: 10
+Valor: teclado, Score: 50
+O score representa a quantidade de pesquisas feitas para aquele produto na aplicação
+
+1. Visualizar a quantidade de produtos
+
+2. Visualizar todos os produtos do mais pesquisado ao menos pesquisado
+
+3. Visualizar o rank do produto teclado
+
+4. Visualizar o score do produto teclado
+
+5. Remover o valor HD da chave
+
+6. Recuperar e remover do set o produto mais pesquisado
+
+7. Recuperar e remover do set o produto menos pesquisado
+
+8. Visualizar todos os produtos
