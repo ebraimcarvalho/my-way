@@ -506,7 +506,6 @@ Deletar o campo
 
 1. Deletar a chave “usuario:100”
 
-- hdel usuario:100
 - del usuario:100
 
 2. Criar uma chave “usuario:100” do tipo hash com a seguinte estrutura
