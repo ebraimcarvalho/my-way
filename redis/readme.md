@@ -556,3 +556,58 @@ Implementar o paradigma de mensagens Publish/Subscribe (Publicar/Assinar). Mensa
 - publish <canal> <mensagem>
 
 - subscribe <canal1> <canal2...>
+
+Assinar canais através de um padrão
+
+- psubscribe <padrao1> <padrao2...>
+
+
+##### Mensagens Cancelamento
+
+
+Cancelar a assinatura dos canais
+
+- unsubscribe <canal1> <canal2...>
+
+Cancelar todos os canais
+
+- unsubscribe
+
+Cancelar a assinatura dos canais através de um padrão
+
+- punsubscribe <padrao1> <padrao2...>
+
+
+### Exercícios - Pub/Sub
+
+1. Criar um assinante para receber as mensagens do canal noticias:sp
+
+- subscribe noticias:sp
+
+2. Criar um editor para enviar as seguintes mensagens no canal noticias:sp
+
+Msg 1
+Msg 2
+Msg 3
+
+- publish noticias:sp "Msg 1"
+- publish noticias:sp "Msg 2"
+- publish noticias:sp "Msg 3"
+
+3. Cancelar o assinante do canal noticias:sp
+
+- unsubscribe noticias:sp
+
+4. Criar um assinante para receber as mensagens dos canais com o padrão noticias:*
+
+- psubscribe noticias:*
+
+5. Criar um editor para enviar as seguintes mensagens no canal noticias:rj
+
+Msg 4
+Msg 5
+Msg 6
+
+- publish noticias:rj "Msg 4"
+- publish noticias:rj "Msg 5"
+- publish noticias:rj "Msg 6"
