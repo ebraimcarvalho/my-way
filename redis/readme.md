@@ -547,3 +547,12 @@ views – 10
 10. Deletar o campo estado
 
 - hdel usuario:100 estado
+
+
+### REDIS Pub/Sub
+
+Implementar o paradigma de mensagens Publish/Subscribe (Publicar/Assinar). Mensagens dos remetentes (editor) são enviadas diretamente para um destinatário (assinante). Mensagens são publicadas através de um canal, sem o editor saber quem são os assinantes.
+
+- publish <canal> <mensagem>
+
+- subscribe <canal1> <canal2...>
