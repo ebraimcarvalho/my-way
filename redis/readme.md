@@ -611,3 +611,46 @@ Msg 6
 - publish noticias:rj "Msg 4"
 - publish noticias:rj "Msg 5"
 - publish noticias:rj "Msg 6"
+
+
+### Configuração Básica
+
+Ler os parametros de configuração do servidor Redis em execução. Os parametros podem ser configurados através do arquivo redis.conf
+
+Ler um parametro
+- config get <parametro>
+- config get appendonly
+
+Ler um padrao de parametros
+- config get <parametro>*
+
+Ler todos os parametros
+- config get *
+
+
+#### Configuração básica - Cache
+
+Cache LRU - Least Recently Used
+
+Permite que o Redis remova automaticamente os dados antigos conforme adiciona novos dados.
+
+Principais configurações:
+
+Maxmemory: Configurar um limite de memória para o dataset
+
+Maxmemory-policy: Configurar a política quando o limite de memória for atingido
+
+- noeviction // Retorna erros quando o limite de memoria é atingido
+- allkeys-lru // Remove as chaves menos usadas recentemente
+- volatile-lru // Remove as chaves menos usadas recentemente com expiração
+- allkeys-random // Remmove as chaves aleatoriamente
+- volatile-random // Remove as chaves aleatoriamente com expiração
+- volatile-ttl // Remove as chaves menos usadas com ttl menor
+
+Sintaxe:
+
+- config get maxmemory
+- config get maxmemory-policy
+- config set maxmemory 2mb
+- config set maxmemory-policy allkeys-lru
+- config get maxmemory*
