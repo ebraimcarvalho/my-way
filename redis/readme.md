@@ -688,3 +688,6 @@ Sintaxe:
 
 - config set maxmemory 1mb
 - config set maxmemory-policy allkeys-lru
+
+
+Prova finalizada!
