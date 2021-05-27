@@ -94,17 +94,31 @@ seguintes questões:
 
 a) Quantos livros cada autor escreveu?
 
+- SELECT COUNT(id_livro), idautor FROM livraria.autoria GROUP BY idautor;
+
 b) Qual o nome/título dos livros que possuem mais de um autor?
 
+- SELECT id_livro, COUNT(id_livro) as qtd, l.titulo_livro FROM livraria.autoria a JOIN livraria.livro l ON a.id_livro = l.id GROUP BY id_livro HAVING qtd > 1;
+
 c) Quantos usuários cadastrados possuem nome iniciando com a letra P?
+
+- select count(*) from livraria.usuario where nome like 'P%';
 
 d) Qual o número de exemplares de cada obra existente na biblioteca? Quantos 
 estão disponíveis, emprestados, extraviados e em manutenção?
 
+- select count(id_exemplar), id_livro from livraria.exemplar group by id_livro;
+- select count(id_exemplar), situação from livraria.exemplar group by situação;
+
 e) Atualmente, quantos usuários estão suspensos na biblioteca?f) Considerando os números de empréstimos realizados por cada usuário, qual(is) 
 o(s) nome(s) do(s) usuário(s) que mais fez(fizeram) empréstimos na biblioteca?
 
+- select count(*) from usuario where status = 'Suspenso';
+- select count(idusuario) as qtd, idusuario, usuario.nome from emprestimo, usuario WHERE emprestimo.idusuario = usuario.id group by idusuario order by qtd DESC;
+
 g) Existe algum idioma no qual os usuários nunca fizeram empréstimos? Qual?
+
+- select distinct(livro.idioma) from emprestimo join exemplar on emprestimo.idexemplar = exemplar.id_exemplar join livro on exemplar.id_livro = livro.id;
 
 h) Qual o nome do livro e o(s) nome(s) de seu(s) respectivo(s) autor(es) para o livro 
 mais emprestado da biblioteca

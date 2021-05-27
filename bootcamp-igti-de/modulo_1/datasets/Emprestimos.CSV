@@ -1,4 +1,4 @@
-id,idexemplar,idusuario,data_emprestimo (MM/DD/YYYY),data_prevista_devolucao,data_devolucao,hora_devolução
+id,idexemplar,idusuario,data_emprestimo (MM/DD/YYYY),data_prevista_devolucao,data_devolucao,hora_devoluÃ§Ã£o
 1,19,12,2004-09-22,2004-10-02,2004-10-02,12:14:23
 2,20,14,1998-03-23,1998-04-02,1998-04-02,17:42:46
 3,21,12,1990-08-26,1990-09-05,1990-09-05,10:02:07
