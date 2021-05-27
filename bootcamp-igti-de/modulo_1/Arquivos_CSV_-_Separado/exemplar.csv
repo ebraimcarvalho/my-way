@@ -1,0 +1,36 @@
+id_exemplar;id_livro;ISBN;id-exemplar;situação
+1;1;764321;1;disponível
+2;1;764321;2;disponível
+3;2;4347421;1;extraviado
+4;3;64732829;1;em manutenção
+5;3;64732829;2;disponível
+6;4;236678678;1;disponível
+7;5;12354321;1;disponível
+8;6;67849098;1;disponível
+9;7;274532617;1;disponível
+10;8;7644309;1;disponível
+11;9;98076534;1;disponível
+12;10;3214667-1;1;emprestado
+13;10;3214667-1;2;extraviado
+14;11;3214667-2;1;disponível
+15;11;3214667-2;2;disponível
+16;11;3214667-2;3;disponível
+17;12;12323456-1;1;disponível
+18;12;12323456-1;2;disponível
+19;13;8764321-1;1;disponível
+20;13;8764321-1;2;disponível
+21;13;8764321-1;3;disponível
+22;14;8764321-2;1;disponível
+23;14;8764321-2;2;em manutenção
+24;14;8764321-2;3;disponível
+25;15;8764321-3;1;disponível
+26;16;98764321-1;1;disponível
+27;16;98764321-1;2;disponível
+28;16;98764321-1;3;disponível
+29;17;98764321-2;1;em manutenção
+30;17;98764321-2;2;disponível
+31;18;98764321-3;1;disponível
+32;19;68764321-1;1;disponível
+33;22;123456-1;1;disponível
+34;22;123456-1;2;disponível
+35;23;123456-2;1;disponível
