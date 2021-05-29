@@ -177,3 +177,44 @@ kafka-console-producer --broker-list localhosto:9092 --topic <nomeTópico>
 - Enviar dados para todos reconhecerem (Leader e ISR)
 
 kafka-console-producer --broker-list localhost:9092 --topic <nomeTópico> --producer-property acks=all
+
+
+
+##### Consumer Console
+
+- Receber mensagens em tempo real:
+
+kafka-console-consumer --bootstrap-server localhost:9092 --topic <nomeTópico>
+
+
+- Receber mensagens desde a criação do tópico
+
+kafka-console-consumer --bootstrap-server localhost:9092 --topic <nomeTópico> --from-beginning
+
+
+- Criar grupo de consumidores
+
+kafka-console-consumer --bootstrap-server localhost:9092 --topic <nomeTópico> --group <nomeGrupo>
+
+
+
+##### Grupos de consumidores - Console
+
+- Listar grupos: 
+
+kafka-consumer-groups --bootstrap-server localhost:9092 --list
+
+
+- Descrever grupo:
+
+kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group <nomeGrupo>
+
+
+- Redefinir o deslocamento do mais antigo:
+
+kafka-consumer-groups --bootstrap-server localhost:9092 --group <nomeGrupo> --reset-offsets --to-earliest --execute --topic <nomeTópico>
+
+
+- Alterar o deslocamento:
+
+kafka-consumer-groups --bootstrap-server localhost:9092 --group <nomeGrupo> --reset-offsets --shift-by 2 --execute --topic <nomeTópico>
