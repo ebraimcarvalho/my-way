@@ -17,6 +17,13 @@ Apache kafka é um sistema para gerenciamento de fluxos de dados em tempo real, 
 4. Connector API: Permite criar e executar produtores ou consumidores reutilizáveis que conectam tópicos do Kafka e aplicativos ou sistemas de dados existentes
 
 
+### Confluent
+
+
+Surgiu para facilitar a construção de pipelines de dados, aplicativos de streaming em tempo real e a integração de dados de várias fontes e locais.
+Buscando simplificar a conexão de fontes de dados ao Kafka, a criação de aplicativos com o Kafka e oferece proteção, monitoramento e gerenciamento.
+
+
 ##### Instalação Cluster Kafka
 
 1. Criar a pasta kafka e inserir o arquivo docker-compose.yml da Guia Arquivos do treinamento
@@ -44,4 +51,17 @@ Docker-compose: https://docs.docker.com/compose/install/ (Links para um site ext
 
 6. Visualizar a interface do Confluent Control Center
 
-Acesso: http://localhost:9021/insta
+Acesso: http://localhost:9021/
+
+
+#### Confluent CLI
+
+Serve para instalar, administrar a plataforma Confluent. É uma aplicação para uso de desenvolvimento não adequeado para ambiente de produção.
+
+
+##### Execução
+
+<path-confluent>/bin/confluent <comando>
+
+Exemplo: <path-confluent>/bin/confluent list
+
