@@ -117,7 +117,7 @@ Boa prática para cada partição é:
 Responsável por enviar os dados, publicar os dados nos tópicos de sua escolha. Escolhe qual registro atribuir a qual partição dentro do tópico para balancear a carga através de uma chave de registro
 
 
-###### confirmação de escrita
+###### Confirmação de escrita
 
 Existem 3 tipos de confirmação de escrita (acks) para o produtor:
 
@@ -224,18 +224,30 @@ kafka-consumer-groups --bootstrap-server localhost:9092 --group <nomeGrupo> --re
 ### Exercício Kafka por linha de comando
 
 
-
 1. Criar o tópico msg-cli com 2 partições e 1 réplica
+
+- docker exec -it broker bash
+- kafka-topics --version
+- kafka-topics --bootstrap-server localhost:9092 --topic msg-cli --create --partitions 2 --replication-factor 1
 
 2. Descrever o tópico msg-cli
 
+- kafka-topics --bootstrap-server localhost:9092 --topic msg-cli --describe
+
 3. Criar o consumidor do grupo app-cli
+
+- kafka-console-consumer --bootstrap-server localhost:9092 --topic msg-cli --group app-cli
 
 4. Enviar as seguintes mensagens do produtor
 
 Msg 1
 Msg 2
+
+- kafka-console-producer --broker-list localhost:9092 --topic msg-cli
+
 5. Criar outro consumidor do grupo app-cli
+
+- kafka-console-consumer --bootstrap-server localhost:9092 --topic msg-cli --group app-cli
 
 6. Enviar as seguintes mensagens do produtor
 
@@ -243,7 +255,13 @@ Msg 4
 Msg 5
 Msg 6
 Msg 7
+
+- kafka-console-producer --broker-list localhost:9092 --topic msg-cli
+
+
 7. Criar outro consumidor do grupo app2-cli
+
+- kafka-console-consumer --bootstrap-server localhost:9092 --topic msg-cli --group app2-cli
 
 8. Enviar as seguintes mensagens do produtor
 
@@ -251,16 +269,34 @@ Msg 8
 Msg 9
 Msg 10
 Msg 11
+
+- kafka-console-producer --broker-list localhost:9092 --topic msg-cli
+
+
 9. Parar o app-cli
+
+- ctrl + d
 
 10. Definir o deslocamento para -2 offsets do app-cli
 
+- kafka-consumer-groups --bootstrap-server localhost:9092 --group app-cli --reset-offsets --shift-by -2 --execute --topic msg-cli
+
 11. Descrever grupo
+
+- kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group app-cli
 
 12. Iniciar o app-cli
 
+- kafka-console-consumer --bootstrap-server localhost:9092 --topic msg-cli --group app-cli
+
 13. Redefinir o deslocamento o app-cli
+
+- kafka-consumer-groups --bootstrap-server localhost:9092 --group app-cli --reset-offsets --to-earliest --execute --topic msg-cli
 
 14. Iniciar o app-cli
 
+- kafka-console-consumer --bootstrap-server localhost:9092 --topic msg-cli --group app-cli
+
 15. Listar grupo
+
+- kafka-consumer-groups --bootstrap-server localhost:9092 --list
