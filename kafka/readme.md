@@ -1,6 +1,14 @@
 ## Kafka
 
+É uma plataforma de Streaming distribuída Open Source, que publica e assina streams de registros e tem fluxos de registros com processamento em tempo real e armazenamento tolerante a falhas.
 
+1. Producer API: Permite que um aplicativo publique um fluxo de registros em um ou mais tópicos do Kafka
+
+2. Consumer API: Permite que um aplicativo assine um ou mais tópicos e processe o fluxo de registros produzidos para eles
+
+3. Streams API: Permite que um aplicativo transforme os fluxos de entrada em fluxos de saída
+
+4. Connector API: Permite criar e executar produtores ou consumidores reutilizáveis que conectam tópicos do Kafka e aplicativos ou
 
 
 Instalação Cluster Kafka
