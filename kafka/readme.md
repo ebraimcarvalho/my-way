@@ -65,3 +65,48 @@ Serve para instalar, administrar a plataforma Confluent. É uma aplicação para
 
 Exemplo: <path-confluent>/bin/confluent list
 
+
+##### Comandos CLI
+
+confluent <comando>
+
+- consume <topico>
+- produce <topico>
+
+- config <conector>
+- load <conector>
+- unload <conector>
+
+- Version <serviço>
+- help <comando>
+
+- list
+- start <serviço>
+- stop <serviço>
+- status <serviço>
+- top <serviço>
+- log <serviço>
+- current
+
+
+
+#### Brokers e Tópicos
+
+
+##### Tópicos
+
+Fluxo de registros similar a uma tabela SQL dividido em partições. A partição é o local onde as mensagens são gravadas em sequencia ordenada e imutável de registro. Cada registro na partição é atribuído a um id sequencial (offset) exclusivamente do registro na partição. O tópico pode ter multi-assinantes, 0, 1 ou N para consumir os dados gravados.
+
+
+##### Brokers
+
+Também chamados de corretores ou servidores, armazenam os tópicos. O Cluster Kafka é composto por múltiplos corretores, em ambiente de produção o ideal é ter no mínimo 3. Cada corretor/servidor é identificado por um id.
+
+
+##### Replicação dos tópicos
+
+Boa prática para cada partição é:
+
+- 1 Corretor líder (Leader): responsável por receber os dados
+
+- 2 Corretores de réplica do líder (ISR - in-sync replica): responsável por sincronizar os dados.
