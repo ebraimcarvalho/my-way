@@ -275,7 +275,7 @@ Msg 11
 
 9. Parar o app-cli
 
-- ctrl + d
+- ctrl + c
 
 10. Definir o deslocamento para -2 offsets do app-cli
 
