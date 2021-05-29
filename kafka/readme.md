@@ -110,3 +110,70 @@ Boa prática para cada partição é:
 - 1 Corretor líder (Leader): responsável por receber os dados
 
 - 2 Corretores de réplica do líder (ISR - in-sync replica): responsável por sincronizar os dados.
+
+
+#### Producers
+
+Responsável por enviar os dados, publicar os dados nos tópicos de sua escolha. Escolhe qual registro atribuir a qual partição dentro do tópico para balancear a carga através de uma chave de registro
+
+
+###### confirmação de escrita
+
+Existem 3 tipos de confirmação de escrita (acks) para o produtor:
+
+- 0: Sem confirmação de escrita
+- 1: Confirmação de escrita no líder (Padrão)
+- All: Confirmação de escrita no líder e nas réplicas (ISR)
+
+
+#### Consumers
+
+Os consumidores são responsáveis por receber os dados, onde cada registro publicado em um tópico será entregue aos consumidores dentro de um grupo de consumidores.
+
+###### Grupo de consumidores
+
+Se todas as instâncias do consumidor estiverem no mesmo grupo de consumidores os registros serão balanceados por carga.
+
+Se todas as instâncias do consumidor estiverem em grupos de consumidores diferentes, cada registro será transmitido para todos os processos.
+
+
+#### Gerenciar tópicos - Console
+
+- docker exec -it broker bash
+- kafka-topics --version
+
+
+###### Comandos básicos
+
+- Listar tópicos: 
+
+kafka-topics --bootstrap-server localhost:9092 --list
+
+kafka-topics --zookeeper zookeeper:2181 --list
+
+
+- Criar tópico:
+
+kafka-topics --bootstrap-server localhost:9092 --topic <nomeTópico> --create --partitions 3 --replication-factor 1
+
+
+- Descrever tópico
+
+kafka-topics --bootstrap-server localhost:9092 --topic <nomeTópico> --describe
+
+
+- Deletar tópico
+
+kafka-topics --bootstrap-server localhost:9092 --topic <nomeTópico> --delete
+
+
+##### Producer Console
+
+- Enviar dados:
+
+kafka-console-producer --broker-list localhosto:9092 --topic <nomeTópico>
+
+
+- Enviar dados para todos reconhecerem (Leader e ISR)
+
+kafka-console-producer --broker-list localhost:9092 --topic <nomeTópico> --producer-property acks=all
