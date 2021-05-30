@@ -352,3 +352,81 @@ Control Center
 11. Visualizar os gráficos de produção e consumo de dados do tópico msg-rapida.
 
 - ok
+
+
+### KSQL
+
+
+É um engine de Streaming SQL do kafka com uma interface SQL interativa que permite facildiade de uso, focada para o processamento streaming no kafka sem a necessidade de escrever código em Java ou Python. 
+
+É escalável, tolerante a falhas, em tempo real, suporta várias operações de streaming, como Filtragem de dados, Transformações e Agregações.
+
+
+##### Comandos básicos
+
+Visualizar tópicos: 
+- list topics;
+
+Mostrar conteúdo do tópico em temp real: 
+- print "<nomeTopico>" <propriedades>;
+
+Propriedades: from beginning; interval; limit;
+
+- print "topic-produto" from beginning interval 5 limit 10;
+
+
+#### KSQL Stream
+
+Sequencia de dados estruturados, tem características de ser imutáveis (Possível apenas inserir dados, não atualizar ou excluir) e podem ser criados a partir de um topico do kafka ou derivados de um stream exsitente, para isso precisa fornecer o formato dos valores armzanados no tópico, pois não infere o formato de dados do tópico.
+
+Comando para visualizar Streams:
+
+- list streams;
+
+
+##### Criação de stream
+
+
+Criar Stream
+
+- create stream <nomeStream> (<campo> <tipo>, ..., <campo> <tipo>) with (kafka_topic='<nomeTopico>', value_format='<formato>', KEY='<campoChave>', TIMESTAMP='<campoTimestamp>');
+
+Formatos: DELIMITED (, CSV), JSON, AVRO
+
+
+Tópico CSV:
+
+Informação do tópico cadastro:
+
+Rodrigo, São José dos Campos
+
+Augusto, São Paulo
+
+
+- create stream cad_str_csv (nome varchar, cidade varchar) with (Kafka_topic='cadastro', value_format='delimited');
+
+
+Tópico JSON:
+
+Informação do tópico cadastrojson:
+
+{"nome": "Rodrigo", "cidade": "São José dos Campos"}
+
+{"nome": "Rodrigo", "cidade": "São Paulo"}
+
+
+- create stream cad_str_json (nome varchar, cidade varchar) with (Kafka_topic='cadastrojson', value_format='json');
+
+
+Alterar formato de serialização de CSV/JSON para Avro:
+
+Criar um Stream no formato avro que cria um novo tópico com os dados do stream no formato csv/json. 
+
+CSV para Avro:
+
+- create stream cad_avro_csv (kafka_topic='cadastro-avro', value_format='avro') as select * from cad_str;
+
+
+Json para Avro:
+
+- create stream cad_str_json (kafka_topic='cadastro-avro', value_format='avro') as select * from cad_str;
