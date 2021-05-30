@@ -310,22 +310,45 @@ Control Center
 
 1. Criar um tópico com o nome msg-rapida com 4 partições, 1 replicação e deletar os dados após 5 minutos de uso.
 
+- control center
+
 2. Produzir e consumir 2 mensagens para o tópico msg-rapida
+
+- Procuer: kafka-console-producer --bootstrap-server localhost:9092 --topic msg-rapida
+- Consumer: kafka-console-consumer --bootstrap-server localhost:9092 --topic msg-rapida --group msg-group 
 
 3. Qual o nome do cluster?
 
+- controlcenter.cluster
+
 4. Quantos tópicos existem no cluster?
+
+- 6
 
 5. Quantas partições existem o tópico msg-cli?
 
+- 2
+
 6. Todas as réplicas estão sincronizadas no tópico msg-cli?
+
+- sim
 
 7. Qual a política de limpeza do tópico msg-cli?
 
+- cleanup.policydelete, retention.ms 604800000 | 1 semana
+
 8. Alterar a política de limpeza do tópico msg-cli para deletar depois de um ano.
+
+- 31540000000
 
 9. Qual o diretório de armazenamento de logs do cluster?
 
+- /var/lib/kafka/data
+
 10. Por padrão os dados são mantidos por quantos dias no Kafka?
 
+- 7
+
 11. Visualizar os gráficos de produção e consumo de dados do tópico msg-rapida.
+
+- ok
