@@ -323,7 +323,7 @@ Control Center
 
 4. Quantos tópicos existem no cluster?
 
-- 6
+- 60
 
 5. Quantas partições existem o tópico msg-cli?
 
