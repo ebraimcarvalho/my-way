@@ -501,3 +501,21 @@ Contar a quantidade de linhas de todo o tópico, o count sempre precisa do group
 - CREATE STREAM <novoStream> AS SELECT 1 AS unit FROM <nomeStreamParaContar>;
 
 - select count(unit) from <novoStream> group by unit;
+
+
+#### Exercício KSQL
+
+
+KSQL
+
+1. Criar o tópico msg-usuário-csv
+
+2. Criar um produtor para enviar 3 mensagens contendo id e nome separados por virgula para o tópico msg-usuário-csv
+
+3. Visualizar os dados do tópico msg-usuário-csv
+
+4. Criar o Stream usuario_csv para ler os dados do tópico msg-usuário-csv
+
+5. Visualizar o Stream usuario_csv
+
+6. Visualizar apenas o nome do Stream usuario_csv
