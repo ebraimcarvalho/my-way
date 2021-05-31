@@ -523,6 +523,8 @@ KSQL
 
 - kafka-console-consumer --bootstrap-server localhost:9092 --topic msg-usuario-csv
 
+- ksql> print 'msg-usuario-csv' from beginning;
+
 
 4. Criar o Stream usuario_csv para ler os dados do tópico msg-usuario-csv
 
