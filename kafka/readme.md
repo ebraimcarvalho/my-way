@@ -581,3 +581,26 @@ Argumentos Datagen - Cluster em Docker
   key=<campoChave> \
   iterations=<númeroLinhas> \
   msgRate=<TaxaMsg/segundo>
+
+
+#### Exemplo Datagen
+
+
+Criação de dados no tópico orders_topic
+
+- ksql> ksql-datagen bootstrap-server=broker:29092 schemaRegistryUrl=schema-registry:8081 quickstart=orders topic=orders_topic
+
+
+Visualizar dados no tópico orders_topic
+
+- ksql> print "orders_topic";
+
+
+Criação de Stream
+
+- CREATE STREAM orders_filtrada(orderid INT, orderunits DOUBLE, address STRUCT<city VARCHAR, zipcode INT>, ordertime VARCHAR) WITH(KAFKA_TOPIC='orders_topic', VALUIE_FORMAT='JSON');
+
+
+Visualização de dados Stream
+
+- ksql> select * from orders_filtrada;
