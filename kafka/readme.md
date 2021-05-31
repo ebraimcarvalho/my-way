@@ -537,3 +537,7 @@ KSQL
 6. Visualizar apenas o nome do Stream usuario_csv
 
 - select nome from usuario_csv emit changes limit 10;
+
+
+
+### KSQL Datagen
