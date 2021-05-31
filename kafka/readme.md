@@ -463,7 +463,7 @@ ex: Setar para visualizar os dados desde o inicio:
 
 Desfazer configuração
 
-- unset 'auto.offset.reset'
+- unset 'auto.offset.reset';
 
 
 Inserção
@@ -508,14 +508,30 @@ Contar a quantidade de linhas de todo o tópico, o count sempre precisa do group
 
 KSQL
 
-1. Criar o tópico msg-usuário-csv
+1. Criar o tópico msg-usuario-csv
 
-2. Criar um produtor para enviar 3 mensagens contendo id e nome separados por virgula para o tópico msg-usuário-csv
+- control center
 
-3. Visualizar os dados do tópico msg-usuário-csv
+- kafka-topics --bootstrap-server localhost:9092 --topic msg-usuario-csv --create --partitions 3 --replication-factor 1
 
-4. Criar o Stream usuario_csv para ler os dados do tópico msg-usuário-csv
+2. Criar um produtor para enviar 3 mensagens contendo id e nome separados por virgula para o tópico msg-usuario-csv
+
+- kafka-console-producer --bootstrap-server localhost:9092 --topic msg-usuario-csv
+
+
+3. Visualizar os dados do tópico msg-usuario-csv
+
+- kafka-console-consumer --bootstrap-server localhost:9092 --topic msg-usuario-csv
+
+
+4. Criar o Stream usuario_csv para ler os dados do tópico msg-usuario-csv
+
+- create stream usuario_csv(id int, nome varchar) with(kafka_topic='msg-usuario-csv', value_format='delimited');
 
 5. Visualizar o Stream usuario_csv
 
+- select * from usuario_csv emit changes limit 10;
+
 6. Visualizar apenas o nome do Stream usuario_csv
+
+- select nome from usuario_csv emit changes limit 10;
