@@ -430,3 +430,74 @@ CSV para Avro:
 Json para Avro:
 
 - create stream cad_str_json (kafka_topic='cadastro-avro', value_format='avro') as select * from cad_str;
+
+
+
+#### Operaçoes com Stream
+
+
+Visualizar conteúdo do Stream
+
+- select * from cad_str limit 10;
+
+
+Visualizar estrutura do stream
+
+- describe <nomeStream>
+- describe extended <nomeStream>
+
+
+Setar propriedades
+
+- set <propriedades> = <valor>
+
+
+Desfazer propriedades
+
+- unset <propriedade>
+
+
+ex: Setar para visualizar os dados desde o inicio:
+
+- set 'auto.offset.reset'='earliest';
+
+Desfazer configuração
+
+- unset 'auto.offset.reset'
+
+
+Inserção
+
+- insert into <stream_name | table_name> (<column_name>, <...>) values (<value>, '<value>', <...>);
+
+ex: insert into foo (rowtime, rowkey, key_col, col_a) values (1234, 'key', 'key1', 'a');
+
+
+Deletar uma stream
+
+- drop stream <nomeStream>;
+
+Deletar uma stream e seu topico
+
+- drop stream <nomeStream> delete topic;
+
+- drop stream if exists <nomeStream> delete topic;
+
+
+### Agregação com Stream
+
+
+Contar a quantidade de linhas de um campo Stream
+
+- select <campo> count(*) from <nomeStream> group by <campo>;
+
+
+ex: select cidade, count(*) from cad_str group by cidade;
+
+
+Contar a quantidade de linhas de todo o tópico, o count sempre precisa do group by, para isso precisaremos criar um campo setado para 1 em todos os registros.
+
+
+- CREATE STREAM <novoStream> AS SELECT 1 AS unit FROM <nomeStreamParaContar>;
+
+- select count(unit) from <novoStream> group by unit;
