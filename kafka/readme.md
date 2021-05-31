@@ -598,9 +598,67 @@ Visualizar dados no tópico orders_topic
 
 Criação de Stream
 
-- CREATE STREAM orders_filtrada(orderid INT, orderunits DOUBLE, address STRUCT<city VARCHAR, zipcode INT>, ordertime VARCHAR) WITH(KAFKA_TOPIC='orders_topic', VALUIE_FORMAT='JSON');
+- CREATE STREAM orders_filtrada(orderid INT, orderunits DOUBLE, address STRUCT<city VARCHAR, zipcode INT>, ordertime VARCHAR) WITH(KAFKA_TOPIC='orders_topic', VALUE_FORMAT='JSON');
 
 
 Visualização de dados Stream
 
 - ksql> select * from orders_filtrada;
+
+
+
+#### Exercício KSQL Datagen
+
+Abrir dois terminais:
+
+- docker exec -it ksql-datagen bash
+- docker exec -it ksqldb-server bash > ksql
+
+
+1. Criar o tópico users com os dados do ksql-datagen
+
+quickstart=users
+topic=users
+
+- ksql-datagen> ksql-datagen bootstrap-server=broker:29092 schemaRegistryUrl=schema-registry:8081 quickstart=users topic=users iterations=50
+
+2. Visualizar os dados do tópico no Ksql
+
+- ksql> print "users" from beginning limit 10;
+
+3. Criar o stream users_raw com os dados do tópico users com as seguintes propriedades
+
+kafka_topic='users’
+value_format='JSON’
+key = 'userid’
+timestamp='viewtime’
+
+
+- ksql> create stream users_raw(userid VARCHAR, regionid VARCHAR, gender VARCHAR) with(kafka_topic='users', value_format='json', key='userid');
+
+Obs.: Não existe a coluna viewtime no topico users, existe a coluna registertime. Para usá-la como timestamp, precisamos incluir essas coluna na definição do schema, ficando dessa forma:
+
+- ksql> create stream users_raw(userid VARCHAR, regionid VARCHAR, gender VARCHAR, registertime BIGINT) with(kafka_topic='users', value_format='json', key='userid', TIMESTAMP='registertime');
+
+4. Visualizar a estrutura da Stream users_raw
+
+- ksql> describe users_raw;
+
+5. Visualizar os dados da Stream users_raw
+
+- set 'auto.offset.reset'='earliest';
+
+- ksql> select * from users_raw emit changes limit 10;
+
+6. Repetir todo o proceso para o tópico pageviews
+
+- ksql-datagen> ksql-datagen bootstrap-server=broker:29092 schemaRegistryUrl=schema-registry:8081 quickstart=pageviews topic=pageviews iterations=50
+
+- print "pageviews" from beginning limit 10;
+
+- ksql> create stream pageviews_raw(userid VARCHAR, pageid VARCHAR, viewtime BIGINT) with(kafka_topic='pageviews', value_f
+ormat='json', key='userid', TIMESTAMP='viewtime');
+
+- ksql> describe pageviews_raw;
+
+- ksql> select * from pageviews_raw emit changes limit 10;
