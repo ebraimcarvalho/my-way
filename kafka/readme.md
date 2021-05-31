@@ -541,3 +541,43 @@ KSQL
 
 
 ### KSQL Datagen
+
+
+Ferramenta de CLI para gerar dados de teste etestar ambientes de desenvolvimento. Para isso, existem diferentes tópicos, orders, users e pageviews em diferentes formatos: avro, json, delimited. Ainda podemos controlar a produção de mensagens, definindo a quanidade e taxa/s.
+
+Acessar:
+
+- docker exec -it ksql-datagen bash
+
+- > ksql-datagen <argumento>
+
+exemplo: > ksql-datagen help
+
+
+##### Propriedades com containers
+
+
+cat docker-compose.yml
+
+...
+broker:
+  ...
+  enviroment:
+    kafka_advertised_listener:
+      plaintext://broker:29092,
+      plaintext_host://localhost:9092
+
+
+Argumentos Datagen - Cluster em Docker
+
+- > ksql-datagen \
+  bootstrap-server=broker:29092 \
+  quickstart=<orders, users, pageviews> \
+  schema=<ArquivoAvro> \
+  schemaRegistryUrl=schema-registry:8081 \
+  key-format=<avro, json, Kafka ou delimited> \
+  value-format=<avro, json ou dedlimited> \
+  topic=<nomeTopicoParaCriar> \
+  key=<campoChave> \
+  iterations=<númeroLinhas> \
+  msgRate=<TaxaMsg/segundo>
