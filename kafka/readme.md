@@ -764,12 +764,11 @@ Para isso, precisamos acessar o serviço do ksqldb-server
 ### Exercício Avro e Schema Registry
 
 
-Abrir quatro terminais:
+Abrir três terminais:
 
 - docker exec -it ksqldb-server bash > ksql
-- docker exec -it ksqldb-server bash > ksql
 - docker exec -it schema-regsitry bash
-- docker exec -it broker bash
+- docker exec -it schema-regsitry bash
 
 
 Schema Registry
