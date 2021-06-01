@@ -800,7 +800,9 @@ c) Visualizar o esquema no Control Center
 
 4. Criar um stream users-avro1 para o tópico users-avro
 
-- ksql> create stream users-avro1 with(kafka_topic='users-avro', value_format='avro');
+Parece não ser permitido nomear o stream usando hífen "-"
+
+- ksql> create stream usersAvro1 with(kafka_topic='users-avro', value_format='avro');
 
 5. Visualizar os dados do stream users-avro1
 
@@ -810,7 +812,7 @@ c) Visualizar o esquema no Control Center
 
 6. Usar o kafka-avro-console-producer para adicionar um novo campo chamado “unit” com valor padrão “1”
 
-- schema> kafka-avro-console-producer --topic users-avro --bootstrap-server broker:29092 --property schema.registry.url=http://localhost:8081 --property value.schema='{"type": "record", "name": "myrecord", "fields": [ {"name": "id", "type": "int"}, {"name": "nome", "type": "string"}, {"name": "unit", "type": "int", "default": 1} ]}'
+- schema> kafka-avro-console-producer --topic users-avro --bootstrap-server broker:29092 --property schema.registry.url=http://localhost:8081 --property value.schema='{"type": "record", "name": "myrecord", "fields": [ {"name": "id", "type": "int"}, {"name": "nome", "type": "string"}, {"name": "unit", "type": "int", "default": "1"} ]}'
 
 7. Usar o kafka-avro-console-consumer para consumir as mensagens
 
@@ -824,4 +826,6 @@ c) Visualizar o esquema no Control Center
 
 - set 'auto.offset.reset'='earliest';
 
-- ksql> select * from users-avro1 emit changes limit 10;
+- create stream usersAvro2 with(kafka_topic='users-avro', value_format='avro');
+
+- ksql> select * from usersAvro2 emit changes limit 10;
