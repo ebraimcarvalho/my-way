@@ -662,3 +662,12 @@ ormat='json', key='userid', TIMESTAMP='viewtime');
 - ksql> describe pageviews_raw;
 
 - ksql> select * from pageviews_raw emit changes limit 10;
+
+
+
+### Schema Registry - conceitos
+
+
+Camada de armazenamento distribuído para esquema avro. É um mecanismo de armazenamento do Kafka que atribui um id esclusivo para cada esquema registrado. Oferece armazenamento e recuperação do esquema para produtores e consumidores com a finalidade de diminuir o payload dos dados enviados para o kafka.
+
+
