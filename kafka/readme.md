@@ -716,7 +716,31 @@ Arquivo: nomes.avsc
 
 Avro console consumer permite o consumo de dados do kafka. Um detalhe é que se não mostrará todos os dados se usar o kafka-console-consumer. Para connsumir, precisa acessar o container do schema-registry:
 
-- docker exec -it schame-registry bash
+- docker exec -it schema-registry bash
 
 
-- kafka-avro-console-consumer --topic test-avro --bootstrap-server broker:29092 --property schema.registry.ul=hittp://localhost:8081 --from-beginning
+- kafka-avro-console-consumer --topic test-avro --bootstrap-server broker:29092 --property schema.registry.url=http://localhost:8081 --from-beginning
+
+
+
+### Avro Console Producer
+
+
+Avro console producer permite o envio rápido de dados do kafka manualmente, especificando o esquema no argumento. Também é acessado pelo schema-registry:
+
+- docker exec -it schema-regsitry bash
+
+
+- kafka-avro-console-producer --topic test-avro --bootstrap-server broker:29092 --property schema.registry.url=http://localhost:8081 --property value.schema='{"type": "record", "name": "myrecord", "fields": [ {"name": "id", "type": "int"}, {"name": "nome", "type": "string"} ]}'
+
+- > {"id": 1, "nome": "Ebraim"}
+- > {"id": 2, "nome": "Brenda"}
+
+
+Podemos evoluir o esquema sem perder os dados anteriores do tópico, para isso, é necessário colocar o campo default
+
+
+- kafka-avro-console-producer --topic test-avro --bootstrap-server broker:29092 --property schema.registry.url=http://localhost:8081 --property value.schema='{"type": "record", "name": "myrecord", "fields": [ {"name": "id", "type": "int"}, {"name": "nome", "type": "string"}, {"name": "cidade", "type": "string", "default": "null"} ]}'
+
+- > {"id": 3, "nome": "Ladjane", "cidade": "Abreu e Lima"}
+- > {"id": 4, "nome": "Sandra", "cidade": "Juazeiro do Norte"}
