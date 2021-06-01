@@ -671,3 +671,52 @@ ormat='json', key='userid', TIMESTAMP='viewtime');
 Camada de armazenamento distribuído para esquema avro. É um mecanismo de armazenamento do Kafka que atribui um id esclusivo para cada esquema registrado. Oferece armazenamento e recuperação do esquema para produtores e consumidores com a finalidade de diminuir o payload dos dados enviados para o kafka.
 
 
+
+#### Formato Avro
+
+
+Estrutura de serialização de dados escrito em json em formatio binário compacto. Tem vantagens de possibilitar digitar os dados e ser comprimido automaticamente, para lê-lo é preciso usar o avro tools, por exemplo. Além disso, a documientação é embarcada no esquema e é suportado pelo Hadoop e diversas linguagens. Você também consegue evoluir o esquema ao longo do tempo de forma segura.
+
+
+#### Avro Estrutura
+
+
+Armazena o esquema através de JSON, campos padrões:
+
+- Name: Nome do esquema
+- Type: Tipo do esquema
+- Namespace: Equivalente ao package em Java
+- Doc: Documentação do esquema
+- Aliasses: Outros nomes para o esquema
+- Fields: [ Name: Nome do campo, Doc: Documentação do campo, Type: tipo do campo, Default: Valor padrão do campo]
+
+
+##### Exemplo
+
+
+Campos: id, nome, status
+
+Arquivo: nomes.avsc
+
+{
+  "type": "record",
+  "Name": "nomes",
+  "Namespace": "example.avro",
+  "Doc": "Exemplo de um esquema",
+  "Fields": [
+    {"name": "id", "type": "int"},
+    {"name": "nome", "type": "string"},
+    {"name": "status", "type": "boolean", "default": true}
+  ]
+}
+
+
+### Avro Console Consumer
+
+
+Avro console consumer permite o consumo de dados do kafka. Um detalhe é que se não mostrará todos os dados se usar o kafka-console-consumer. Para connsumir, precisa acessar o container do schema-registry:
+
+- docker exec -it schame-registry bash
+
+
+- kafka-avro-console-consumer --topic test-avro --bootstrap-server broker:29092 --property schema.registry.ul=hittp://localhost:8081 --from-beginning
