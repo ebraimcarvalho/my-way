@@ -744,3 +744,84 @@ Podemos evoluir o esquema sem perder os dados anteriores do tópico, para isso, 
 
 - > {"id": 3, "nome": "Ladjane", "cidade": "Abreu e Lima"}
 - > {"id": 4, "nome": "Sandra", "cidade": "Juazeiro do Norte"}
+
+
+
+#### Stream de Avro
+
+
+O esquema já está registrado no tópico do Kafka no Schema Registry, já tem os dados e o esquema, precisa apenas configurar as propriedades do Stream.
+
+Para isso, precisamos acessar o serviço do ksqldb-server
+
+- docker exec -it ksqldb-server bash > ksql
+
+
+- ksql> create stream str_test-avro with(kafka_topic='test-avro', value_format='avro');
+
+
+
+### Exercício Avro e Schema Registry
+
+
+Abrir quatro terminais:
+
+- docker exec -it ksqldb-server bash > ksql
+- docker exec -it ksqldb-server bash > ksql
+- docker exec -it schema-regsitry bash
+- docker exec -it broker bash
+
+
+Schema Registry
+
+1. Visualizar os dados do tópico users;
+
+- ksql> print "users" from beginning limit 10;
+
+2. Criar o tópico users-avro
+
+- broker> kafka-topics --bootstrap-server localhost:9092 --topic users-avro --create --partitions 3 --replication-factor 1
+
+a) Usar o kafka-avro-console-producer para enviar 1 mensagem
+
+- schema> kafka-avro-console-producer --topic users-avro --bootstrap-server broker:29092 --property schema.registry.url=http://localhost:8081 --property value.schema='{"type": "record", "name": "myrecord", "fields": [ {"name": "id", "type": "int"}, {"name": "nome", "type": "string"} ]}'
+
+b) Usar o kafka-avro-console-consumer para consumir a mensagem
+
+- schema> kafka-avro-console-consumer --topic users-avro --bootstrap-server broker:29092 --property schema.registry.url=http://localhost:8081 --from-beginning
+
+c) Visualizar o esquema no Control Center
+
+- acessasr http://localhost:9021/
+
+3. Visualizar os dados do users-avro no KSQL
+
+- ksql> print "users-avro" from beginning limit 10;
+
+4. Criar um stream users-avro1 para o tópico users-avro
+
+- ksql> create stream users-avro1 with(kafka_topic='users-avro', value_format='avro');
+
+5. Visualizar os dados do stream users-avro1
+
+- set 'auto.offset.reset'='earliest';
+
+- ksql> select * from users-avro1 emit changes limit 10;
+
+6. Usar o kafka-avro-console-producer para adicionar um novo campo chamado “unit” com valor padrão “1”
+
+- schema> kafka-avro-console-producer --topic users-avro --bootstrap-server broker:29092 --property schema.registry.url=http://localhost:8081 --property value.schema='{"type": "record", "name": "myrecord", "fields": [ {"name": "id", "type": "int"}, {"name": "nome", "type": "string"}, {"name": "unit", "type": "int", "default": 1} ]}'
+
+7. Usar o kafka-avro-console-consumer para consumir as mensagens
+
+- schema> kafka-avro-console-consumer --topic users-avro --bootstrap-server broker:29092 --property schema.registry.url=http://localhost:8081 --from-beginning
+
+8. Comparar os esquemas do users-avro no Control Center
+
+- acessasr http://localhost:9021/
+
+9. Visualizar os dados no stream do tópico users-avro
+
+- set 'auto.offset.reset'='earliest';
+
+- ksql> select * from users-avro1 emit changes limit 10;
