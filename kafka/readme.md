@@ -895,3 +895,76 @@ Cluster 2:
 - acks: Confirmação de gravação (padrão 1)
 - retries: Tentativas (padrão 2147483647)
 - max.in.flight.requests.per.connection: Mensagens em voo (padrao 5)
+
+
+
+### Kafka Otimizando throughput
+
+
+##### Produtor
+
+- linger.ms: aumente para 10 - 100 (padrão 0)
+- compression.type-lz4 (padrão none)
+- acks=1 (padrão 1)
+- retries=0 (padrão 0)
+- batch.size: aumente para 100000 - 200000 (padrão 16384)
+
+
+##### Consumidor
+
+- fetch.min.bytes: aumente para ~100000 (default 1)
+
+
+
+### Kafka Otimizando a latência
+
+
+##### Produtor
+
+- linger.ms=0 (padrão 0)
+- compression.type=none (padrão none)
+- acks=1 (padrão 1)
+
+
+##### Consumidor
+
+- fetch.min.bytes=1 (padrão 1)
+
+
+### Kafka Otimizando a durabildiade
+
+
+##### Produtor
+
+- replication.factor: 3
+- acks=all (padrao 1)
+- retries: 1 ou mais (padrao 0)
+- max.in.flight.requests.per.connection=1 (padrao 5) - Serve para previnir mensagens fora de ordem
+
+
+##### Consumidor
+
+- enable.auto.commit=false (padrao true)
+
+
+##### Broker
+
+- default.replication.factor=3 (padrao 1)
+- auto.create.topics.enable=false (padrao true)
+- min.insync.replicas=2 (default 1)
+- unclean.leader.election.enable=false (default true)
+
+
+### Kafka Otimizando a disponibilidade
+
+
+##### Broker
+
+- unclean.leader.election.enable=true (default true)
+- default.replication.factor=3 (padrao 1)
+- min.insync.replicas=1 (default 1)
+
+
+##### consumidor
+
+- session.timeout.ms: Baixar o quanto possível (default 10000)
