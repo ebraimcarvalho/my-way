@@ -828,3 +828,32 @@ Parece não ser permitido nomear o stream usando hífen "-"
 - create stream usersAvro2 with(kafka_topic='users-avro', value_format='avro');
 
 - ksql> select * from usersAvro2 emit changes limit 10;
+
+
+
+
+### Kafka Connect
+
+
+Componentes open-source do Kafka, é uma estrutura para conectar o Kafka a sistemas externos, como banco de dados, índices de pesquisa, sistemas de arquivos e etc. Os principais tipos de conectores são:
+
+1. Source Connector: Enviar dados do sistema externo para os tópicos Kafka, importa dados.
+
+2. Sink Connector: Enviar os dados do tópico Kafka para o sistema externo, exporta dados.
+
+
+A Execução pode ser com um processo autônomo para executar tarefas em uma única máquina ou em um serviço distribuído, escalável e tolerante a falhas.
+
+
+Repositório de conectores da Confluent:
+
+https://www.confluent.io/hub/
+
+
+Para instalar componentes:
+
+- docker exec -it connect bash
+- confluent-hub install <componente>
+
+
+Disponível também pelo Control Center pela plataforma Confluent
