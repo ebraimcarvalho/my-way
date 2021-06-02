@@ -968,3 +968,31 @@ Cluster 2:
 ##### consumidor
 
 - session.timeout.ms: Baixar o quanto possível (default 10000)
+
+
+
+#### Melhores práticas
+
+
+- Número de partições: Partições múltiplos do número de brokers
+- Quantidade de partições: Qual Throughput vo cê quer atingir e quanto cada partição entrega?
+
+Comandos: 
+- kafka-consumer-perf-test.sh
+- kafka-producer-perf-test.sh
+- kafka-run-class.sh kafka.tools.TestEndToEndLatency
+
+
+- Balanceamento de partições: Importante entender o comportamento de seus dados e manter uma uniformidade de crescimento entre as partições
+
+- Tempo de retenção: Manter partições com 25GB para facilitar o gerenciamento. Saber o SLA da aplicação, a necessidade de reprocessamento e de acordo com a regra de negócio/compliance
+
+- Criptografia e compressão: Não aplicar compressão ou criptografia no disco do broker, fazer a compressão ou criptografia na mensagem
+
+- Monitoramento: 
+  Utilização do Disco
+  Utilização de CPU
+  I/O de Rede
+  I/O de Disco
+  Utilização de Memória
+  Arquivos abertos
