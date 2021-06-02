@@ -857,3 +857,41 @@ Para instalar componentes:
 
 
 Disponível também pelo Control Center pela plataforma Confluent
+
+
+### Confluent Cloud
+
+
+Cluster 1:
+
+- Entrada de dados: 100GB > 100GB * 0,11/GB = $11,00
+- Saída de dados: 200GB > 200GB * 0,11/GB = $22,00
+- Armazenamento: 500GB > 500GB * 0,10/GB = $50,00
+- Nuvem: Google Cloud > Total = $83,00
+
+
+Cluster 2:
+
+- Taxa de transferência in: 1MB/s > 1MB/s * 86.400 s/dia * 30 dias = 2531GB * $11,00 = $278,41
+- Taxa de transferência out: 1MB/s > 1MB/s * 86.400 s/dia * 30 dias = 2531GB * $11,00 = $278,41
+- Política de retenção: 7 dias > 1MB/s * 86.400 s/dia * 7 dias * 3 réplicas = 1772GB * $10,00 = $177,20
+- Nuvem: Google Cloud > Total = $734,02
+
+
+
+### Principais Parâmetros
+
+
+#### Kafka consumidor
+
+
+- group.id: Nome do grupo de consumo
+- auto.offset.reset: Indica o que o klafka fará quando não tempos um offset inicial (padrão latest). earliest | latest
+- enable.auto.commit: Indica se o commit do offset será automático (padrão true)
+- max.poll.interval.ms: Intervalo máximo de busca de dados (padrão 5 minutos)
+- max.poll.records: Máximo de mensagens que são retornadas no poll (padrão 500)
+- fetch.max.bytes: Quantidade de dados que caputradas em cada poll (padrão 52mb)
+-linger.ms: Tempo de envio (padrao 0)
+- acks: Confirmação de gravação (padrão 1)
+- retries: Tentativas (padrão 2147483647)
+- max.in.flight.requests.per.connection: Mensagens em voo (padrao 5)
