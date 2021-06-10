@@ -218,3 +218,25 @@ Buscar a quantidade de documentos em um índice
 Buscar os dados de um documento em um índice, retorna os dados do documento. Mesmo que SQL-> SELECT * FROM cliente WHERE id = 1
 
 - GET cliente/_source/1
+
+
+#### Exercício CRUD Elasticsearch
+
+CRUD
+
+1. Criar o índice produto e inserir os seguintes documentos:
+
+_id: 1, "nome": "mouse", "qtd": 50, "descricao": "com fio USB, compatível com Windows, Mac e Linux"
+_id: 2, "nome": "hd", "qtd": 20, "descricao": "Interface USB 2.0, 500GB, Sistema: Windows 10, Windows 8, Windows 7 "
+_id: 3, "nome": "memória ram", "qtd": 10, "descricao": "8GB, DDR4"
+_id: 4, "nome": "cpu", "qtd": 15, "descricao": "i5, 2.5Ghz"
+
+2. Verificar se existe o documento com  id 3
+
+3. Alterar o valor do atributo qtd para 30 do documento com id 3
+
+4. Buscar o documento com id 1
+
+5. Deletar o documento com id 4
+
+6. Contar quantos documentos tem o índice produto
