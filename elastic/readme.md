@@ -18,7 +18,7 @@ Banco relacional  x   ElasticSearch
 
 Banco de dados    x   Index
 
-Tabela            x   Type
+<s>Tabela</s>     x   <s>Type</s>
 
 Schema            x   Mapping
 
@@ -97,3 +97,124 @@ http://localhost:9200/ (Links para um site externo.)
 9. Acessar o Kibana através do browser:
 
 http://localhost:5601/
+
+
+
+### Comunicação com Elasticsearch
+
+
+Comunicação protocolo HTTP
+
+- HEAD
+- GET
+- POST
+- PUT
+- DELETE
+
+Requisições HTTP para a APi de elasticsearch por meio do envio de objetos JSON.
+
+Estrutura de uma requisição HTTP:
+
+- <ação> endereço_api:porta/indice/<opcoes>
+
+- Ex: PUT localhost:9200/cliente/_create
+
+
+### Interface Kibana - Comunicação HTTP
+
+- http://localhost:5601
+
+- Menu/Management/Dev Tools
+
+- http://localhost:5601/app/dev_tools
+
+
+### Operações Básicas CRUD
+
+
+- Create
+- Read
+- Update
+- Delete
+
+#### HEAD
+
+Retorna apenas o cabeçalho do HTTP para saber se o documento exsite
+
+Exemplo:
+
+- CURL: curl -XHEAD -v http://localhost:9200/cliente/_doc/1
+
+Obs.: Curl é uma ferramenta de linha de comando, biblioteca para transferir dados com URLs.
+
+- Kibana: HEAD cliente/_doc/1
+
+
+#### PUT
+
+Criar ou reindexar um documento inteiro (_version)
+
+- PUT cliente/_doc/1  //Obs. se executar novamente, cria outro com um version diferente
+{
+  "nome": "Lucas",
+  "idade": 20,
+  "conhecimento": "Windows, Office, Hadoop, Elastic"
+}
+
+- PUT cliente/_create/1  or PUT cliente/_doc/1/_create //Obs.: só cria um, se executar novamente retorna erro
+{
+  "nome": "Lucas",
+  "idade": 20,
+  "conhecimento": "Windows, Office, Hadoop, Elastic, Sqoop"
+}
+
+
+#### POST
+
+Criar um documento com _id ou atualizar um documetno parcial
+
+- POST cliente/_update/1 // Atualiza o documento
+{
+  "doc": {
+    "nome": "João"
+  }
+}
+
+- POST cliente/_doc // Cria documento com id automatico
+{
+  "nome": "Marcos"
+}
+
+
+#### DELETE
+
+Deletar um documento
+
+- DELETE cliente/_doc/1
+
+Deletar um índice
+
+- DELETE cliente
+
+
+#### GET
+
+Informações sobre o nó do elasticsearch
+
+- GET /
+
+Buscar todos os documentos em um índice
+
+- GET cliente/_search
+
+Buscar um documento em um índice, retorna outras informações além dos dados do documento em si
+
+- GET cliente/_doc/1
+
+Buscar a quantidade de documentos em um índice
+
+- GET cliente/_count
+
+Buscar os dados de um documento em um índice, retorna os dados do documento. Mesmo que SQL-> SELECT * FROM cliente WHERE id = 1
+
+- GET cliente/_source/1
