@@ -286,3 +286,63 @@ _id: 4, "nome": "cpu", "qtd": 15, "descricao": "i5, 2.5Ghz"
 6. Contar quantos documentos tem o índice produto
 
 - GET produto/_count
+
+
+### Múltiplas Operações Simultâneas
+
+
+Bulk API, permite a execução de várias operações de indexação / exclusão em uma única chamada da API. Permite também aumentar a velocidade de indexação.
+
+
+#### Comandos
+
+POST_bulk
+{"index": {"_index": "test", "_id": "1"} }
+{"field1": "value1"}
+{"delete": {"_index": "test", "_id": "2"} }
+{"create": {"_index": "test", "_id": "3"} }
+{"field1": "value3"}
+{"update": {"_index": "test", "_id": "1"} }
+{"doc": {"field2": "value2"} }
+
+POST concessionaria/_bulk
+{"create": {"_id": "1"} }
+{"nome": "carro"}
+{"create": {"_id": "2"} }
+{"nome": "automóvel"}
+{"create": {"_id": "3"} }
+{"nome": "caminhão"}
+{"create": {"_id": "4"} }
+{"nome": "caminhonete"}
+{"create": {"_id": "5"} }
+{"nome": "veículo"}
+
+
+
+#### Importação de dados com Kibana
+
+Homw/Menu/Kibana/Machine Learning/Import Data/Upload File
+
+
+##### Exercício Bulk API e Importação
+
+1. Importar os dados na Guia Arquivos para os índices
+
+Índice: concessionaria2
+dataset/cars.bulk
+Índice: populacao
+dataset/populacaoLA.csv
+
+
+2. Executar as consultas
+
+Contar o número de documentos de cada um dos novos índices
+Mostrar todos os documentos de cada um dos novos índices
+
+- GET concessionaria2/_count
+
+- GET populacao/_count
+
+- GET concessionaria2/_search
+
+- GET populacao/_search
