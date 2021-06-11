@@ -346,3 +346,165 @@ Mostrar todos os documentos de cada um dos novos índices
 - GET concessionaria2/_search
 
 - GET populacao/_search
+
+
+#### Api de Pesquisa
+
+Buscar todos os documentos
+
+- GET cliente/_search
+
+
+Pesquisar algo em todos os documentos, faz o uso do campo "_all"
+
+- GET cliente/_search?q=hadoop
+
+
+Pesquisar em um atributo específico
+
+- GET cliente/_search?q=nome:João
+
+- GET cliente/_search?q:João&q=idade:20
+
+
+##### Definição de consultas
+
+Query DSL (Domain Specific Language), baseada em JSON
+
+Exemplo:
+
+- GET cliente/_search?q=Hadoop
+
+- GET cliente/_search?q=Hadoop
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+
+##### Pesquisa Cabeçalho
+
+Estrutura do json de busca
+
+- Took: Tempo em milissegundo
+- Timed_out: Tempo de limite excedido
+- _shards: Quantidade de limite excedido
+- Hits: Informação do resultado
+  Total: Quantidade de documentos encontrados
+  Max_score: Valor de semelhança da consulta (0 à 1)
+
+O score é calculado com uso do algoritmo BM25
+
+
+##### Pesquisa Múltiplos índices
+
+Pesquisar em todos os índices, cuidado para não fazer consultas lentas
+
+- GET _all/_search?q=Windows
+
+
+Pesquisar em índices específicos
+
+- GET produto,cliente/_search?q=Windows
+- GET produto,cliente/_count?q=Windows
+
+Caso o índice não exista: index_not_found_exception
+
+
+##### Pesquisa Limitação e paginação
+
+Para pesquisas com muitos documentos e com difícil visualização, podemos usar para limitar a quantidade de documentos o atributo size para definir o número de documentos e o from para a paginação que será exibida.
+
+Por padrão a resposta máxima são 10.000 documentos, logo, o from + size tem que ser menor ou igual a 10.000 (index.max_result_window). Caso precise visualizar mais documentos, usar o atributo scroll
+
+
+Exemplo para limitar o número de documentos
+
+- GET cliente/_search?q=hadoop&size=100
+
+Paginação, visualizar n documentos por paginação
+
+- GET cliente/_search?q=hadoop&size=100&from=500
+
+
+Paginação na estrutura na busca
+- GET cliente/_search
+{
+  "from": 0, 
+  "size": 10,
+  "query": {}
+}
+
+Mostrar os 10 primeiros documentos da 1ª página
+
+- GET cliente/_search&from=0&size=10
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+Mostrar os documentos de 31 a 40 (4ª página)
+
+-GET cliente/_search&from=30&size=10
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+
+Exemplo com paginação de 10 documentos
+
+- 1ª Página: size = 10, from = 0 (default)
+- 2ª Página: size = 10, from = 10
+- 10ª Página: size = 10, from = 90
+
+Fórmula
+
+Primeiro documento da busca = from + 1
+
+Último documento da busca: from + size
+
+Página: from / size + 1
+
+
+#### Exercício Pesquisa e Paginação
+
+1. Pesquisar no índice produto os documentos com os seguintes atributos:
+
+a) Nome = mouse
+
+b) Quantidade = 30
+
+c) Descrição = USB
+
+d) Nome = hd e descrição = windows
+
+e) Nome = memória e descrição = GB
+
+
+- GET produto/_search?q=nome:mouse
+
+- GET produto/_search
+{
+  "from": 0, 
+  "size": 10,
+  "query": {
+    "nome": "mouse"
+  }
+}
+
+- GET produto/_search?q=qtd:30
+
+- GET produto/_search?q=descricao:USB
+
+- GET produto/_search?q=nome:hd&q=descricao:windows
+
+- GET produto/_search?q=nome:memória&descricao:GB
+
+
+2. Pesquisar todos os índices, limitando a pesquisa em 5 documentos em cada página e visualizar a 4 página (Documentos entre 16 á 20 )
+
+- GET _all/_search&from=15&size=5
