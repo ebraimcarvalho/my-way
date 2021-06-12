@@ -508,3 +508,77 @@ e) Nome = memória e descrição = GB
 2. Pesquisar todos os índices, limitando a pesquisa em 5 documentos em cada página e visualizar a 4 página (Documentos entre 16 á 20 )
 
 - GET _all/_search&from=15&size=5
+
+
+#### Api de Índices
+
+Gerenciamento de índices
+
+##### Criação
+
+Configuração básica:
+
+PUT teste
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1
+    }
+  },
+  "mappings": {},
+  "aliases": {}
+}
+
+Obs.: Cada shard ter entre 20GB a 50GB (não é uma regra), precisa testar o índice para saber o valor ideal
+
+
+##### Busca índice
+
+Consulta índice
+
+- GET teste
+- GET teste/_search
+- GET teste/_settings
+- GET teste/_mapping
+- GET teste/_alias
+- GET teste/_stats
+
+Verificar se o índice existe
+
+- HEAD teste
+
+
+Deletar um índice
+
+- PUT teste1
+- DELETE teste 1
+
+Deletar múltiplos índices
+
+- PUT indice1
+- PUT indice2
+- PUT indice3
+- PUT indice4
+- GET ind*
+
+- DELETE ind*
+
+- HEAD ind*
+
+
+##### Fechamento e abertura de índice
+
+Fechar índice para diminuir a sobrecarga no cluster, mas mantem os metadados. Bloqueia a leitura e gravação.
+
+Não manter por muito tempo, quando um nó deixar o cluster as cópias serão perdidas, a solução é usar Frozen index
+
+Exemplo abertura
+
+- POST teste/_open
+- POST test*/_open
+
+Exemplo fechamento
+
+- POST teste/_close
+- POST test*/_close
