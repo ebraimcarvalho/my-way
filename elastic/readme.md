@@ -582,3 +582,143 @@ Exemplo fechamento
 
 - POST teste/_close
 - POST test*/_close
+
+
+
+#### Mapeamento
+
+Elasticsearch define automaticamente no índice, os tipos dos campos, mesmo que o schema da tabela no SQL.
+
+Exemplo:
+
+- GET cliente/_mapping
+
+Atenção, não é possível alterar o tipo do dado, para isso será necessário reindexar o documento com as informações corretas. É possível criar novos atributos.
+
+
+#### Mapeamento Pesquisa
+
+Mapeamento pelo índice
+
+- GET cliente/_mapping
+- GET client*/_mapping
+
+Mapeamento pelo atributo
+
+- GET/_mapping/field/conhecimento
+- GET/_mapping/field/conhe*
+- GET/_mapping/field/nome,conhecimento
+
+Mapeamento de todos os índices
+
+- GET _mapping
+
+
+#### Exemplo de Criação de Mapeamento
+
+- PUT cliente1
+{}
+
+- PUT cliente1/_mapping
+{
+  "properties": {
+    "nome": {"type": "text"},
+    "idade": {"type": "long"},
+    "conhecimento": {"type": "keyword"},
+  }
+}
+
+
+#### Reindex
+
+Para alterar o mapeamento, a forma básica para reindexar é configurar o novo índice, indexando o índice de entrada (source) para o destino (dest)
+
+Exemplo:
+
+- POST _reindex
+{
+  "source": {
+    "index": "teste1"
+  },
+  "dest": {
+    "index": "new_teste"
+  }
+}
+
+
+#### Exercício Mapeamento e Reindex
+
+Índices
+
+1. Visualizar as configurações do índice produto
+
+- GET produto/_settings
+
+2. Visualizar o mapeamento do índice produto
+
+- GET produto/_mapping
+
+3. Visualizar o mapeamento do atributo nome do índice produto
+
+- GET produto/_mapping/field/nome
+
+4. Inserir o campo data do tipo date no índice produto
+
+- PUT produto/_mapping
+{
+  "properties": {
+    "data": {"type": "date"}
+  }
+}
+
+
+5. Adicionar o documento:
+
+_id: 6, "nome": "teclado", "qtd": 100, "descricao": "USB", "data":"2020-09-18"
+
+- PUT produto/_doc/6
+{
+  "nome": "teclado",
+  "qtd": 100,
+  "descricao": "USB",
+  "data": "2020-09-18"
+}
+
+
+6. Reindexar o índice produto para produto2, com o campo quantidade para o tipo short
+
+- PUT produto2/_mapping
+{
+  "properties": {
+    "nome": {"type": "text"},
+    "qtd": {"type": "short"},
+    "descricao": {"type": "keyword"},
+    "data": {"type": "date"}
+  }
+}
+
+- POST _reindex
+{
+  "source": {
+    "index": "produto"
+  },
+  "dest": {
+    "index": "produto2"
+  }
+}
+
+7. Visualizar o mapeamento do índice produto2
+
+- GET produto2/_mapping
+
+8. Fechar o índice produto
+
+- POST produto/_close
+
+9. Pesquisar todos os documentos no índice produto
+
+- GET produto/_search
+
+10. Abrir o índice produto
+
+- POST produto/_open 
