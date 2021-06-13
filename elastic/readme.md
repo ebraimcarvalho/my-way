@@ -671,7 +671,6 @@ Exemplo:
   }
 }
 
-
 5. Adicionar o documento:
 
 _id: 6, "nome": "teclado", "qtd": 100, "descricao": "USB", "data":"2020-09-18"
