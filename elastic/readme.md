@@ -721,3 +721,152 @@ _id: 6, "nome": "teclado", "qtd": 100, "descricao": "USB", "data":"2020-09-18"
 10. Abrir o índice produto
 
 - POST produto/_open 
+
+
+#### Entendimento de Query
+
+
+Queries e Filtros
+
+Queries: Quão bem a busca corresponde com o documento, tem caracteristicas de ter score e não são armazenadas em cache
+
+Filtros:  A busca corresponde com o documento do tipo, sim ou não atende ao match. Tem caracteristica não possuir score (order by) e são armzanenados em cache automaticamente para acelerar o desempenho.
+
+Índice invertido
+
+Query DSL: Todas as queries calculam o "_score", se não, utilizar o "constant_score". Serve para filtrar os dados antes da busca textual, para ganhar desempenho.
+
+
+Exemplo Query - Term
+
+- GET cliente/_search
+{
+  "query": {
+    "term": {
+      "nome": "joão"
+    }
+  }
+}
+
+Busca exatamente como está no index invertido.
+
+
+Exemplo query - Term com constant_score
+
+- GET cliente/_search
+{
+  "query": {
+    "constant_score": {
+      "filter": {
+        "term": {
+          "nome": "joão"
+        }
+      }
+    }
+  }
+}
+
+
+Exemplo query - Terms
+
+- GET cliente/_search
+{
+  "query": {
+    "terms": {
+      "idade": [30,20]
+    }
+  }
+}
+
+
+#### Bool Query
+
+Para filtrar um dataset grande, com estrutura flexível.
+
+Atributos:
+
+- Must: And
+- Should: OR
+- Must_not: Not and
+- Filter: Filtrar mais dados antes de atender as outras cláusulas
+
+
+- GET cliente/_search
+{
+  "query":{
+    "bool": {
+      "must": [{}],
+      "must_not": [{}],
+      "should": [{}],
+      "filter": [{}]
+    }
+  }
+}
+
+##### Exemplo
+
+- 1 Consulta booleana com 1 atributo
+
+- GET cliente/_search
+{
+  "query": {
+    "bool": {
+      "should": {
+        "term": {
+          "idade": "30"
+        }
+      }
+    }
+  }
+}
+
+
+- 1 Consulta booleana com N Atributos
+
+- GET cliente/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {"must": {"estado": "sp"}},
+        {"must": {"ativo": "sim"}},
+      ]
+    }
+  }
+}
+
+
+- N consultas booleanas com N atributos
+
+- GET cliente/_search 
+{
+  "query": {
+    "bool": {
+      "must": {"match": {"setor": "vendas"}},
+      "should": [
+        {"match": {"tags": "imutabilidade"}},
+        {"match": {"tags": "larga escala"}},
+      ],
+      "must_not": {"match": {"nome": "inativo"}}
+    }
+  }
+}
+
+
+#### Exercícios Query e Filtros
+
+Query e Filtros
+
+Realizar todas as buscas a seguir no índice produto
+
+1. Buscar no termo nome o valor mouse
+
+2. Buscar no termo nome os valores mouse e teclado
+
+3. Realizar a mesma busca do item 1 e 2, desconsiderando o score
+
+4. Buscar os documentos que contenham a palavra “USB” no atributo descrição
+
+5. Buscar os documentos que contenham a palavra “USB” e não contenham a palavra “Linux” no atributo descrição
+
+6. Buscar os documentos que podem ter a palavra “memória” no atributo nome ou contenham a palavra “USB” e não contenham a palavra “Linux” no atributo descrição
