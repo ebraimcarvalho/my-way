@@ -1587,3 +1587,7 @@ d) Buscar a palavra “compativel” no campo descricao
     }
   }
 }
+
+
+#### Conceitos de Agregações
+

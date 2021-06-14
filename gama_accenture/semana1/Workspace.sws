@@ -4,9 +4,22 @@
 
 <Workspace>
 	<Local Expanded="Yes">
-		<Model Expanded="Yes" ID="{E5C92677-7BF2-4985-BAD0-43A55E9E0973}" Name="Conceptual Data_1" Type="{1E597170-9350-11D1-AB3C-0020AF71E433}" URL="Conceptual Data_1.cdm"/>
-		<Model Expanded="Yes" ID="{5EF8BF3A-CC8D-41FB-A210-6814445E4AE3}" Name="Conceptual Data_2" Selected="Yes" Type="{1E597170-9350-11D1-AB3C-0020AF71E433}" URL="Conceptual Data_2.cdm"/>
+		<Model Expanded="Yes" ID="{E5C92677-7BF2-4985-BAD0-43A55E9E0973}" Loaded="No" Name="Conceptual Data_1" Type="{1E597170-9350-11D1-AB3C-0020AF71E433}" URL="Conceptual Data_1.cdm"/>
+		<Model ID="{5EF8BF3A-CC8D-41FB-A210-6814445E4AE3}" Name="Conceptual Data_2" Type="{1E597170-9350-11D1-AB3C-0020AF71E433}" URL="Conceptual Data_2.cdm"/>
 		<Model ID="{A8843DBE-6DAC-4084-89FD-B4CC95EE839D}" Name="Logical Data _1" Type="{5F45F978-C4F3-4E35-A3FC-AF3318663A0F}" URL="Logical Data _1.ldm"/>
+		<Model ID="{C8B251B6-6CFC-4BEA-82AB-F6ED4BF3849B}" Name="pratica1" Type="{5F45F978-C4F3-4E35-A3FC-AF3318663A0F}" URL="pratica1.ldm"/>
+		<Model ID="{985F8532-7B7F-4A94-BD23-41E2E7B0A7CE}" Name="pratica3" Type="{CDE44E21-9669-11D1-9914-006097355D9B}" URL="desafio_formula1/pratica3.pdm"/>
+		<Model ID="{FECA684C-8320-4ABE-AE88-73B137C4BB4E}" Name="Logical Data _2" Type="{5F45F978-C4F3-4E35-A3FC-AF3318663A0F}" URL="desafio_formula1/Logical Data _2.ldm"/>
+		<Model ID="{49DC8138-B14F-429B-A9E2-EAE0EDC79590}" Name="MultiDimensional Data_1" Type="{CDE44E21-9669-11D1-9914-006097355D9B}" URL="desafio_formula1/MultiDimensional Data_1.pdm"/>
+		<Model ID="{B6E752E9-23D4-418A-AD9A-56925140D5AF}" Name="Conceptual Data_1" Type="{1E597170-9350-11D1-AB3C-0020AF71E433}" URL="desafio_formula1/Conceptual Data_1.cdm"/>
+		<Model ID="{921CFB6C-BE90-4440-955E-25196483E090}" Name="Logical Data _3" Type="{5F45F978-C4F3-4E35-A3FC-AF3318663A0F}" URL="pratica_sabado_vitor.ldm"/>
+		<Model ID="{2CD404C7-2E25-4DB6-B934-3A0363AF8815}" Name="Physical Data _2" Type="{CDE44E21-9669-11D1-9914-006097355D9B}" URL="desafio_formula1/Physical Data _2.pdm"/>
+		<Model ID="{CC3E6CCC-555D-4794-A3C8-DF395D06D970}" Name="formula1Conceptual" Type="{1E597170-9350-11D1-AB3C-0020AF71E433}" URL="desafio_formula1/formula1ConceptualModelFinal.cdm"/>
+		<Model ID="{015A161F-4907-4A33-B747-84C2300E1199}" Name="marioKartConceptual" Type="{1E597170-9350-11D1-AB3C-0020AF71E433}" URL="desafio_formula1/marioKartConceptual.cdm"/>
+		<Model ID="{4AB29860-0911-49EB-9ACD-6D89D30AB2CD}" Name="formula1Logical" Type="{5F45F978-C4F3-4E35-A3FC-AF3318663A0F}" URL="desafio_formula1/formula1Logical.ldm"/>
+		<Model ID="{1D907A0A-F5DB-4D92-8AB6-1A249073DE08}" Name="formula1physical" Type="{CDE44E21-9669-11D1-9914-006097355D9B}" URL="desafio_formula1/formula1physical.pdm"/>
+		<Model ID="{342AF481-620E-41B4-AA93-2CD35FFA517D}" Name="MultiDimensional Data_2" Type="{CDE44E21-9669-11D1-9914-006097355D9B}" URL="desafio_formula1/MultiDimensional Data_2.pdm"/>
+		<Model Expanded="Yes" ID="{1E1D2A53-0C20-48BA-ACF9-CDACF50874CD}" Name="formula1PhysicalDW" Type="{CDE44E21-9669-11D1-9914-006097355D9B}" URL="desafio_formula1/formula1PhysicalDW.pdm"/>
 	</Local>
 	<BrowserModule Name="Repository"/>
 </Workspace>
