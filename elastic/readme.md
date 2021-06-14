@@ -1853,6 +1853,7 @@ Realizar os exercícios no índice bolsa
 
 - GET bolsa/_search
 {
+  "size": 0,
   "aggs": {
     "media": {
       "avg": {
@@ -1866,6 +1867,7 @@ Realizar os exercícios no índice bolsa
 
 - GET bolsa/_search
 {
+  "size": 0,
   "aggs": {
     "estatisticas": {
       "stats": {
@@ -1879,13 +1881,11 @@ Realizar os exercícios no índice bolsa
 
 - GET bolsa/_search
 {
-  "aggs": {
-    "intervalo_data": {
-      "date_range": {
-        "field": "data",
-        "ranges": [
-          {"from": 2019-04-01, "to": "now"}
-        ]
+  "query": {
+    "range": {
+      "@timestamp": {
+        "gte": "2019-04-01",
+        "lte": "now"
       }
     }
   }
@@ -1895,18 +1895,18 @@ Realizar os exercícios no índice bolsa
 
 - GET bolsa/_search
 {
-  "aggs": {
-    "intervalo_data": {
-      "date_range": {
-        "field": "data",
-        "ranges": [
-          {"from": 2019-04-01, "to": "now"}
-        ]
+  "query": {
+    "range": {
+      "@timestamp": {
+        "gte": "2019-04-01",
+        "lte": "now"
       }
-    },
+    }
+  },
+  "aggs": {
     "estatisticas": {
       "stats": {
-        "field": "data"
+        "field": "open"
       }
     }
   }
@@ -1935,13 +1935,8 @@ Realizar os exercícios no índice bolsa
   "aggs": {
     "docs_por_ano": {
       "date_histogram": {
-        "field": "date",
+        "field": "@timestamp",
         "calendar_interval": "year"
-      }
-    },
-    "quantidade": {
-      "sum": {
-        "field": "date"
       }
     }
   }
@@ -1953,17 +1948,12 @@ Realizar os exercícios no índice bolsa
 {
   "size": 0,
   "aggs": {
-    "intervalo_data": {
+    "qtd_2anos": {
       "date_range": {
-        "field": "data",
+        "field": "@timestamp",
         "ranges": [
-          {"from": 2019-06-01, "to": "now"}
+          {"from": "now-2y", "to": "now"}
         ]
-      }
-    },
-    "quantidade": {
-      "sum": {
-        "field": "data"
       }
     }
   }
