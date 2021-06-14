@@ -1503,8 +1503,14 @@ O elasticsearch surgiu em 2010
 
 a) Criar um analyzer brazilian para o atributo descricao
 
-- PUT produto
+- PUT produto1
 {
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0
+    }
+  },
   "mapping": {
     "properties": {
       "descricao": {
@@ -1515,18 +1521,48 @@ a) Criar um analyzer brazilian para o atributo descricao
   }
 }
 
+- POST _reindex
+{
+  "source": {
+    "index": "produto"
+  },
+  "dest": {
+    "index": produto1"
+  }
+}
+
 b) Para o atributo descricao aplicar o analzyer brazilian para o tipo de campo text e criar o atributo descricao.original com o dado do tipo keyword
+
+- DELETE produto
 
 - PUT produto
 {
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0
+    }
+  },
   "mapping": {
     "properties": {
       "descricao": {
         "type": "text",
         "analyzer": "brazilian",
-        "original": {"raw": {"type": "keyword"}}
+        "fields": {
+          "original": {"raw": {"type": "keyword"}}
+        }
       }
     }
+  }
+}
+
+- POST _reindex
+{
+  "source": {
+    "index": "produto1"
+  },
+  "dest": {
+    "index": produto
   }
 }
 
