@@ -1662,7 +1662,7 @@ Média do campo qtd
 }
 
 
-Sum com limitação de escopo, visualizar apenas o resultado da agregação, ou uma parte dos resultados, usar o size.
+#### Sum com limitação de escopo, visualizar apenas o resultado da agregação, ou uma parte dos resultados, usar o size.
 
 - GET cliente/_search
 {
@@ -1678,7 +1678,7 @@ Sum com limitação de escopo, visualizar apenas o resultado da agregação, ou 
 }
 
 
-Várias estatísticas com apenas uma requisição. Estatísticas: count, min, max, avg e sum
+#### Várias estatísticas com apenas uma requisição. Estatísticas: count, min, max, avg e sum
 
 - GET cliente/_search
 {
@@ -1713,7 +1713,7 @@ Valores mínimo e máximo
 }
 
 
-Exemplo de cardinalidade, para contar valores únicos. O resultado pode não ser preciso para grandes datasets. Faz uso do algoritmo HyperLogLog++ que faz um calculo de velocidade vs precisao
+#### Exemplo de cardinalidade, para contar valores únicos. O resultado pode não ser preciso para grandes datasets. Faz uso do algoritmo HyperLogLog++ que faz um calculo de velocidade vs precisao
 
 - GET cliente/_search
 {
@@ -1728,7 +1728,7 @@ Exemplo de cardinalidade, para contar valores únicos. O resultado pode não ser
 }
 
 
-Exemplo para separar em percentis, e assim encontrar a mediana.
+#### Exemplo para separar em percentis, e assim encontrar a mediana.
 
 - GET cliente/_search
 {
@@ -1754,7 +1754,7 @@ Exemplo para separar em percentis, e assim encontrar a mediana.
 }
 
 
-Exemplo com tempo para agrupar valores por um intervalo: date_histogram
+#### Exemplo com tempo para agrupar valores por um intervalo: date_histogram
 
 - GET log_servico/_search
 {
@@ -1837,6 +1837,133 @@ Especificar o campo e a quantidade de valores com a maior relevancia. Ex: As 5 m
       "terms": {
         "field": "cidade.keyword",
         "size": 5
+      }
+    }
+  }
+}
+
+
+#### Exercício Agregações
+
+Agregações
+
+Realizar os exercícios no índice bolsa
+
+1. Calcular a média do campo volume
+
+- GET bolsa/_search
+{
+  "aggs": {
+    "media": {
+      "avg": {
+        "field": "volume"
+      }
+    }
+  }
+}
+
+2. Calcular a estatística do campo close
+
+- GET bolsa/_search
+{
+  "aggs": {
+    "estatisticas": {
+      "stats": {
+        "field": "close"
+      }
+    }
+  }
+}
+
+3. Visualizar os documentos do dia 2019-04-01 até agora. (hits = 3)
+
+- GET bolsa/_search
+{
+  "aggs": {
+    "intervalo_data": {
+      "date_range": {
+        "field": "data",
+        "ranges": [
+          {"from": 2019-04-01, "to": "now"}
+        ]
+      }
+    }
+  }
+}
+
+4. Calcular a estatística do campo open do período do dia 2019-04-01 até agora
+
+- GET bolsa/_search
+{
+  "aggs": {
+    "intervalo_data": {
+      "date_range": {
+        "field": "data",
+        "ranges": [
+          {"from": 2019-04-01, "to": "now"}
+        ]
+      }
+    },
+    "estatisticas": {
+      "stats": {
+        "field": "data"
+      }
+    }
+  }
+}
+
+5. Calcular a mediana do campo open
+
+- GET bolsa/_search
+{
+  "size": 0,
+  "aggs": {
+    "mediana": {
+      "percentiles": {
+        "field": "open",
+        "percents": [50]
+      }
+    }
+  }
+}
+
+6. Contar a quantidade de documentos agrupados por ano
+
+- GET bolsa/_search
+{
+  "size": 0,
+  "aggs": {
+    "docs_por_ano": {
+      "date_histogram": {
+        "field": "date",
+        "calendar_interval": "year"
+      }
+    },
+    "quantidade": {
+      "sum": {
+        "field": "date"
+      }
+    }
+  }
+}
+
+7. Contar a quantidade de documentos de 2 anos atrás até hoje
+
+- GET bolsa/_search
+{
+  "size": 0,
+  "aggs": {
+    "intervalo_data": {
+      "date_range": {
+        "field": "data",
+        "ranges": [
+          {"from": 2019-06-01, "to": "now"}
+        ]
+      }
+    },
+    "quantidade": {
+      "sum": {
+        "field": "data"
       }
     }
   }
