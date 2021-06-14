@@ -1343,3 +1343,211 @@ b) Visualizar os documentos do dia 2019-04-01 até agora. (hits = 3)
     }
   }
 }
+
+
+#### Analyzer
+
+Busca exata: Sim e não
+
+Busca FullText: Quanto a busca casa (_score), Analisadores servem para testar, aplicar em atributos específicos e criar analyzer personalizado
+
+Índice invertido: Quebra em tokens e insere numa tabela. Exemplo: _search?cidade="São Paulo" -> Tokens: são paulo
+
+Principais Analyzer
+
+- Espaço em branco: whitespace: Separa as palavras por espaço
+
+- Simples: simple: Remove números, remove espaços e pontuação, somente texto em lowercase.
+
+- Padrão: standard: Remove espaços e pontuação, texto em lowercase
+
+- Idioma: Brazilian, English: Remove acentos, gênero, plural.
+
+
+##### Exemplo de Analyzer
+
+Analyzer Standard ou Simple
+
+- POST _analyze
+{
+  "analyzer": "standard",
+  "text": "Elasticsearch e Hadoop são ferramentas de Big Data"
+}
+
+- POST _analyze
+{
+  "analyzer": "simple",
+  "text": "Elasticsearch e Hadoop são ferramentas de Big Data"
+}
+
+Obs.: Vão colocar as palavras em lowercase, remover espações e pontuação. Simple remove números.
+
+- POST _analyze
+{
+  "analyzer": "whitespace",
+  "text": "Elasticsearch e Hadoop são ferramentas de Big Data"
+}
+
+Obs.: Separa as palavras pelos espaços
+
+- POST _analyze
+{
+  "analyzer": "brazilian",
+  "text": "Elasticsearch e Hadoop são ferramentas de Big Data"
+}
+
+Obs.: Remove acentos, plurao e genero, palavras em lowercase, English é melhor formatado o dicionário.
+
+
+##### Aplicação de Analyzer em atributos
+
+- PUT cliente1
+{
+  "mapping": {
+    "properties": {
+      "conhecimento": {
+        "type": "text",
+        "analyzer": "standard"
+      }
+    }
+  }
+}
+
+
+##### Boas práticas
+
+Indexar o mesmo campo de maneiras diferentes para fins diferentes
+
+- Tipo Keyword: Para Classificação e Agregação
+
+- Tipo Text: Pesquisa Fulltext
+
+Manter 2 versões do atributo como analyzer
+
+- Tipo Keyword: Dado original
+
+- Tipo Text: Dado com analisador
+
+
+##### Exemplo de Campo de 2 tipos
+
+- PUT cliente2
+{
+  "mapping": {
+    "properties": {
+      "conhecimento": {
+        "type": "text",
+        "analyzer": "standard",
+        "fields": {"raw": {"type": "keyword"}}
+      }
+    }
+  }
+}
+
+- PUT cliente3
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0
+    }
+  },
+  "mapping": {
+    "properties": {
+      "nome": {"type": "text"},
+      "conhecimento": {
+        "type": "text",
+        "analyzer": "whitespace",
+        "fields": {
+          "raw": {"type": "keyword"}
+        }
+      }
+    }
+  }
+}
+
+
+#### Exercício Analyzer
+
+Analyzer
+
+1. Criar os Analyzer simple, standard, brazilian e portuguese para a seguinte frase:
+
+O elasticsearch surgiu em 2010
+
+- POST _analyze
+{
+  "analyzer": "simple",
+  "text": "O elasticsearch surgiu em 2010"
+}
+
+- POST _analyze
+{
+  "analyzer": "standard",
+  "text": "O elasticsearch surgiu em 2010"
+}
+
+- POST _analyze
+{
+  "analyzer": "brazilian",
+  "text": "O elasticsearch surgiu em 2010"
+}
+
+- POST _analyze
+{
+  "analyzer": "portuguese",
+  "text": "O elasticsearch surgiu em 2010"
+}
+
+2. Realizar os passos no índice produto
+
+a) Criar um analyzer brazilian para o atributo descricao
+
+- PUT produto
+{
+  "mapping": {
+    "properties": {
+      "descricao": {
+        "type": "text",
+        "analyzer": "brazilian"
+      }
+    }
+  }
+}
+
+b) Para o atributo descricao aplicar o analzyer brazilian para o tipo de campo text e criar o atributo descricao.original com o dado do tipo keyword
+
+- PUT produto
+{
+  "mapping": {
+    "properties": {
+      "descricao": {
+        "type": "text",
+        "analyzer": "brazilian",
+        "original": {"raw": {"type": "keyword"}}
+      }
+    }
+  }
+}
+
+c) Buscar a palavra “compativel” no campo descricao.original (hits = 0)
+
+- GET produto/_search
+{
+  "query": {
+    "match": {
+      "descricao.original": "compativel"
+    }
+  }
+}
+
+d) Buscar a palavra “compativel” no campo descricao
+
+- GET produto/_search
+{
+  "query": {
+    "match": {
+      "descricao": "compativel"
+    }
+  }
+}
