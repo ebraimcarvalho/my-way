@@ -886,6 +886,33 @@ Realizar todas as buscas a seguir no índice produto
 - GET produto/_search
 {
   "query": {
+    "constant_score": {
+      "filter": {
+        "term": {
+          "nome": "mouse"
+        }
+      }
+    }
+  }
+}
+
+
+- GET produto/_search
+{
+  "query": {
+    "constant_score": {
+      "filter": {
+        "terms": {
+          "nome": ["mouse", "teclado"]
+        }
+      }
+    }
+  }
+}
+
+- GET produto/_search
+{
+  "query": {
     "bool": {
       "should": {
         "term": {
@@ -913,6 +940,15 @@ Realizar todas as buscas a seguir no índice produto
 - GET produto/_search
 {
   "query": {
+    "match": {
+      "descricao": "USB"
+    }
+  }
+}
+
+- GET produto/_search
+{
+  "query": {
     "bool": {
       "should": {
         "term": {
@@ -929,12 +965,12 @@ Realizar todas as buscas a seguir no índice produto
 {
   "query": {
     "bool": {
-      "must": {
-        "match": {"descrição": "USB"}
-      },
-      "must_not": {
-        "match": {"descrição": "Linux"}
-      }
+      "must": [
+        {"match": {"descrição": "USB"}}
+      ],
+      "must_not": [
+        {"match": {"descrição": "Linux"}}
+      ]
     }
   }
 }
@@ -949,9 +985,297 @@ Realizar todas as buscas a seguir no índice produto
         {"match": {"nome": "memória"}},
         {"match": {"descrição": "USB"}}
       ],
-      "must_not": {
-        "match": {"descrição": "Linux"}
+      "must_not": [
+        {"match": {"descrição": "Linux"}}
+      ]
+    }
+  }
+}
+
+
+#### Ordem de busca
+
+- Quantas vezes o termo aparece no atributo
+- Tamanho do atributo
+- Tamanho do termo
+- Quantaz vezes o termo aparece em todos os documentos
+
+Exemplo:
+
+- GET cliente/_search
+{
+  "query": {
+    "match": {
+      "conhecimento": "sqoop hive impala elk"
+    }
+  }
+}
+
+O padrão é "or", para alterar, usar o "operator": "and"
+
+- GET cliente/_search
+{
+  "query": {
+    "match": {
+      "conhecimento": {
+        "query": "sqoop hive",
+        "operator": "and"
       }
     }
   }
 }
+
+
+Para definir o mínimo % que estejam na consulta, usar o "minimum_should_match": "valor em %"
+
+
+- GET cliente/_search
+{
+  "query": {
+    "match": {
+      "hobby": {
+        "query": "sqoop hive impala",
+        "minimum_should_match": "50%"
+      }
+    }
+  }
+}
+
+Para definir o mínimo de quantidade que estejam na consulta, usar o "minimum_should_match": numero
+
+
+- GET cliente/_search
+{
+  "query": {
+    "match": {
+      "hobby": {
+        "query": "sqoop hive impala",
+        "minimum_should_match": 2
+      }
+    }
+  }
+}
+
+
+##### Múltiplos atributos
+
+{
+  "query": {
+    "bool": {
+      "should": [
+        {"match": {"endereco": "pinheiros"}},
+        {"match": {"cidade": "pinheiros"}},
+        {"match": {"estado": "pinheiros"}},
+      ]
+    }
+  }
+}
+
+
+{
+  "query": {
+    "multi_match": {
+      "query": "pinheiros",
+      "type": "most_fields",
+      "fields": ["endereco", "cidade", "estado"]
+    }
+  }
+}
+
+Obs.: Não pode usar junto com operator e minimum_should_match
+
+
+#### Exercício ordem de busca
+
+Ordem de Busca
+
+Realizar todas as buscas a seguir no índice produto
+
+1. Buscar os documentos que contenham as palavras “Windows” e “Linux” no atributo descrição
+
+- GET produto/_search
+{
+  "query": {
+    "match": {
+      "descricao": {
+        "query": "Windows Linux",
+        "operator": "and"
+      }
+    }
+  }
+}
+
+2. Buscar os documentos que contenham as palavras “Windows”, “Linux” ou “USB” no atributo descrição
+
+- GET produto/_search
+{
+  "query": {
+    "match": {
+      "descricao": "Windows Linux USB"
+    }
+  }
+}
+
+3. Buscar os documentos que contenham pelo menos 2 palavras da seguinte lista de palavras: “Windows”, “Linux” e “USB” no atributo descrição
+
+- GET produto/_search
+{
+  "query": {
+    "match": {
+      "descricao": {
+        "query": "Windows Linux USB",
+        "minimum_should_match": 2
+      }
+    }
+  }
+}
+
+4. Buscar os documentos que contenham pelo menos 50 % da seguinte lista de palavras: “Windows”; “Linux” e “USB” no atributo descrição
+
+- GET produto/_search
+{
+  "query": {
+    "match": {
+      "descricao": {
+        "query": "Windows Linux USB",
+        "minimum_should_match": "50%"
+      }
+    }
+  }
+}
+
+
+#### Consulta por intervalo
+
+Atributos para controlar o intervalo:
+
+- gte: Maior ou igual
+- gt: Maior que
+- lte: Menor ou igual
+- lt: Menor que
+
+
+Ex: Consultar o campo idade maior ou igual a 10
+
+- GET cliente/_search
+{
+  "query": {
+    "range": {
+      "idade": {
+        "gte": 10
+      }
+    }
+  }
+}
+
+
+Ex: Consultar o campo idade entre 10 e 25
+
+- GET cliente/_search
+{
+  "query": {
+    "range": {
+      "idade": {
+        "gte": 10,
+        "lte": 25
+      }
+    }
+  }
+}
+
+
+#### Consultas por intervalo de tempo
+
+Propriedades com data
+
+- "format": "dd/MM/yyyy||yyyy"
+- "time_zone": "+03:00"
+- Now: Agora
+- +1d: Adiciona 1 dia
+- -1M: Subtrai 1 Mês
+
+- y: Anos
+- M: Meses
+- w: Semanas
+- d: Dias
+- H: Horas
+- h: Horas
+- m: Minutos
+- s: Segundos
+
+
+- Exemplo com diferentes formatos
+
+- GET cliente/_search
+{
+  "query": {
+    "range": {
+      "data": {
+        "gte": "01/01/2012",
+        "lte": "2013",
+        "format": "dd/MM/yyyy||yyyy"
+      }
+    }
+  }
+}
+
+- GET cliente/_search
+{
+  "query": {
+    "range": {
+      "data": {
+        "gte": "now-1d",
+        "lt": "now"
+      }
+    }
+  }
+}
+
+- GET cliente/_search
+{
+  "query": {
+    "range": {
+      "timestamp": {
+        "gte": "2015-01-01 00:00:00",
+        "lte": "now",
+        "time_zone": "+03:00"
+      }
+    }
+  }
+}
+
+- GET cliente/_search
+{
+  "query": {
+    "range": {
+      "@timestamp": {
+        "gte": "2015-08-04T11:00:00",
+        "lt": "2015-08-04T12:00:00"
+      }
+    }
+  }
+}
+
+
+
+#### Exercícios Consulta por Intervalo
+
+Consultas por Intervalo
+
+1. Verificar se existe o índice populacao
+
+2. Executar as consultas no índice populacao
+
+a) Mostrar os documentos com o atributo "Total Population" menor que 100
+
+b) Mostrar os documentos com o atributo "Median Age" maior que 70
+
+c) Mostrar os documentos 50 (Zip Code: 90056) à 60 (Zip Code: 90067) do índice de populacao
+
+3. Importar através do Kibana o arquivo weekly_MSFT.csvPré-visualizar o documento (Guia Arquivos/dataset/weekly_MSFT.csv) com o índice bolsa
+
+4. Executar as consultas no índice bolsa
+
+a) Visualizar os documentos do dia 2019-01-01 à 2019-03-01. (hits = 9)
+
+b) Visualizar os documentos do dia 2019-04-01 até agora. (hits = 3)
