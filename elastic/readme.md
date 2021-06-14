@@ -1591,3 +1591,253 @@ d) Buscar a palavra “compativel” no campo descricao
 
 #### Conceitos de Agregações
 
+Forma de analisar os dados indexados. Estrutura:
+
+- GET <index>/_search
+{
+  "aggs": {
+    "<nomeAgregação>": {
+      "<tipoAgregação>": {}
+    }
+  }
+}
+
+
+##### Tipos de Agregações
+
+- Bucket: Combinam os documentos resultantes em buckets. Buckets são criados.
+
+- Metric: Cálculos matemáticos feitos nos campos de documentos. São calculados em buckets
+
+- Matrix: Operam em diversos campos produzindo uma matriz de resultado (matrix_stats)
+
+- Pipeline: Agrega a saída de outras agregações
+
+
+##### Buckets
+
+Conjunto de documento formado por critérios de Data, Intervalo ou Atributo. Ex:
+
+- Range
+- Date_range
+- Ip_ranges
+- Geo_distance
+- Significant_terms
+
+
+##### Metricas
+
+Operações matemáticascom um valor de saída. Ex:
+
+- Avg
+- Sum
+- Min
+- Max
+- Cardinality
+- Value_count
+- Etc
+
+
+Operações matemáticas com N valores de saída
+
+- Stats
+- Percentiles
+- Percentile_ranks
+
+
+##### Exemplos
+
+Média do campo qtd
+
+- GET cliente/_search
+{
+  "query": {},
+  "aggs": {
+    "media": {
+      "avg": {
+        "field": "qtd"
+      }
+    }
+  }
+}
+
+
+Sum com limitação de escopo, visualizar apenas o resultado da agregação, ou uma parte dos resultados, usar o size.
+
+- GET cliente/_search
+{
+  "query": {},
+  "size": 0,
+  "aggs": {
+    "soma": {
+      "sum": {
+        "field": "qtd"
+      }
+    }
+  }
+}
+
+
+Várias estatísticas com apenas uma requisição. Estatísticas: count, min, max, avg e sum
+
+- GET cliente/_search
+{
+  "query": {},
+  "aggs": {
+    "estatisticas": {
+      "stats": {
+        "field": "qtd"
+      }
+    }
+  }
+}
+
+
+Valores mínimo e máximo
+
+- GET cliente/_search
+{
+  "query": {},
+  "aggs": {
+    "minimo": {
+      "min": {
+        "field": "qtd"
+      }
+    },
+    "maximo": {
+      "max": {
+        "field": "qtd"
+      }
+    }
+  }
+}
+
+
+Exemplo de cardinalidade, para contar valores únicos. O resultado pode não ser preciso para grandes datasets. Faz uso do algoritmo HyperLogLog++ que faz um calculo de velocidade vs precisao
+
+- GET cliente/_search
+{
+  "size": 0,
+  "aggs": {
+    "quantidade_cidades": {
+      "cardinality": {
+        "field": "cidade.keyword"
+      }
+    }
+  }
+}
+
+
+Exemplo para separar em percentis, e assim encontrar a mediana.
+
+- GET cliente/_search
+{
+  "aggs": {
+    "mediana": {
+      "percentiles": {
+        "field": "qtd"
+      }
+    }
+  }
+}
+
+- GET cliente/_search
+{
+  "aggs": {
+    "percentil": {
+      "percentiles": {
+        "field": "qtd",
+        "percents": [25,50,75,100]
+      }
+    }
+  }
+}
+
+
+Exemplo com tempo para agrupar valores por um intervalo: date_histogram
+
+- GET log_servico/_search
+{
+  "size": 0,
+  "aggs": {
+    "logs_por_dia": {
+      "date_histogram": {
+        "field": " @timestamp",
+        "calendar_interval": "day"
+      }
+    }
+  }
+}
+
+obs.: "calendar_interval": "month" | "fixed_interval": "10m"
+
+Medidas: ms, s, m, h, d, w, M, q, y
+
+- GET log_servico/_search
+{
+  "size": 0,
+  "aggs": {
+    "logs_cada_100ms": {
+      "histogram": {
+        "field": " runtime_ms",
+        "interval": 100
+      }
+    }
+  }
+}
+
+
+##### Exemplo Intervalo
+
+- GET cliente/_search
+{
+  "query": {},
+  "aggs": {
+    "intervalo": {
+      "range": {
+        "field": "qtd",
+        "ranges": [
+          {"to": 5},
+          {"from": 5, "to": 20},
+          {"from": 20}
+        ]
+      }
+    }
+  }
+}
+
+
+##### Exemplo Intervalo de Data
+
+- GET cliente/_search
+{
+  "query": {},
+  "aggs": {
+    "intervalo_data": {
+      "date_range": {
+        "field": "data",
+        "ranges": [
+          {"from": 2019-01-01, "to": 2019-05-01}
+        ]
+      }
+    }
+  }
+}
+
+
+##### Exemplo Atributo
+
+Especificar o campo e a quantidade de valores com a maior relevancia. Ex: As 5 maiores cidades que visitaram o site
+
+- GET logs_servico/_search
+{
+  "size": 0,
+  "aggs": {
+    "cidades_views": {
+      "terms": {
+        "field": "cidade.keyword",
+        "size": 5
+      }
+    }
+  }
+}
