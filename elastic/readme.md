@@ -2094,3 +2094,33 @@ $ sudo find / -name docker.sock
 
 - GET heartbeat-7.9.2-2021.06.19-000001/_count
 - GET heartbeat-7.9.2-2021.06.19-000001/_search
+
+
+#### Logstash
+
+- Input
+- Filter
+- Output
+
+
+Beats > Logstash (Input > Filter > Output) > Elasticsearch
+
+Editar pipeline/logstash.conf
+
+
+##### Plugins de entrada
+
+Permite que uma fonte específica de eventos seja lida pelo Logstash
+
+
+Entrada - Exemplo
+
+- pipeline/logstash.conf
+
+input {
+  file {
+    id=> "test_log_sem_gz"
+    path => "/var/log/*.log"
+    exclude => "*.gz"
+  }
+}
