@@ -2043,6 +2043,34 @@ Beats
 - sudo ./filebeat -e -strict.perms=false
 - http://localhost:5601/app/dev_tools#/console
 
+
+- curl -L -O https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-7.9.2-linux-x86_64.tar.gz
+- tar xzvf metricbeat-7.9.2-linux-x86_64.tar.gz
+- cd metricbeat-7.9.2-linux-x86_64/
+- ./metricbeat modules list -strict.perms=false
+- ./metricbeat test config -strict.perms=false
+- ./metricbeat test output -strict.perms=false
+- cd modules.d/
+- sudo find / -name docker.sock
+- copy /mnt/wsl/docker-desktop/shared-sockets/guest-services/docker.sock
+- vi docker.yml
+- paste path docker
+- uncomment metrics and save
+- sudo chown root modules.d/docker.yml
+- sudo chown root metricbeat.yml
+- sudo ./metricbeat -e -strict.perms=false
+
+
+- curl -L -O https://artifacts.elastic.co/downloads/beats/heartbeat/heartbeat-7.9.2-linux-x86_64.tar.gz
+- tar xzvf heartbeat-7.9.2-linux-x86_64.tar.gz
+- cd heartbeat-7.9.2-linux-x86_64/
+- vi heartbeat.yml
+- ./heartbeat test config -strict.perms=false
+- ./heartbeat test output -strict.perms=false
+- sudo chown root heartbeat.yml
+- sudo ./heartbeat -e -strict.perms=false
+
+
 2. Verificar a quantidade de documentos do índice criado pelo Filebeat e visualizar seus 10 primeiros documentos
 
 - GET filebeat-7.9.2-2021.06.19-000001/_count
@@ -2058,6 +2086,11 @@ $ sudo find / -name docker.sock
 
 4. Verificar a quantidade de documentos do índice criado pelo Metricbeat e visualizar seus 10 primeiros documentos
 
+- GET metricbeat-7.9.2-2021.06.19-000001/_count
+
 5. Monitorar o site https://www.elastic.co/pt/ (Links para um site externo.) com uso do Heartbeat
 
 6. Verificar a quantidade de documentos do índice criado pelo Heartbeat e visualizar seus 10 primeiros documentos
+
+- GET heartbeat-7.9.2-2021.06.19-000001/_count
+- GET heartbeat-7.9.2-2021.06.19-000001/_search
