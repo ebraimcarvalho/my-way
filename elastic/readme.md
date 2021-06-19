@@ -2124,3 +2124,20 @@ input {
     exclude => "*.gz"
   }
 }
+
+
+##### Plugina de Saída
+
+Permite o envio de dados de evento para um destino específico
+
+- pipeline/logstash.conf
+
+output {
+  stdout {
+    codec => json
+  }
+  elasticsearch {
+    hosts => ["localhost:9200"]
+    index => "testes-%{+YYYY.MM.dd}"
+  }
+}
