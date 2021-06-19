@@ -1958,3 +1958,106 @@ Realizar os exercícios no índice bolsa
     }
   }
 }
+
+
+
+#### Beats
+
+Beats enviam dados de centenas ou milhares de máquinas e sistemas para o Logstach ou Elasticsearch.
+
+- Filebeat: Arquivos de log;
+- Metricbeat: Métricas;
+- Packetbeat: Dados de rede;
+- Winlogbeat: Logs de evento do Windows;
+- Auditbeat: Dados de auditoria;
+- Heartbeat: Monitoramento de disponibilidade;
+- Funcionbeat: Agente de envio sem servidor
+
+
+##### Instalação e Configuração
+
+- curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.9.2-linux-x86_64.tar.gz
+
+- tar xzvf filebeat-7.9.2-linux-x86_64.tar.gz
+
+- ./filebeat modules list
+- ./filebeat modules enable <modulo>
+- ./filebeat test config
+- ./filebeat test output
+
+- Configurar o arquivo: filebeat.yml
+
+- filebeat.prospectors:
+  - type: log
+    enabled: true
+    paths: - /var/log/*.log
+
+  output.elasticsearch:
+    hosts: ["<es_url>"]
+    username: "<user>"
+    password: "<password>"
+
+  # output.logstash:
+
+
+##### Filebeat Inicialização
+
+Inicializar de modo simples:
+
+- sudo chown root filebeat.yml
+- sudo chown root modules.d/system.yml 
+  Apenas para os módulos habilitados
+- sudo ./filebeat -e
+  Exibir a configuração e saída do beat
+
+
+Inicializar como serviço
+
+- sudo service filebeat start
+- sudo service filebeat status
+- sudo service filebeat stop
+- sudo service filebeat restart
+
+
+#### Exercício Filebeat
+
+Beats
+
+- sudo sysctl -w vm.max_map_count=262144
+- docker-compose up -d
+
+1. Enviar o arquivo <local>/paris-925.logs com uso do Filebeat
+
+- curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.9.2-linux-x86_64.tar.gz
+- tar xzvf filebeat-7.9.2-linux-x86_64.tar.gz
+- cd filebeat-7.9.2-linux-x86_64/
+- ./filebeat modules list -strict.perms=false
+- cd ../data/datasets
+- pwd #and copy path
+- vi ../filebeat-7.9.2-linux-x86_64/filebeat.yml
+- enable: true
+- path: past pwd paris-925.logs
+- ./filebeat test config -strict.perms=false
+- ./filebeat test output -strict.perms=false
+- sudo chown root filebeat.yml
+- sudo ./filebeat -e -strict.perms=false
+- http://localhost:5601/app/dev_tools#/console
+
+2. Verificar a quantidade de documentos do índice criado pelo Filebeat e visualizar seus 10 primeiros documentos
+
+- GET filebeat-7.9.2-2021.06.19-000001/_count
+- GET filebeat-7.9.2-2021.06.19-000001/_search
+
+3. Monitorar as métricas do docker
+
+Referência:
+https://www.elastic.co/guide/en/beats/metricbeat/current/metricbeat-module-docker.html (Links para um site externo.)
+
+Encontrar o socket do Docker
+$ sudo find / -name docker.sock
+
+4. Verificar a quantidade de documentos do índice criado pelo Metricbeat e visualizar seus 10 primeiros documentos
+
+5. Monitorar o site https://www.elastic.co/pt/ (Links para um site externo.) com uso do Heartbeat
+
+6. Verificar a quantidade de documentos do índice criado pelo Heartbeat e visualizar seus 10 primeiros documentos
