@@ -2033,7 +2033,7 @@ Beats
 - cd filebeat-7.9.2-linux-x86_64/
 - ./filebeat modules list -strict.perms=false
 - cd ../data/datasets
-- pwd #and copy path
+- pwd #and copy path to paris-925.logs
 - vi ../filebeat-7.9.2-linux-x86_64/filebeat.yml
 - enable: true
 - path: past pwd paris-925.logs
@@ -2139,5 +2139,181 @@ output {
   elasticsearch {
     hosts => ["localhost:9200"]
     index => "testes-%{+YYYY.MM.dd}"
+  }
+}
+
+
+##### Plugina de Filtro
+
+Permite o processamento intermediário em um evento
+
+- pipeline/logstash.conf
+
+filter {
+  mutate {"convert" => ["bytes", "intenger"]}
+  mutate {"convert" => ["duration", "float"]}
+}
+
+
+#### Exercício Beats Logstash
+
+Beats
+
+1. Enviar o arquivo <local>/paris-925.logs  para o Logstash, com uso do Filebeat.
+
+- docker-compose stop
+- vi ../filebeat-7.9.2-linux-x86_64/filebeat.yml
+- enable: true
+- path: past pwd paris-925.logs
+- uncomment logstash and comment beats
+
+2. Configurar e executar o logstash com as seguintes configurações
+
+- pipeline/logstash.conf
+
+Entrada:
+beats {
+  port => 5044
+
+}
+
+Saída:
+elasticsearch {
+  hosts => [ “elasticsearch:9200" ]
+
+  index => “seu_nome-%{+YYYY.MM.dd}"
+
+}
+
+- docker-compose down
+- docker-compose up -d
+- ./filebeat test config -strict.perms=false
+- ./filebeat test output -strict.perms=false
+- sudo rm -rf data/
+- sudo rm -rf logs/
+- sudo chown root filebeat.yml
+- sudo ./filebeat -e -strict.perms=false
+
+3. Verificar a quantidade de documentos do índice criado pelo Logstash e visualizar seus 10 primeiros documentos
+
+- GET _cat/indices
+- GET _cat/indices?v
+- GET ebraim-2021.06.19/_count
+- GET ebraim-2021.06.19/_search
+
+
+POST avaliacao/_doc
+{"nome": "Elastic", "nota": "10"}
+POST avaliacao/_doc
+{"nome": "Logstash", "nota": "8"}
+POST avaliacao/_doc
+{"nome": "Kibana", "nota": "5"}
+POST avaliacao/_doc
+{"nome": "Beats", "nota": "6"}
+GET avaliacao/_search
+{
+  "query": {
+    "bool": {
+      "should": [
+        {
+          "match": {
+            "nome": "Elastic"
+          }
+        },
+        {
+          "match": {
+            "nota": "5, 8"
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "match": {
+            "nota": "10"
+          }
+        }
+      ]
+    }
+  }
+}
+
+GET avaliacao/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "nome": "Kibana"
+          }
+        },
+        {
+          "match": {
+            "nota": "5, 6"
+          }
+        }
+      ]
+    }
+  }
+}
+
+{
+  "query": {
+    "bool": {
+      "filter": {
+        "term": {
+          "nome": "beats"
+        }
+      }
+    }
+  }
+}
+
+{
+  "query": {
+    "constant_score": {
+      "filter": {
+        "term": {
+          "nome": "beats"
+        }
+      }
+    }
+  }
+}
+
+POST _analyze
+{
+  "analyzer": "brazilian",
+  "text": "A prova de 2020 está facil"
+}
+
+POST _analyze
+{
+  "analyzer": "simple",
+  "text": "A prova de 2020 está facil"
+}
+
+PUT avaliacao4
+PUT avaliacao4/_mapping
+{
+  "properties": {
+    "nome": {
+      "type": "text",
+      "fields": {
+        "texto": {"type", "analyzer": "simple"},
+        "chave": {"type": "keyword"}
+      }
+    }
+  }
+}
+
+POST avaliacao4/_doc
+{"nome": "Elastic", "nota": 10}
+GET avaliacao4/_search
+{
+  "query": {
+    "match": {
+      "nome.chave": "elastic"
+    }
   }
 }
