@@ -158,3 +158,142 @@ Transformação: Retorna um RDD
 - ReduceByKey
 - AggregateByKey
 
+
+#### RDD - Leitura e visualização de dados
+
+entrada1.txt | entrada2.txt
+
+- rdd = sc.textFile("entrada*")
+
+- rdd.count()
+
+- rdd.first()
+
+- rdd.take(5)
+
+- rdd.collect()
+
+- rdd.foreach(println)
+
+
+#### RDD - FlatMap
+
+Scala
+
+- rdd.take(2) # Array[String] = Array(Big Data, Semantix SP)
+
+- val palavras = rdd.flatMap(x => x.split(" "))
+
+- val palavras = rdd.flatMap(_.split(" "))
+
+- palavras.foreach(println) # 'Big', 'Data', 'Semantix', 'SP'
+
+
+Python
+
+- rdd.take(2) # ['Big Data', 'Semantix SP']
+
+- palavras = rdd.flatMap(lambda x: x.split(" "))
+
+- palavras.collect() # ['Big', 'Data', 'Semantix', 'SP']
+
+
+#### Função Anônima
+
+Python
+
+- rdd.take(2) # ['Big Data', 'Semantix SP']
+
+- p = rdd.flatMap(lambda x: x.split(" "))
+
+- min = p.map(lambda linha: linha.loiwer())
+
+- min.collect() # ['big', 'data', 'semantix', 'sp']
+
+Poderia fazer assim, menos funcional:
+
+def Func(linha):
+  return linha.lower()
+
+minuscula = p.map(Func)
+
+minuscula.collect()
+
+
+#### RDD - FlatMap e Map
+
+- rdd.take(2) # ['Big Data'. 'Semantix SP']
+
+- palavras = rdd.flatMap(lambda x: x.split(" "))
+
+- palavras.collect() # ['Big', 'Data', 'Semantix', 'SP']
+
+- palavras = rdd.map(lambda x: x.split(" "))
+
+- palavras.collect() # [['Big', 'Data'], ['Semantix', 'SP']]
+
+
+#### RDD - Transformações no Map
+
+Scala
+
+- val pMinuscula = palavras.map(_.toLowerCase)
+
+- val pMaiscula = palavras.map(_.toUpperCase)
+
+- val pChaveValor = pMinuscula.map((_,1))
+
+- pChaveValor.take(4) # Array(('big', 1), ('data', 1), ('semantix', 1), ('sp', 1))
+
+
+Python
+
+- pMinuscula = palavras.map(lambda linha: linha.lower())
+
+- pMaiuscula = palavras.map(lambda linha: linha.upper())
+
+- pChaveValor = pMinuscula.map(lambda palavra: (palavra, 1))
+
+- pChaveValor.take(4) # [('big', 1), ('data', 1), ('semantix', 1), ('sp', 1)]
+
+
+#### RDD - Transformações de filter
+
+Remover dados do RDD
+
+Scala
+
+- val filtroA = palavras.filter(_.startsWith('a'))
+
+- val filtroB = palavras.filter(_.length > 5)
+
+- val numPar = numeros.filter(_ % 2 == 0)
+
+
+Python
+
+- filtro_a = palavras.filter(lambda palavra: palavra.startsWith('a'))
+
+- filtro_tamanho = palavra.filter(lambda palavra: len(palavra) > 5)
+
+- num_par = numeros.filter(lambda numero: numero % 2 == 0)
+
+
+#### RDD - Transformações de Reduce
+
+Scala
+
+- val pChaveValor = pMinuscula.map((_,1))
+
+- pReduce = pChaveValor.reduceByKey(_+_)
+
+- pReduce.take(3) # Array(('big', 1), (2019, 2), ('hadoop', 4))
+
+
+Python
+
+- p_chave_valor = pMinuscula.map(lambda palavra: (palavra, 1))
+
+- p_reduce = p_chave_valor.reduceByKey(lambda x, y: x + y)
+
+- p_reduce.take(3) # [('big', 1), (2019, 2), ('hadoop', 4)]
