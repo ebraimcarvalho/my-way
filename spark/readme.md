@@ -25,7 +25,8 @@
 
 6. Verificar os logs do container jupyter-spark
 
-docker jupyter-spark logs
+- docker logs jupyter-spark
+
 7. Acessar pelo browser o Jupyter, através do link:
 
 http://localhost:8889
@@ -120,3 +121,40 @@ Exercícios – Testar o Jupyter Notebook
 11. Ler e visualizar os dados da tabela juros , com uso de Dataframe no formato Parquet
 
 - spark.read.parquet("user/hive/warehouse/juros/").show(5)
+
+
+#### Conceitos RDD
+
+Resilient Distributed Datasets
+
+- Resiliente: Recriar dado perdido na memória
+- Distribuído: Processamento no cluster
+- Datasets: Dados podem ser criados ou vir de fontes
+
+
+- Coleção de objetos distribuídos entre os nós do cluster, armazena os dados em partições
+- Imutáveis
+- Tipos de operações: Ação e Transformação
+
+
+#### RDD - Operações
+
+Ação: Retorna um valor
+
+- Collect
+- Count
+- First
+- Take
+- Reduce
+- CountByKey
+- Foreach
+
+Transformação: Retorna um RDD
+
+- Map
+- Filter
+- FlatMap
+- GroupByKey
+- ReduceByKey
+- AggregateByKey
+
