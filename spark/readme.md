@@ -420,8 +420,26 @@ Spark armazena os dados do RDD em diferentes partições, no mínimo 2. É poss�
 
 1. Ler com RDD os arquivos localmente do diretório “/opt/spark/logs/” ("file:///opt/spark/logs/") com 10 partições
 
+- logs = sc.textFile("file:///opt/spark/logs", 10)
+
 2. Contar a quantidade de cada palavras em ordem decrescente do RDD em 5 partições
+
+- palavras = logs.flatMap(lambda linha: linha.split(" "))
+
+- palavras_minusculas = palavras.map(lambda palavra: palavra.lower())
+
+- p_chave_valor = palavras_minusculas.map(lambda palavra: (palavra, 1))
+
+- p_reduce = p_chave_valor.reduceByKey(lambda x, y: x + y, 5)
+
+- p_ordem = p_reduce.sortBy(lambda x: x[1], False)
+
 
 3. Salvar o RDD no diretório do HDFS /user/<seu-nome>/logs_count_word_5
 
+- p_ordem.saveAsTextFile("/user/ebraim/logs_count_word_5")
+
+
 4. Refazer a questão 2, com todas as funções na mesma linha de um RDD
+
+- p_ordem_5_2 = palavras.flatMap(lambda linha: linha.split(" ")).map(lambda palavra: (palavra, 1)).reduceByKey(lambda x, y: x + y).sortBy(lambda x: x[1], False)
