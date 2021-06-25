@@ -297,3 +297,98 @@ Python
 - p_reduce = p_chave_valor.reduceByKey(lambda x, y: x + y)
 
 - p_reduce.take(3) # [('big', 1), (2019, 2), ('hadoop', 4)]
+
+
+#### RDD - Transformação de Ordenação
+
+Scala
+
+- val pOrdena = pReduce.sortBy(-_._2) # [(String, Int)]
+
+- pOrdena.take(4) # Array[('hadoop', 4), ('semantix', 3), ('data', 3), (2019, 2)]
+
+
+Python
+
+- p_ordena = p_reduce.sortBy(lambda palavra: palavra[1], False)
+
+- p_ordena.take(4) # [('hadoop', 4), ('semantix', 3), ('data', 3), (2019, 2)]
+
+
+#### RDD - Armazenamento e visualização
+
+Scala
+
+- pOrdena.foreach(y => println(y._1 + " - " + y._2)) # hadoop - 4 \n semantix - 3 \n data - 3
+
+
+Python
+
+- lista - p_ordena.collect()
+
+- for row in lista:
+  print(row[0], " - ", row[1]) # hadoop - 4, semantix - 3, data - 3
+
+
+#### RDD - Salvar dados
+
+- p_ordena.getNumPartitions
+
+- p_ordena.saveAsTextFile("saida")
+
+- hdfs dfs -ls /user/root/saida
+
+
+#### Exercício RDD
+
+1. Ler com RDD os arquivos localmente do diretório “/opt/spark/logs/” ("file:///opt/spark/logs/")
+
+- files = sc.textFile("file:///opt/spark/logs/*")
+
+2. Com uso de RDD faça as seguintes operações
+
+a) Contar a quantidade de linhas
+
+- files.count()
+
+b) Visualizar a primeira linha
+
+- files.first()
+
+c) Visualizar todas as linhas
+
+- files.foreach(println)
+
+d) Contar a quantidade de palavras
+
+e) Converter todas as palavras em minúsculas
+
+- filesMin = files.map(lambda x: x.lower())
+
+f) Remover as palavras de tamanho menor que 2
+
+- filesFilter = filesMin.filter(lambda x: len(x) > 2)
+
+g) Atribuir o valor de 1 para cada palavra
+
+- filesMap = filesMin.flatMap(lambda x: (x, 1))
+
+h) Contar as palavras com o mesmo nome
+
+- filesCount = filesMap.reduceByKey(lambda x, y: x + y)
+
+i) Visualizar em ordem alfabética
+
+- filesCount.sortBy(lambda x: x[0], False)
+
+j) Visualizar em ordem decrescente a quantidade de palavras
+
+- filesCount.sortBy(lambda x: x[1], False)
+
+k) Remover as palavras, com a quantidade de palavras > 1
+
+- filesCount.filter(lambda x: x[1] < 1)
+
+l) Salvar o RDD no diretorio do HDFS /user/<seu-nome>/logs_count_word
+
+- filesCount.saveAsTable("/user/ebraim/logs_count_word")
