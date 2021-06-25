@@ -397,3 +397,31 @@ k) Remover as palavras, com a quantidade de palavras <> 1
 l) Salvar o RDD no diretorio do HDFS /user/<seu-nome>/logs_count_word
 
 - logCount.saveAsTextFile("hdfs:///user/ebraim/logs_count_word")
+
+
+#### RDD - Partições
+
+Spark armazena os dados do RDD em diferentes partições, no mínimo 2. É possível definir as partições manualmente na leitura e na redução do dado.
+
+- rdd = sc.textFile("entrada*", 6)
+
+- palavras = rdd.flatMap(lambda linha: linha.split(" "), 3)  # não vai alterar a partição para 3, ignora
+
+- p_chave_valor = palavras.map(lambda palavra: (palavra, 1), 20) # não vai alterar a partição para 20, ignora
+
+- p_reduce = p_chave_valor.reduceByKey(lambda x, y: x + y, 10) # aqui ele altera a partição para 10
+
+- p_reduce_5 = p_reduce.repartition(5) # podemos forçar o reparticionamento em qualquer momento dessa foram
+
+- p_reduce_5.getNumPartitions()
+
+
+#### Exercício RDD - Partition
+
+1. Ler com RDD os arquivos localmente do diretório “/opt/spark/logs/” ("file:///opt/spark/logs/") com 10 partições
+
+2. Contar a quantidade de cada palavras em ordem decrescente do RDD em 5 partições
+
+3. Salvar o RDD no diretório do HDFS /user/<seu-nome>/logs_count_word_5
+
+4. Refazer a questão 2, com todas as funções na mesma linha de um RDD
