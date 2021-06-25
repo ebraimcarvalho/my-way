@@ -343,52 +343,57 @@ Python
 
 1. Ler com RDD os arquivos localmente do diretório “/opt/spark/logs/” ("file:///opt/spark/logs/")
 
-- files = sc.textFile("file:///opt/spark/logs/*")
+- !ls /opt/spark/logs
+- !cat /opt/spark/logs/spark--org.apache.spark.deploy.master.Master-1-jupyter-notebook.out
+- log = sc.textFile("file:///opt/spark/logs")
 
 2. Com uso de RDD faça as seguintes operações
 
 a) Contar a quantidade de linhas
 
-- files.count()
+- log.count()
 
 b) Visualizar a primeira linha
 
-- files.first()
+- log.first()
 
 c) Visualizar todas as linhas
 
-- files.foreach(println)
+- log.collect()
 
 d) Contar a quantidade de palavras
 
+- palavras = log.flatMap(lambda linha: linha.split(" "))
+- palavras.count()
+
 e) Converter todas as palavras em minúsculas
 
-- filesMin = files.map(lambda x: x.lower())
+- logMin = palavras.map(lambda x: x.lower())
 
 f) Remover as palavras de tamanho menor que 2
 
-- filesFilter = filesMin.filter(lambda x: len(x) > 2)
+- logFilter = logMin.filter(lambda x: len(x) > 2)
 
 g) Atribuir o valor de 1 para cada palavra
 
-- filesMap = filesMin.flatMap(lambda x: (x, 1))
+- logMap = logMin.map(lambda x: (x, 1))
 
 h) Contar as palavras com o mesmo nome
 
-- filesCount = filesMap.reduceByKey(lambda x, y: x + y)
+- logCount = logMap.reduceByKey(lambda x, y: x + y)
 
 i) Visualizar em ordem alfabética
 
-- filesCount.sortBy(lambda x: x[0], False)
+- logCount.sortBy(lambda x: x[0], False)
 
 j) Visualizar em ordem decrescente a quantidade de palavras
 
-- filesCount.sortBy(lambda x: x[1], False)
+- logCount.sortBy(lambda x: x[1], False)
 
-k) Remover as palavras, com a quantidade de palavras > 1
+k) Remover as palavras, com a quantidade de palavras <> 1
 
-- filesCount.filter(lambda x: x[1] < 1)
+- logCount.filter(lambda x: x[1] > 1)
 
 l) Salvar o RDD no diretorio do HDFS /user/<seu-nome>/logs_count_word
 
-- filesCount.saveAsTable("/user/ebraim/logs_count_word")
+- logCount.saveAsTextFile("hdfs:///user/ebraim/logs_count_word")
