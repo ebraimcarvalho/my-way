@@ -443,3 +443,6 @@ Spark armazena os dados do RDD em diferentes partições, no mínimo 2. É poss�
 4. Refazer a questão 2, com todas as funções na mesma linha de um RDD
 
 - p_ordem_5_2 = palavras.flatMap(lambda linha: linha.split(" ")).map(lambda palavra: (palavra, 1)).reduceByKey(lambda x, y: x + y).sortBy(lambda x: x[1], False)
+
+
+#### Spark - Aula 4
