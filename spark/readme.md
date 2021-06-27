@@ -445,4 +445,33 @@ Spark armazena os dados do RDD em diferentes partições, no mínimo 2. É poss�
 - p_ordem_5_2 = palavras.flatMap(lambda linha: linha.split(" ")).map(lambda palavra: (palavra, 1)).reduceByKey(lambda x, y: x + y).sortBy(lambda x: x[1], False)
 
 
-#### Spark - Aula 4
+#### Spark - Criação de Schema
+
+Tipagem de Dados
+
+Esquemas - Definição
+
+Scala
+
+Inferir esquema manualmente em dados com cabeçalho
+
+- import org.apache.spark.sql.types._
+
+- val columnsList = List(StructField("id", IntengerType), StructField("setor", StringType))
+
+- val setorSchema = StructType(columnsList)
+
+- val setorDF = spark.read.option("header", "true").schema(setorSchema).csv("setor.csv")
+
+
+Python
+
+``` python
+from pyspark.sql.types import *
+
+columns_list = [StructField("id", IntengerType()), StructField("setor", StringType())]
+
+setor_schema = StructType(columns_list)
+
+setor_df = spark.read.option("header", "true").schema(setor_schema).csv("setor.csv")
+```
