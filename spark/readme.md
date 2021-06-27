@@ -508,7 +508,17 @@ teste_df.printSchema()
 
 1. Criar o DataFrame names_us_sem_schema para ler os arquivos no HDFS “/user/<nome>/data/names”
 
+- !hdfs dfs -ls /user/ebraim/data/names
+
+- !hdfs dfs -cat /user/ebraim/data/names/ytob1880.txt
+
+- names_us_sem_schema = pyspark.read.csv("/user/ebraim/data/names")
+
 2. Visualizar o Schema e os 5 primeiros registos do names_us_sem_schema
+
+- names_us_sem_schema.printSchema()
+
+- names_us_sem_schema.show(5)
 
 3. Criar o DataFrame names_us para ler os arquivos no HDFS “/user/<nome>/data/names” com o seguinte schema:
 
@@ -516,6 +526,25 @@ nome: String
 sexo: String
 quantidade: Inteiro
 
+```py
+from pyspark.sql.types import *
+
+columns_list = [StructField("nome", StringType()), StructField("sexo", StringType()), StructField("quantidade", IntengerType())]
+
+schema = StructType(columns_list)
+
+names_us = pyspark.read.csv("/user/ebraim/data/names", schema=schema)
+
+```
+
 4. Visualizar o Schema e os 5 primeiros registos do names_us
 
+````py
+names_us.printSchema()
+
+names_us.show(5)
+```
+
 5. Salvar o DataFrame names_us no formato orc no hdfs “/user/<nome>/names_us_orc”
+
+- names_us.writeORC("/user/<nome>/names_us_orc")
