@@ -697,16 +697,39 @@ Exemplo:
 
 1. Criar o DataFrame names_us para ler os arquivos no HDFS “/user/<nome>/data/names”
 
+- docker exec -it jupyter-spark bash
+- spark-shell
+
+- names_us = spark.read.csv("/user/ebraim/data/names")
+
 2. Visualizar o Schema do names_us
+
+- names_us.printSchema()
 
 3. Mostras os 5 primeiros registros do names_us
 
+- names_us.show(5)
+
 4. Criar um case class Nascimento para os dados do names_us
+
+- case class Nascimento(nome: String, sexo: String, quantidade: Integer)
 
 5. Criar o Dataset names_ds para ler os dados do HDFS “/user/<nome>/data/names”, com uso do case class Nascimento
 
+- import org.apache.spark.sql.Encoders
+- val schema_names = Encoders.product[Nascimento].schema
+- val names_ds = spark.read.schema(schema_names).csv("/user/ebraim/data/names").as[Nascimento]
+
 6. Visualizar o Schema do names_ds
+
+- names_ds.printSchema()
 
 7. Mostras os 5 primeiros registros do names_ds
 
+- names_ds.show(5)
+
 8. Salvar o Dataset names_ds no hdfs “/user/<nome>/ names_us_parquet” no formato parquet com compressão snappy
+
+- names_ds.write.parquet("user/ebraim/names_us_parquet")
+
+- spark.read.parquet("/user/ebraim/names_us_parquet").show(5)
