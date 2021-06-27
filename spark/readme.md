@@ -512,7 +512,7 @@ teste_df.printSchema()
 
 - !hdfs dfs -cat /user/ebraim/data/names/ytob1880.txt
 
-- names_us_sem_schema = pyspark.read.csv("/user/ebraim/data/names")
+- names_us_sem_schema = spark.read.csv("/user/ebraim/data/names")
 
 2. Visualizar o Schema e os 5 primeiros registos do names_us_sem_schema
 
@@ -539,7 +539,7 @@ names_us = pyspark.read.csv("/user/ebraim/data/names", schema=schema)
 
 4. Visualizar o Schema e os 5 primeiros registos do names_us
 
-````py
+```py
 names_us.printSchema()
 
 names_us.show(5)
@@ -547,4 +547,106 @@ names_us.show(5)
 
 5. Salvar o DataFrame names_us no formato orc no hdfs “/user/<nome>/names_us_orc”
 
-- names_us.writeORC("/user/<nome>/names_us_orc")
+- names_us.write.orc("/user/ebraim/names_us_orc")
+
+
+#### DataSet - Conceitos
+
+Coleção distribuída de objetos de tipagem forte
+
+- Tipos primitivos: Int ou String
+- Tipos Complexos: Array ou listas
+- Product objects: Scala => case classes | Java => JavaBen objects
+- Row objects
+
+Mapeado para um schema relacional
+
+- Schema é definido por um encoder
+- Schema mapeia objeto de propriedades para tipos de colunas
+
+Otimizada pelo Catalyst
+
+Implementado apenas em Java e Scala
+
+
+#### DataFrame x DataSet
+
+Dataframes são conjuntos de dados de Row objects, representam dados tabulares, transformações não são tipadas.
+
+- Linhas podem conter elementos de qualquer tipo
+- Schemas definidos não são aplicados os tipos de coluna até o tempo de execução
+
+Datasets representam dados tipados e orientados a objeto. As transformações são tipadas (Propriedades do objeto são tipadas em tempo de compilação)
+
+Representação dos dados
+
+- RDD - 2011
+- Dataframe - 2013
+- Dataset - 2015
+
+
+#### Criação  de Dataset
+
+Criar Dataset com case classes (recomendada)
+
+- case class <NomeClasse>(<atributo>:<tipo>,...,<atributo>:<tipo>)
+
+Exemplo:
+
+```java
+case class Name(id: Integer, name: String)
+
+reg = Seq(Name(1, "Ebraim"), Name(2, "Carvalho"))
+
+regDS = spark.createDataset(reg)
+
+regDS.show
+
+// Imprimir para cada linha só o name
+
+regDS.foreach(n => println(n.name))
+```
+
+#### Criação de Dataset de Dataframe
+
+Ler dados estruturados para um Dataframe
+
+Criar um Dataset para ler os dados do Dataframe
+
+Forçar para inserir um schema com o Encoder
+
+```java
+case class Name(id: Integer, name: String)
+
+val regDF = spark.read.json("registros.json")
+
+val regDS =  regDF.as[Name]
+
+regDS.show
+
+
+import org.apache.spark.sql.Encoders
+
+val schema = Encoders.product[Name].schema
+
+val regDS = spark.read.schema(schema).json("registros.json").as[Name]
+```
+
+
+#### Criação de Dataset de RDD
+
+Ler dados não estruturados ou semi estsruturados para um RDD
+
+Criar um Dataset para ler os dados do RDD
+
+``` java
+case class PcodeLatLon(pcode: String, latlon: Tuple2[Double, Double])
+
+val pLatLonRDD = sc.textFile("latlon.tsv").map(_.split("\t")).map(fields => (PcodeLatLon(fields(0), (fields(1).toFloat, fields(2).toFloat))))
+
+val pLatLonDS = spark.createDataset(pLatLonRDD)
+
+pLatLonDS.printSchema
+
+println(pLatLonDS.first)
+```
