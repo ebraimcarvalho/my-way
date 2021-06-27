@@ -475,3 +475,30 @@ setor_schema = StructType(columns_list)
 
 setor_df = spark.read.option("header", "true").schema(setor_schema).csv("setor.csv")
 ```
+
+
+#### Dataframe - Testar Schema
+
+```py
+from pyspark.sql.types import *
+
+columns_list = [StructField("id", IntengerType()), StructField("setor", StringType())]
+
+setor_schema = StructType(columns_list)
+
+dados_teste = [Row(1, "vendas"), Row(2, "TI"), Row(3, "RH")]
+
+setor_df = spark.createDataFrame(data=dados_teste, schema=setor_schema)
+```
+
+```py
+from pyspark.sql.import Row
+
+Schema = Row("id", "setor")
+
+dados_teste = [Schema(1, "vendas"), Schema(2, "TI"), Schema(3, "RH")]
+
+teste_df = spark.createDataFrame(data=dados_teste)
+
+teste_df.printSchema()
+```
