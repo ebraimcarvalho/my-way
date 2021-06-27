@@ -650,3 +650,63 @@ pLatLonDS.printSchema
 
 println(pLatLonDS.first)
 ```
+
+#### Transformações de Dataset
+
+Transformações tipadas criam um novo Dataset
+
+- Filter
+- Limit
+- Sort
+- flatMap
+- Map
+- ordereBy
+
+Transformações não tipadas retornarm DataFrames ou colunas não tipadas
+
+- Join
+- groupBy
+- Col
+- Drop
+- Select
+- withColumn
+
+#### Exemplo de transformações
+
+- Tipadas: Dataset
+- Não tipadas: Dataframe
+
+``` java
+val sortedDS = regDS.sort("name") // Dataset
+
+val nameDF = regDS.select("name") // Dataframe
+
+val combineDF = regDS.sort("name");where("id > 10").select("name") // Dataframe
+```
+
+Ao salvar dataset, será salvo como Dataframe
+
+Exemplo: 
+
+- regDS.write.save("hdfs://localhost/user/cloudera/registros/")
+
+- regDS.write.json("registros")
+
+
+#### Exercício - Dataset com Dataframe
+
+1. Criar o DataFrame names_us para ler os arquivos no HDFS “/user/<nome>/data/names”
+
+2. Visualizar o Schema do names_us
+
+3. Mostras os 5 primeiros registros do names_us
+
+4. Criar um case class Nascimento para os dados do names_us
+
+5. Criar o Dataset names_ds para ler os dados do HDFS “/user/<nome>/data/names”, com uso do case class Nascimento
+
+6. Visualizar o Schema do names_ds
+
+7. Mostras os 5 primeiros registros do names_ds
+
+8. Salvar o Dataset names_ds no hdfs “/user/<nome>/ names_us_parquet” no formato parquet com compressão snappy
