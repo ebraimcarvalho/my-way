@@ -733,3 +733,28 @@ Exemplo:
 - names_ds.write.parquet("user/ebraim/names_us_parquet")
 
 - spark.read.parquet("/user/ebraim/names_us_parquet").show(5)
+
+
+#### Opções de Leitura e Escrita CSV
+
+```py
+data = spark.read.
+        option("sep", "|").
+        option("header", "true").
+        option("quote", "\"").
+        option("mode", "DROPMALFORMED").
+        csv("hdfs:///user/teste/")
+
+
+from pyspark.sql import Row
+
+Name = ("cod", "nome")
+data = [Name(1, "Ebraim"), Name(2, "Carvalho"), Name(3, "Brenda")]
+data_frame = spark.createDataFrame(data)
+
+data_frame.printSchema()
+data_frame.show()
+
+data_frame.write.csv("/user/ebraim/teste_csv", mode="overwrite", header="true")
+
+```
