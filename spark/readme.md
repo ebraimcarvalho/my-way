@@ -863,3 +863,56 @@ valpNome = sepNomeDF.withColumn("pNome", nomesDF["sepNome"].getItem(0)).drop("se
 6. Salvar no hdfs /user/rodrigo/juros_selic_americano no formato CSV, incluindo o cabeçalho
 
 - jurosFormat.write.csv("/user/ebraim/juros_selic_americano", header="true")
+
+
+#### WithColumn - Trabalhando com Cast
+
+Cast: Alterar o tipo do dado. Sintaxe:
+
+- <dataFrame>.withColumn("<nomeColuna>", <coluna>.cast("Tipo"))
+
+Alterar as casas decimais:
+
+- format_number("<coluna>", <numeroCasasDecimais>)
+
+```py
+medida = data.select("total").show(1) # 1000.00 (String)
+
+from pyspark.sql.types import *
+
+converter = medida.withColumn("Total Real", medida["total"].cast(FloatType()))
+
+converter2c = converter.withColumn("Total Real", format_number(converter["Total Real"].cast(FloatType()), 2))
+```
+
+#### WitchColumn - Trabalhando com Cast e regexp_replace
+
+Regexp serve para alterar um padrão com uso de regex, sintaxe:
+
+- regexp_replace("<coluna>", "<padrao_atual>", "<novo_padrao>")
+
+Exemplo para fazer cast de decimais para substituir "," por "."
+
+```py
+medida = data.select("total").show(1) # 1.000,00 (String)
+
+medida = medida.witchColumn("total", regexp_replace(medida["total"], "\.", "")) # 1000,00 (String)
+
+medida = medida.withcolumn("total", regexp_replace(medida["total"], "\,", ".")) # 1000.00 (String)
+
+from pyspark.sql.types import *
+
+converter = medida.witchColumn("Total Real", medida["total"].cast(FloatType())) # 1000.00 (Float)
+```
+
+#### WitchColumn - Trabalhando com When
+
+Responsável por fazer condicional em colunas. Sintaxe:
+
+- <dataFrame>.withColum("<nomeColuna>", when(<condição>, <valorVerdadeiro>).otherwise(<valorFalso>))
+
+```py
+codigos = data.select("cod").take(5) # AABB, ACBB, 00ABCC
+
+remover_zeros = codigos.withColumn("cod_sem_zero", when(length(codigos["cod"]) > 4, substring(codigos["cod"], 3, 6)).otherwise(codigos["cod"])) # AABB, ACBB, ABCC
+```
