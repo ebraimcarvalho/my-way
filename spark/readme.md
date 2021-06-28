@@ -916,3 +916,30 @@ codigos = data.select("cod").take(5) # AABB, ACBB, 00ABCC
 
 remover_zeros = codigos.withColumn("cod_sem_zero", when(length(codigos["cod"]) > 4, substring(codigos["cod"], 3, 6)).otherwise(codigos["cod"])) # AABB, ACBB, ABCC
 ```
+
+
+#### WithColumn - Trabalhando com Agregações
+
+- <dataFrame>.groupBy(<coluna>).agg(<f_agg>)
+
+- count
+- avg
+- sum
+- min
+- max
+- first
+- last
+- countDistinct
+- approx_count_distinct
+- stddev
+- var_sample
+- var_pop
+- covar_samp
+- covar_pop
+- corr
+
+```py
+peopleDF.groupBy("setor").sum("gastos").sort(desc("gastos"))
+
+peopleDF.groupBy("setor").agg(avg("gastos"), sum("gastos").alias("total_gastos"))
+```
