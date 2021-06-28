@@ -755,6 +755,27 @@ data_frame = spark.createDataFrame(data)
 data_frame.printSchema()
 data_frame.show()
 
-data_frame.write.csv("/user/ebraim/teste_csv", mode="overwrite", header="true")
+data_frame.write.csv("/user/ebraim/teste_csv", mode="overwrite", header="true", sep=";")
 
+spark.read.csv("/user/ebraim/teste_csv", header="true", sep=";").show()
 ```
+
+#### Função Withcolumn - Conceitos
+
+```py
+from pyspark.sql.functions import col
+
+addColumn = dataframe.withColumn("Novo campo", col("id"))
+
+# pode ser usado essas notações para referenciar coluna em python
+
+col("campo")
+dataframe["campo"]
+datafram.campo
+```
+
+Em scala:
+
+- col("campo")
+- dataframe("campo")
+- $"campo"
