@@ -779,3 +779,23 @@ Em scala:
 - col("campo")
 - dataframe("campo")
 - $"campo"
+
+
+#### WitchColumn - Trabalhando com Timestamp
+
+Converter Coluna para timestamp: unix_timestamp(col("<ColString>"), "<FormatoAtual>")
+
+Alterar formato de Coluna de timestamp: from_unixtime(<ColTimestamp>, "<FormatoConversão>")
+
+```py
+from pyspark.sql.functions import unix_timestamp, from_unixtime
+
+formato = data.select("data").show(1) # 2020/10/25
+
+convUnix = formato.withColumn("timestamp", unix_timestamp(formato["data"], "yyyy/MM/dd"))
+
+convUnixData = convUnix.withColumn("new data", from_unixtime("timestamp", "MM-dd-yyyy"))
+
+# Fazendo em uma linha de comando
+convDataDireto = formato.withColumn("mes-dia-ano", from_unixtime(unix_timestamp(formato["data"], "yyyy/MM/dd"),"MM-dd-yyyy"))
+```
