@@ -817,3 +817,18 @@ colsDF = data.select("codigo") # codigo = AA150000CCS
 resumoCod = colsDF.withColumn("pedido", concat(substring(colsDF["codigo"], 1, 2), lit("-"), substring(colsDF["codigo"], 9, 3))) # pedido = AA-CCS
 
 ```
+
+
+#### WithColumn - Trabalhando com Split
+
+Split serve para criar um array de acordo com um delimitar. Sintaxe:
+
+- <dataframe>.withColumn("<nomeColuna>", split("<Coluna>", "<delimitador>"))
+
+```py
+nomesDF = data.select("nome").show(1) # Rodrigo Augusto Rebouças
+
+sepNomeDF = nomesDF.withColumn("sepNome", split(data["nome"], " "))
+
+valpNome = sepNomeDF.withColumn("pNome", nomesDF["sepNome"].getItem(0)).drop("sepNome")
+```
