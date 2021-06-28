@@ -799,3 +799,21 @@ convUnixData = convUnix.withColumn("new data", from_unixtime("timestamp", "MM-dd
 # Fazendo em uma linha de comando
 convDataDireto = formato.withColumn("mes-dia-ano", from_unixtime(unix_timestamp(formato["data"], "yyyy/MM/dd"),"MM-dd-yyyy"))
 ```
+
+
+#### WithColumn - Trabalhando com Substring
+
+Extrai dados de uma coluna de acordo com uma posição, muito usado com concat. Sintaxe:
+
+- <dataframe>.withColumn("<nomeColuna>", substring("<Coluna>", <posicaoInicial>, <tamanho>))
+
+```py
+formato = data.select("data").show(1) # 2020/10/25
+
+mes = formato.withColumn("mes", substring(formato["data"], 6, 2)) # mes = 10
+
+colsDF = data.select("codigo") # codigo = AA150000CCS
+
+resumoCod = colsDF.withColumn("pedido", concat(substring(colsDF["codigo"], 1, 2), lit("-"), substring(colsDF["codigo"], 9, 3))) # pedido = AA-CCS
+
+```
