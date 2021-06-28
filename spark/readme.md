@@ -838,12 +838,28 @@ valpNome = sepNomeDF.withColumn("pNome", nomesDF["sepNome"].getItem(0)).drop("se
 
 1. Criar um dataframe para ler o arquivo no HDFS /user/<nome/data/juros_selic/juros_selic
 
+- !hdfs dfs -ls /user/ebraim/data/juros_selic/juros_selic
+- juros = spark.read.json("/user/ebraim/data/juros_selic/juros_selic")
+
 2. Alterar o formato do campo data para “MM/dd/yyyy”
+
+- from pyspark.sql.functions import unix_timestamp, from_unixtime
+
+- juros.show(1)
+- jurosFormat = juros.withColumn("mes-dia-ano", from_unixtime(unix_timestamp(juros["data"], "dd/MM/yyyy"), "MM/dd/yyyy"))
 
 3. Com uso da função from_unixtime crie o campo “ano_unix”, com a informação do ano do campo data
 
+- jurosFormat.withColumn("ano_unix", from_unixtime(unix_timestamp(jurosFormat["data"], "dd/MM/yyyy"), "yyyy"))
+
 4. Com uso de substring crie o campo “ano_str”, com a informação do ano do campo data
+
+- jurosFormat.withColumn("ano_str", substring(jurosFormat["data"], 7, 4))
 
 5. Com uso da função split crie o campo “ano_str”, com a informação do ano do campo data
 
+- jurosFormat.withColumn("ano_str", split(jurosFormat["data"], "/").getItem(2))
+
 6. Salvar no hdfs /user/rodrigo/juros_selic_americano no formato CSV, incluindo o cabeçalho
+
+- jurosFormat.write.csv("/user/ebraim/juros_selic_americano", header="true")
