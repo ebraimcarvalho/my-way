@@ -985,6 +985,8 @@ relatorio2.printSchema()
 juros_relatorio = relatorio2.groupBy("ano").agg(count("mes").alias("Meses"), format_number(avg("valor"), 2).alias("Valor Médio"), min("valor").alias("Valor Mínimo"), max("valor").alias("Valor Máximo")).sort(desc("ano"))
 juros_relatorio.show()
 
+
+
 #!hdfs dfs -ls /user/ebraim
 
 # 3. Salvar no hdfs:///user/<nome>/relatorioAnual com compressão zlib e formato orc
