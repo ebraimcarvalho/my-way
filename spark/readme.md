@@ -991,3 +991,21 @@ juros_relatorio.show()
 
 juros_relatorio.write.orc("hdfs:///user/ebraim/relatorioAnual", compression="zlib")
 ```
+
+### Spark Application
+
+- spark submit --class NameList MyJarFile.jar people.json namelist/
+
+Opções submit:
+
+- master: Local, yarn, mesos ou spark standalone
+- jars: adicionar arquivos jar
+- py-files: lista de arquivos em .py, .zip, .egg
+- driver-java-options: parametros para o driver JVM
+- deploy-mode: client ou cluster
+- driver-memory: Memória alocada para o spark driver (1G)
+- executor-memory: Memória alocada para a aplicação
+- num-executors: Número de executores para iniciar uma aplicação
+- driver-cores: Número de core's alocados para o spark driver
+- queue: Rodar na fila do Yarn
+- help
