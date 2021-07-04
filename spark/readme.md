@@ -1279,3 +1279,170 @@ spark-shell --packages org.apache.spark:spark-streaming-kafka-0.10_2.11:2.4.1
 
 
 #### Estrutura do código e importações - Scala
+
+Processos básicos para leitura de dados do kafka
+
+```scala
+import...
+val ssc = new StreamingContext(...)
+val kafkaParams = Map[String, Object](...)
+val dstream = kafkaUtils.createDirectStream[String, String](...)
+dstream.map(...)
+ssc.start()
+
+import org.apache.kafka.clients.consumer.ConsumerRecord
+import org.apache.kafka.common.serialization.StringDeserializer
+import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.streaming.kafka010._
+import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
+import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
+
+```
+
+#### Parâmetros do Kafka
+
+Usar API Kafka para configuração:
+
+```scala
+val kafkaParams = Map[String, Object](
+  "bootstrap.servers" -> "localhost:9092",
+  "key.deserializer" -> classOf[StringDeserializer],
+  "value.deserializer" -> classOf[StringDeserializer],
+  "group.id" -> "app-teste",
+  "auto.offset.reset" -> "earliest",
+  "enable.auto.commit" -> (false: java.lang.Boolean)
+)
+```
+
+
+#### Criação e visualização do Dstream
+
+- Location Strategies:
+
+1. PreferConsistent: Distribuir partições uniformemente entre os executores disponíveis
+
+2. PreferBrokers: Se seus executores estiverem nos mesmos hosts que seus corretores kafka
+
+3. PreferFixed: Especifique um mapeamento explícito de partições para hosts
+
+- Consumer Strategies:
+
+1. Subscribe: Inscrever-se em uma coleção fixa de tópicos
+
+2. SubscribePattern: Use um regex para especificar tópicos de interesse
+
+3. Assign: Especificar uma coleção fixa de partições
+
+
+#### Criação do Dstream
+
+Usar estratégia do Kafka
+
+```scala
+val ssc - new StreamingContext(sc, Seconds(10))
+val topics = Array("topicA")
+val dstream = KafkaUtils.createDirectStream[String, String](
+  ssc,
+  LocationStrategies.PreferConsistent,
+  ConsumerStrategies.Subscribe[String, String](topics, kafkaParams)
+)
+```
+
+#### Visualizar DStream
+
+Mapear a estrutura do Tópico
+
+```scala
+val info_dstream = dstream.map(record => (
+  record.topic,
+  record.partition,
+  record.key,
+  record.value
+))
+
+info_dstream.print()
+```
+
+#### Exercício Spark e Kafka
+
+##### kafka
+
+1. Preparação do ambiente no Kafka
+
+a) Criar o tópico “topic-spark” com 1 partição e o fator de replicação = 1
+
+- docker exec -it kafka bash
+- kafka-topics.sh --bootstrap-server kafka:9092 --topic topic-spark --create --partitions 1 --replication-factor 1
+
+b) Inserir as seguintes mensagens no tópico:
+
+- Msg1
+
+- Msg2
+
+- Msg3
+
+- kafka-console-producer --broker-list kafka:9092 --topic topic-spark
+
+c) Criar um consumidor no Kafka para ler o “topic-spark”
+
+- kafka-console-consumer --bootstrap-server kafka:9092 --topic topic-spark
+
+##### Spark
+
+1. Criar um consumidor em Scala usando Spark Streaming para ler o “topic-spark” no cluster Kafka ”kafka:9092”
+
+- docker exec -it jupyter-spark bash
+- spark-shell --packages org.apache.spark:spark-streaming-kafka-0-10_2.11:2.4.1
+
+```scala
+import org.apache.kafka.clients.consumer.ConsumerRecord
+import org.apache.kafka.common.serialization.StringDeserializer
+import org.apache.spark.streaming.kafka010._
+import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
+import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
+import org.apache.spark.streaming.{StreamingContext, Seconds}
+
+val kafkaParams = Map[String, Object](
+  "bootstrap.servers" -> "kafka:9092",
+  "key.deserializer" -> classOf[StringDeserializer],
+  "value.deserializer" -> classOf[StringDeserializer],
+  "group.id" -> "aplicacao1",
+  "auto.offset.reset" -> "earliest",
+  "enable.auto.commit" -> (false: java.lang.Boolean))
+
+val ssc = new StreamingContext(sc, Seconds(5))
+val topic = Array("topic-spark")
+val dstream = KafkaUtils.createDirectStream[String, String](
+  ssc,
+  LocationStrategies.PreferConsistent,
+  ConsumerStrategies.Subscribe[String, String](topic, kafkaParams)
+)
+
+```
+
+
+2. Visualizar o tópico com as seguintes informações
+
+Nome do tópico
+Partição
+Valor
+
+```scala
+val info_dstream = dstream.map(record => (
+  record.topic,
+  record.partition,
+  record.value
+))
+
+info_dstream.print()
+
+info_dstream.saveAsTextFiles("/user/ebraim/kafka/dstream")
+
+```
+
+3. Salvar o tópico no diretório hdfs://namenode:8020/user/<nome>/kafka/dstream
+
+- info_dstream.saveAsTextFiles("/user/ebraim/kafka/dstream")
+
+- ssc.start()
