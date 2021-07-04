@@ -1009,3 +1009,22 @@ Opções submit:
 - driver-cores: Número de core's alocados para o spark driver
 - queue: Rodar na fila do Yarn
 - help
+
+
+#### Build Spark - Pycharm
+
+- Create a project, file main.py
+
+```py
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder.appname("Projeto Python").getOrCreate()
+
+juros = spark.read.json("hdfs://namenode:8020/user/ebraim/data/juros_selic/juros_selic.json")
+
+juros.collect()
+
+juros.write.parquet("hdfs://namenode:8020/user/ebraim/projeto_python")
+
+spark.stop()
+```
