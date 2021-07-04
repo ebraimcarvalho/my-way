@@ -1041,3 +1041,109 @@ spark.stop()
 - docker exec -it jupyter-spark bash
 - spark-submit --master local /home/main.py
 - docker exec -it jupyter-spark hdfs dfs -ls /user/ebraim/projeto_python
+
+
+### Spark Streaming - conceitos
+
+1. Spark: ETL e processamento em batch
+
+2. Spark SQL: Consultas em dados estruturados
+
+3. Spark Streaing: Processamento de stream
+
+4. Spark MLib: Machine Learning
+
+5. Spark GraphX: Processamento de grafos
+
+
+#### Spark Streaming
+
+Abstração de alto nível, Dstreams (Discretized Streaming), representa um Strema contínuo de dados.
+
+Extensão da API core do Spark com processamento escalonável, alta taxa de transferência e tolerante a falhas de stream de dados.
+
+Recebe fluxos de dados de entrada e divide os dados em lotes processados pela engine do spark para gerar o stream final de resultados em batch. DStream é representado como uma sequencia de RDDs.
+
+
+#### DStream - Leitura Básica
+
+- Criar um Contexto com intervalo de 2 segundos
+
+Scala:
+
+```scala
+import org.apache.spark._
+import org.apache.spark.streaming._
+
+val conf = new SparkConf().setMaster("local")
+val sc = new SparkContext(conf)
+val ssc = new StreamingContext(sc, Seconds(2))
+
+val dstr = ssc.socketTextStream("localhost", 9999)
+```
+
+Python:
+
+```python
+from pyspark import SparkContext
+from pyspark.streaming import StreamingContext
+
+conf = SparkConf().setMaster("local")
+sc = SparkContext.getOrCreate(conf)
+ssc = StreamingContext(sc, 2)
+
+dstr = ssc.socketTextStream("localhost", 9999)
+```
+
+#### DStream - Leitura e exibição de uma porta
+
+Exemplo de leitura na porta 9999 no localhost
+
+```python
+from pyspark.streaming import StreamingContext
+
+ssc = StreamingContext(sc, 2)
+
+readStr = ssc.socketTextStream("localhost", 9999)
+
+readStr.pprint()
+
+# Usar netcat para enviar dados na porta 9999
+# Rodar o comando no serviço do localhost jupyter-spark
+
+# $nc -lp 9999
+
+ssc.start()
+```
+
+#### Exercicio spark streaming
+
+1. Instalar o NetCat no container do spark
+
+- docker exec -it jupyter-spark bash
+- apt update
+- apt install netcat
+
+2. Criar uma aplicação para ler os dados da porta 9999 e exibir no console
+
+```python
+from pyspark import SparkContext
+from pyspark.streaming import StreamingContext
+from time import sleep
+
+conf = SparkConf().setAppName("DStream Python").setMaster("local[*]")
+sc = SparkContext.getOrCreate(conf)
+
+ssc = StreamingContext(sc, 5)
+
+readStr = ssc.socketTextStream("localhost", 9999)
+
+readStr.pprint()
+
+# run: $ docker exec -it jupyter-spark bash
+# run: $ nc -lp 9999
+
+ssc.start()
+sleep(20)
+ssc.stop()
+```
