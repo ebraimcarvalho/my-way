@@ -1262,3 +1262,20 @@ Criação do produtor enviando um arquivo
 
 Criação do produtor enviando um arquivo com chave/valor
 - kafka-console-producer --broker-list kafka:9092 --topic topicTeste --property parse.key=true --property parse.separator=, < file.log
+
+
+#### Dependencias do spark streaming com kafka
+
+Necessário adicionar pacote do kafka:
+
+- --packages org.apache.spark:spark-streaming-kafka-0.10_<versãoScala>:<versãoSpark>
+
+- Encontrar versão do kafka, no serviço do kafka, rodar: kafka-topics --version => 2.3.0
+- Encontrar versão do Scala e do Spark, no serviço do spark, rodar: spark-shell => Scala: 2.11.12 e Spark: 2.4.1
+
+- Comando no serviço do spark para adicionar dependencia:
+
+spark-shell --packages org.apache.spark:spark-streaming-kafka-0.10_2.11:2.4.1
+
+
+#### Estrutura do código e importações - Scala
