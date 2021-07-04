@@ -1147,3 +1147,63 @@ ssc.start()
 sleep(20)
 ssc.stop()
 ```
+
+
+#### Spart Streaming - Operações
+
+Ação: retorna um valor
+
+- Count
+- CountByValue
+- Reduce
+- Print
+- ForeachRDD
+
+Transformação: retorna um DStream
+
+- Map
+- Filter
+- FlatMap
+- ReduceByKey
+
+```python
+from pyspark import SparkContext
+from pyspark.streaming import StreamingContext
+
+conf = SparkConf().setAppName("DStreaming Python").setMaster("local[*]")
+sc = SparkContext.getOrCreate(conf)
+
+ssc = StreamingContext(sc, 5)
+
+readStr = ssc.socketTextStream("localhost", 9999)
+
+# Flatmap
+palavras = readStr.flatMap(lambda linha: linha.split(" "))
+palavras.saveAsTextFile("hdfs://localhost/linha")
+
+# Map
+pMinuscula = palavras.map(lambda palavra: palavra.lower())
+pMaiuscula = palavras.map(lambda palavra: palavra.upper())
+pChaveValor = pMinuscula.map(lambda palavra: (palavra, 1))
+pReduce = pChaveValor.reduceByKey(lambda x, y: x + y)
+pReduce.pprint()
+
+# Filter
+filtro_a = palavras.filter(lambda palavra: palavra.startswith("a"))
+filtro_tamanho = palavras.filter(lambda palavra: len(palavra) > 5)
+num_par = numeros.filter(lambda numero: numero % 2 == 0)
+
+# nc -lp 9999
+
+ssc.start()
+```
+
+#### Exercício 2 DStream - Word Count
+
+1. Criar o diretório no hdfs “/user/rodrigo/stream”
+
+- !hdfs dfs -mkdir /user/ebraim/stream
+
+2. Criar uma aplicação para contar palavras a cada 10 segundos da porta 9998 e exibir no console durante 50 segundos
+
+3. Criar uma aplicação para contar palavras a cada 10 segundos da porta 9998 e salvar os dados no namenode no diretório “hdfs://namenode/user/rodrigo/stream/word_count” durante 50 segundos
