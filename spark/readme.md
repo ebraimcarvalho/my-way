@@ -1014,9 +1014,11 @@ Opções submit:
 #### Build Spark - Pycharm
 
 - Create a project, file main.py
+- isntall pyspark
 
 ```py
 from pyspark.sql import SparkSession
+from time import sleep
 
 spark = SparkSession.builder.appname("Projeto Python").getOrCreate()
 
@@ -1024,7 +1026,18 @@ juros = spark.read.json("hdfs://namenode:8020/user/ebraim/data/juros_selic/juros
 
 juros.collect()
 
-juros.write.parquet("hdfs://namenode:8020/user/ebraim/projeto_python")
+juros.write.parquet("hdfs://namenode:8020/user/ebraim/projeto_python", mode="overwrite")
+
+sleep(100)
 
 spark.stop()
 ```
+
+- enviar arquivo do projeto main.py para o serviço pyspark
+
+- docker cp /mnt/c/Users/ebraim.carvalho/PythonProject/projeto_python/main.py jupyter-spark:/home
+
+- rodar comando spark-submit: 
+- docker exec -it jupyter-spark bash
+- spark-submit --master local /home/main.py
+- docker exec -it jupyter-spark hdfs dfs -ls /user/ebraim/projeto_python
