@@ -1207,3 +1207,58 @@ ssc.start()
 2. Criar uma aplicação para contar palavras a cada 10 segundos da porta 9998 e exibir no console durante 50 segundos
 
 3. Criar uma aplicação para contar palavras a cada 10 segundos da porta 9998 e salvar os dados no namenode no diretório “hdfs://namenode/user/rodrigo/stream/word_count” durante 50 segundos
+
+
+#### Integração do Spark Streaming com Kafka
+
+Formas de integrar Kafka no Spark:
+
+- Spark Streaming (Dstreams): spark >= 0.7.0
+- Structured Streaming: spark >= 2.0.0 (2.3)
+
+|                            | spark-streaming-kafka-0-8 | spark-streaming-kafka-0-10 |
+|----------------------------|---------------------------|----------------------------|
+| Broker Version             | 0.8.2.1 or higher         | 0.10.1 or higher           |
+| Api maturity               | Deprecated spark 2.3      | stable                     |
+| Language Support           | Scala, Java, Python       | Scala, Java                |
+| Receiver DStream           | Yes                       | No                         |
+| Direct DStream             | Yes                       | Yes                        |
+| SSL/TSL Support            | No                        | Yes                        |
+| Offset Commit API          | No                        | Yes                        |
+| Dynamic Topic Subscription | No                        | Yes                        |
+
+
+#### Spark Streaming (Dstreams)
+
+- Scala e Java: versão >= 0.7.0 Spark
+- Python: versão >= 1.2 Spark e <= 2.3
+
+- Receber dados de um ou mais tópicos do kafka
+
+1. Configurar os parametros do StreamContext
+2. Configurar os parametros do kafka
+3. Configurar o Dstreams para leitura dos tópicos
+
+
+#### Revisão comandos Kafka
+
+Acessar o container do kafka:
+- docker exec -it kafka bash
+
+Criação do tópico
+- kafka-topics --bootstrap-server kafka:9092 --topics topicTeste --create --partitions1 --replication-factor 1
+
+Criação do produtor
+- kafka-console-producer --broker-list kafka:9092 --topic topicTeste
+
+Criação do consumidor
+- kafka-console-consumer --bootstrap-server kafka:9092 --topic topicTeste
+
+Criação do produtor com chave/valor
+- kafka-console-producer --broker-list kafka:9092 --topic topicTeste --property parse.key=true --property key.separator=,
+
+Criação do produtor enviando um arquivo
+- kafka-console-producer --broker-list kafka:9092 --topic topicTeste < file.log
+
+Criação do produtor enviando um arquivo com chave/valor
+- kafka-console-producer --broker-list kafka:9092 --topic topicTeste --property parse.key=true --property parse.separator=, < file.log
