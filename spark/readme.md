@@ -681,7 +681,7 @@ val sortedDS = regDS.sort("name") // Dataset
 
 val nameDF = regDS.select("name") // Dataframe
 
-val combineDF = regDS.sort("name");where("id > 10").select("name") // Dataframe
+val combineDF = regDS.sort("name").where("id > 10").select("name") // Dataframe
 ```
 
 Ao salvar dataset, será salvo como Dataframe
@@ -1533,3 +1533,16 @@ read_csv_df.writeStream.format("csv").option("checkpointLocation", "/user/ebraim
 hdfs dfs -ls /user/ebraim/stream_iris
 
 6. Bônus: Contar as palavras do exercício 1.
+
+
+#### Structured Strteaming com Kafka
+
+- Structured Streaming: versao spark >= 2.0.0 (2.3)
+- Spark Streaming:
+
+1. Configuirar os parametros do streamContext
+2. Configurar os parametros do Kafka
+3. Configurar o Dstreams para leitura dos topicos
+
+- Structured Streaming
+1. configurar o Dataframe para leitura dos tópicos
