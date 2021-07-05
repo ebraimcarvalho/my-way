@@ -1501,7 +1501,9 @@ read_csv_df.writeStream.format("csv").option("checkpointLocation", "/tmp/checkpo
 1. Criar uma aplicação em scala usando o spark para ler os dados da porta 9999 e exibir no console
 
 - docker exec -it jupyter-spark bash
+- pyspark
 - read_str = spark.readStream.format("socket").option("host", "localhost").option("port", 9999).load()
+- nc -lp 9999 in other terminal
 - write_str = read_str.writeStream.format("console").start()
 
 2. Ler os arquivos csv “hdfs://namenode:8020/user/<nome>/data/iris/*.data” em modo streaming com o seguinte schema:
@@ -1514,7 +1516,7 @@ class string
 
 ```python
 user_schema = StructType().add("sepal_length", "float").add("sepal_width", "float").add("petal_length", "float").add("petal_width", "float").add("class", "string")
-read_csv_df = spark.readStream.schema(user_schema).csv("/user/nomes/data/iris/*.data")
+read_csv_df = spark.readStream.schema(iris_schema).csv("/user/ebraim/data/iris/*.data")
 
 read_csv_df.printSchema()
 
