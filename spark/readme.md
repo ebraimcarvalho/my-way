@@ -1384,6 +1384,8 @@ b) Inserir as seguintes mensagens no tópico:
 
 - kafka-console-producer --broker-list kafka:9092 --topic topic-spark
 
+Observação: Se quiser usar chave e valor no producer do kafka, adicionar os parametros --property parse.key=true --property parse.separator=, no comando do kafka-console-producer
+
 c) Criar um consumidor no Kafka para ler o “topic-spark”
 
 - kafka-console-consumer --bootstrap-server kafka:9092 --topic topic-spark
@@ -1446,3 +1448,86 @@ info_dstream.saveAsTextFiles("/user/ebraim/kafka/dstream")
 - info_dstream.saveAsTextFiles("/user/ebraim/kafka/dstream")
 
 - ssc.start()
+
+
+#### Struct Streaming - Conceitos
+
+Engine de processamento de stream construído na engine do Spark SQL. 
+
+Consultas do Spark Streaming são processadas usando uma engine de processamento de micro lote:
+- Processar stream de dados como uma série de pequenos Jobs em Batch
+- Latências de ponta a ponta de até 100 milissegundos
+- Tolerância de uma falha
+
+Novo modelo de Stream: Continuous processing
+- Spark >= 2.3
+- Latências de ponta a ponta tão baixas quanto a 1 milissegundos
+- Tolerância de uma falha
+- Sem alterar as operações Dataset / Dataframe em suas consultas
+
+Struct Streaming trata um stream de dados como uma tabela que está sendo continuamente anexada. Modelo de processamento de stream muito semelhante a um modelo de processamento em lote.
+
+New data in the data stream = new rows appended to a unbounded table
+
+
+#### Struct Streaming - Exemplo Socket
+
+Exemplo de leitura na porta 9999 no localhost
+
+```python
+read_str = spark.readStream.format("socket").option("host", "localhost").option("port", 9999).load()
+
+write_str = read_str.writeStream.format("console").start()
+
+```
+
+### Struct Streaming - Exemplo CSV
+
+Leitura de um arquivo CSV, obrigatório a definição do Schema e a leitura é do diretório e não do arquivo
+
+```python
+user_schema = StructType().add("nome", "string").add("idade", "integer")
+read_csv_df = spark.readStream.schema(user_schema).csv("/user/nomes/")
+
+read_csv_df.printSchema()
+
+read_csv_df.writeStream.format("csv").option("checkpointLocation", "/tmp/checkpoint").option("path", "/home/data/").start()
+
+```
+
+
+#### Exercício Struct Stream
+
+1. Criar uma aplicação em scala usando o spark para ler os dados da porta 9999 e exibir no console
+
+- docker exec -it jupyter-spark bash
+- read_str = spark.readStream.format("socket").option("host", "localhost").option("port", 9999).load()
+- write_str = read_str.writeStream.format("console").start()
+
+2. Ler os arquivos csv “hdfs://namenode:8020/user/<nome>/data/iris/*.data” em modo streaming com o seguinte schema:
+
+sepal_length float
+sepal_width float
+petal_length float
+petal_width float
+class string
+
+```python
+user_schema = StructType().add("sepal_length", "float").add("sepal_width", "float").add("petal_length", "float").add("petal_width", "float").add("class", "string")
+read_csv_df = spark.readStream.schema(user_schema).csv("/user/nomes/data/iris/*.data")
+
+read_csv_df.printSchema()
+
+read_csv_df.writeStream.format("csv").option("checkpointLocation", "/user/ebraim/stream_iris/check").option("path", "/user/ebraim/stream_iris/path").start()
+
+```
+
+3. Visualizar o schema das informações
+
+4. Salvar os dados no diretório “hdfs://namenode:8020/user/<nome>/stream_iris/path” e o checkpoint em “hdfs://namenode:8020/user/<nome>/stream_iris/check”
+
+5. Verificar a saida no hdfs e entender como os dados foram salvos
+
+hdfs dfs -ls /user/ebraim/stream_iris
+
+6. Bônus: Contar as palavras do exercício 1.
