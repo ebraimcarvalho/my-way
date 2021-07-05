@@ -1261,7 +1261,7 @@ Criação do produtor enviando um arquivo
 - kafka-console-producer --broker-list kafka:9092 --topic topicTeste < file.log
 
 Criação do produtor enviando um arquivo com chave/valor
-- kafka-console-producer --broker-list kafka:9092 --topic topicTeste --property parse.key=true --property parse.separator=, < file.log
+- kafka-console-producer --broker-list kafka:9092 --topic topicTeste --property parse.key=true --property key.separator=, < file.log
 
 
 #### Dependencias do spark streaming com kafka
@@ -1384,7 +1384,7 @@ b) Inserir as seguintes mensagens no tópico:
 
 - kafka-console-producer --broker-list kafka:9092 --topic topic-spark
 
-Observação: Se quiser usar chave e valor no producer do kafka, adicionar os parametros --property parse.key=true --property parse.separator=, no comando do kafka-console-producer
+Observação: Se quiser usar chave e valor no producer do kafka, adicionar os parametros --property parse.key=true --property key.separator=, no comando do kafka-console-producer
 
 c) Criar um consumidor no Kafka para ler o “topic-spark”
 
@@ -1535,7 +1535,7 @@ hdfs dfs -ls /user/ebraim/stream_iris
 6. Bônus: Contar as palavras do exercício 1.
 
 
-#### Structured Strteaming com Kafka
+#### Structured Streaming com Kafka
 
 - Structured Streaming: versao spark >= 2.0.0 (2.3)
 - Spark Streaming:
@@ -1546,3 +1546,119 @@ hdfs dfs -ls /user/ebraim/stream_iris
 
 - Structured Streaming
 1. configurar o Dataframe para leitura dos tópicos
+
+
+#### Leitura de dados do kafka em batch
+
+Criação do kafka Source para consultas batch
+
+```python
+kafka_df = spark.read.format("kafka").option("kafka.bootstrap.servers", "host1:port1, host2:port2").option("subscribe", "topic1").load()
+
+kafka_df = spark.readStream.format("kafka").option("kafka.bootstrap.servers", "host1:port1, host2:port2").option("subscribe", "topic1").option("startingOffsets", "earliest").load()
+```
+
+
+#### Visualizar dados do kafka em batch
+
+```python
+kafka_df.printSchema
+# root
+# |-- key: binary (nullable = true)
+# |-- value: binary (nullable = true)
+# ...
+
+kafka_df.select(col("key").cast(StringType), col("value").cast(StringType)).show()
+```
+
+#### Visualizar dados do kafka em stream
+
+```python
+kafka_df.printSchema
+# root
+# |-- key: binary (nullable = true)
+# |-- value: binary (nullable = true)
+# ...
+
+kafka_df.select(col("key").cast(StringType), col("value").cast(StringType))
+
+kafka_df.writeStream.format("console").start
+```
+
+#### Enviar dados Stream para o kafka
+
+Fazer uso do Continuous Processing (Experimental)
+- Registrar o progresso da consulta a cada x tempo com o Trigger Continuous
+- O número de tarefas exigidas pela consulta depende de quantas partições a consulta pode ler das fontes em paralelo (Núcleos >= partições)
+
+```python
+kafka_df.writeStream.format("kafka").option("kafka.bootstrap.servers", "host1:port1, host2:port2").option("topic", "topic_teste2").trigger(Trigger.Continuous("1 second")).start()
+```
+
+#### Enviar dados Batch para o kafka
+
+obrigatório ter o campo value, opcional ter o campo key
+
+```python
+dataframe.withColumnRenamed("id", "key").withColumnRenamed("nome", "value")
+
+dataframe.write.format("kafka").option("kafka.bootstrap.servers", "host1:port1, host2:port2").option("topic", "topic_teste2").save()
+
+```
+
+
+#### Exercício Structured Streaming com Kafka
+
+1. Ler o tópico do kafka “topic-kvspark” em modo batch
+
+```python
+from pyspark.sql.functions import *
+
+kafka_df = spark.read.format("kafka").option("kafka.bootstrap.servers", "kafka:9092").option("subscribe", "topic-kvspark").load()
+
+```
+
+2. Visualizar o schema do tópico
+
+```python
+kafka_df.printSchema()
+```
+
+3. Visualizar o tópico com o campo key e value convertidos em string
+
+```python
+kafka_df.select(col("key").cast(StringType), col("value").cast(StringType)).show()
+```
+
+4. Ler o tópico do kafka “topic-kvspark” em modo streaming
+
+```python
+kafka_df = spark.readStream.format("kafka").option("kafka.bootstrap.servers", "kafka:9092").option("subscribe", "topic-spark").option("startingOffsets", "earliest").load()
+```
+
+5. Visualizar o schema do tópico em streaming
+
+```python
+kafka_df.printSchema
+```
+
+6. Alterar o tópico em streaming com o campo key e value convertidos para string
+
+```python
+kafka_df_stream_str = kafka_df_stream.select(col("key").cast("string"), col("value").cast("string"))
+# kafka_df.withColumnRenamed("id", "key").withColumnRenamed("nome", "value")
+
+kafka_df.write.format("kafka").option("kafka.bootstrap.servers", "kafka:9092").option("topic", "topic-spark").save()
+```
+
+7. Salvar o tópico em streaming no tópico topic-kvspark-output a cada 5 segundos
+
+```python
+kafka_df.writeStream.format("kafka").option("kafka.bootstrap.servers", "kafka:9092").option("topic", "topic-kvspark-output").trigger(Trigger.Continuous("5 second")).start()
+```
+
+8. Salvar o tópico na pasta hdfs://namenode:8020/user/<nome>/Kafka/topic-kvspark-output
+
+```python
+kafka_df.saveAsTextFiles("/user/ebraim/kafka/topic-kvspark-output")
+```
