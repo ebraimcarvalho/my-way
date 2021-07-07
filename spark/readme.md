@@ -1742,3 +1742,136 @@ spark.catalog.cacheTable("src")
 broadcast(spark.table("src")).join(spark.table("records"), "key")
 spark.catalog.uncacheTable("src")
 ```
+
+#### UDF - Spark
+
+User Defined Function para Spark SQL. É preciso registrar a função como UDF.
+
+Comando: spark.udf.register("<nomeUDF>", <UserDefinedFunction>)
+
+```python
+### UDF para spark SQL
+# Em scala
+val quadrado = ((s: Long) => s * s)
+
+# Em python
+quadrado = (lambda s: s * s)
+
+spark.udf.register("fQuad", quadrado)
+spark.range(1,20).registerTempTable("test")
+spark.sql("select id, fQuad(id) as id_quad from test")
+
+#### Para DataFrames
+# em Scala
+import org.apache.spark.sql.functions.{col, udf}
+val fDfQuad = udf((s: Long) => s * s)
+
+# em Python
+from pyspark.sql.functions import col, udf
+def quadrado(s):
+  return s * s
+
+dFdQuad = udf(lambda s: quadrado(s))
+
+spark.range(1,20).select(col("id"), fDfQuad(col("id")))
+```
+
+Obersvação: Realmente é necessário criar UDF? Usar UDF se perderá:
+
+- Otimização
+- Desempenho
+
+
+#### Deploy com alocação dinamica
+
+Parametros para utilizar os recursos do cluster
+
+```
+--master $YARN
+# Executar o log local: $YARN = local
+# Executar no cluster: $YARN = yarn
+
+--deploy-mode-cluster
+--conf "spark.dynamic.Allocation.enable=true"
+--conf "spark.shuffe.service.enable=true"
+--conf "spark.shuffe.service.port=7337"
+--conf "spark.dynamic.InitialExecutor=6"
+--conf "spark.dynamic.maxExecutor=9"
+--conf "spark.dynamic.minExecutor=3"
+```
+
+
+#### Deploy com alocação calculada
+
+Considerar toda a capacidade da infra/fila. Parâmetros para utilizar os recursos do cluster
+
+```
+--master $YARN
+# Executar o log local: $YARN = local
+# Executar no cluster: $YARN = yarn
+
+--deploy-mode-cluster
+--driver-memory=8G (recomendável)
+--executor-memory=int( (Memória total - 10%) / num-executors)
+--conf "spark.yarn.driver.memoryOverhead=10% de memória"
+--conf "spark.yarn.executor.memoryOverhead=10% dos executores"
+--executors-core=4 ou 5 no máximo (mais que isso fica pesado)
+--num-executors=int( (Cores total - 10%) / executors-core)
+```
+
+#### Exercise - Spark Deploy
+
+Para as seguintes máquinas:
+
+a) 20 nodes x 8 cores | 16Gb RAM
+
+```
+--driver-memory=8G
+--executor-memory=((20*16)-10%)/39 = 8G
+--conf "spark.yarn.driver.memoryOverhead=3G"
+--conf "spark.yarn.executor.memoryOverhead=2"
+--executors-core=4
+--num-executors= ((20*8)-10%)/4 = 39
+```
+
+b) 9 nodes x 20 cores | 128Gb RAM
+
+```
+--driver-memory=8G
+--executor-memory=int( (9*128=1152 - 10%) = 1037 / 40) = 25G
+--conf "spark.yarn.driver.memoryOverhead=12G"
+--conf "spark.yarn.executor.memoryOverhead=2"
+--executors-core=4
+--num-executors=int( (9*20=180 - 10%) = 162 / 4) = 44
+```
+
+c) 6 nodes x 10 cores | 32Gb RAM – 3 Jobs em paralelo
+
+```
+--driver-memory=8G
+--executor-memory=int( (6*32=192 - 10%)=173/3 / 4) = 15G
+--conf "spark.yarn.driver.memoryOverhead=2G"
+--conf "spark.yarn.executor.memoryOverhead=1"
+--executors-core=4
+--num-executors=int( (6*10=60 - 10%)=54 / 4) / 3 = 4
+```
+
+d) 10 nodes x 16 cores | 64Gb RAM – 50 % dos recursos já utilizados
+
+```
+--driver-memory=8G
+--executor-memory=int( (10*64=640 - 10%)=576 / 19) / 2 = 16G
+--conf "spark.yarn.driver.memoryOverhead=6G"
+--conf "spark.yarn.executor.memoryOverhead=2"
+--executors-core=4
+--num-executors=int( (10*16=160 - 10%)=144 / 4) / 2 = 19
+```
+
+Configurar os atributos:
+
+--driver-memory
+--executor-memory
+--conf spark.yarn.driver.memoryOverhead
+--conf spark.yarn.executor.memoryOverhead
+--executors-core
+--num-executors
