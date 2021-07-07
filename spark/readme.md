@@ -1662,3 +1662,83 @@ kafka_df.writeStream.format("kafka").option("kafka.bootstrap.servers", "kafka:90
 ```python
 kafka_df.saveAsTextFiles("/user/ebraim/kafka/topic-kvspark-output")
 ```
+
+#### Spark - Variáveis compartilhadas
+
+Quando uma função é passada para o Spark, a operação é executada em um nó de cluster remoto.
+
+- Trabalha em cópias separadas de todas as variáveis usadas na função
+- As variáveis são copiadas para cada máquina e nenhuma atualização nas variáveis na máquina remota é propaganda de volta ao programar do driver
+- A leitura e gravação entre tarefas é ineficiente
+
+O spark fornece dois tipos limitados de variáveis compartilhadas> Broadcast e Accumulators
+
+#### Broadcast
+
+Para cada máquina no cluster terá uma variável somente para leitura em cache, não é necessário enviar uma cópia dela para as tarefas.
+
+Variáveis de broadcast é útil quando tarefas em vários estágios precisam dos mesmos dados e quando há importância de armazenar em cache os dados na forma desserializada.
+
+##### Métodos
+
+- id: Identificador único
+- Value: Valor
+- Unpersist: Exclui assincronamente cópias em cache da variável broadcast nos executores
+- Destroy: Destrói todos os dados e metadados relacionados a variável de broadcast
+- toString: Representação de String
+
+##### Exemplo
+
+Sintaxe: <variavelBroadcast> = sc.broadcast([1,2,3])
+
+```python
+broadcastVar = sc.broadcast([1,2,3])
+type(broadcastVar) # pyspark.broadcast.Broadcast
+broadcastVar.Value # [1,2,3]
+broadcastVar.destroy
+```
+
+#### Accumulators
+
+Acumuladores são variáveis que são apenas "adicionadas" a uma operação associativa e comutativa e tem características:
+
+- Paralelismo eficiente
+- Podem ser usados para implementar contadores
+- Suporta acumuladores de tipos numericos, e podem adicionar outros
+
+O Spark exibe o valor para cada acumulador modificado por uma tarefa na tabela "Tasks"
+
+O rastreamento de acumuladores na interface do usuario pode ser util para entender o progresso dos estagios em execução
+
+- Para criar o acumulador: sc.long/doubleAccumulator(valor, "<nomeAcumulador>") # em Scala e view Spark's UI
+- sc.Accumulator(valor) # Em python
+- Adicionar tarefas: <acumulator>.add(Long/Double)
+
+```python
+# Em scala
+val accum = sc.longAccumulator(0, "My Accumulator")
+sc.parallelize(Array(1,2,3,4)).foreach(x => accum.add(x))
+accum.value # 10
+
+# Em python
+accum = sc.Accumulator(0)
+sc.parallelize([1,2,3,4]).foreach(lambda x: accum.add(x))
+accum.value # 10
+```
+
+#### Cache de tabelas
+
+Armazenar tabela em cache na memoria:
+
+- spark.catalog.cacheTable("tableName")
+- dataFra,e.cache()
+
+Remover tabela da memória
+
+- spark.catalog.uncacheTable("tableName")
+
+```python
+spark.catalog.cacheTable("src")
+broadcast(spark.table("src")).join(spark.table("records"), "key")
+spark.catalog.uncacheTable("src")
+```
