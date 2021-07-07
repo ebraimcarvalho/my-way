@@ -1149,7 +1149,7 @@ ssc.stop()
 ```
 
 
-#### Spart Streaming - Operações
+#### Spark Streaming - Operações
 
 Ação: retorna um valor
 
