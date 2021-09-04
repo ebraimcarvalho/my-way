@@ -175,8 +175,7 @@ SELECT table_name, grantee, privilege
 FROM USER_TAB_PRIVS_MADE
 WHERE table_name = 'WORDCOUNT';
 ```
-
-![[Pasted image 20210903140138.png]]
+![Block PL/SQL](block_plsql.png "Block PL/SQL")
 
 ```sql
 PROCEDURE remove_order (order_id IN NUMBER)
