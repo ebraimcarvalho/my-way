@@ -1,0 +1,98 @@
+{
+  "main": {
+    "id": "8e087cbc9b031b3c",
+    "type": "split",
+    "children": [
+      {
+        "id": "7d956803cd1fe2c7",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "pl_sql.md",
+            "mode": "source"
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "82f8563cf5579905",
+    "type": "split",
+    "children": [
+      {
+        "id": "c42156b188e76768",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7e7daa3b9414376d",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "1cd1dcd4d66c439d",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "right": {
+    "id": "c6bd7597e1844bce",
+    "type": "split",
+    "children": [
+      {
+        "id": "fd1e35b045d6fa74",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8aaa6e8537e77b08",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "pl_sql.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": true,
+                "unlinkedCollapsed": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "7d956803cd1fe2c7",
+  "lastOpenFiles": [
+    "pl_sql.md",
+    "Banco de Dados Oracle Completo SQL PLSQL Modelagem de dados.md",
+    "Untitled.md",
+    "teste.md",
+    "aws_cloud_practitioner.md"
+  ]
+}
