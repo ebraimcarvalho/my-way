@@ -568,6 +568,64 @@ END display_multiple_years;
 
 ```
 
+##### Rules for Numeric FOR Loops
+
+Follow these rules when you use numeric FOR loops:
+
+* Do not declare the loop index. PL/SQL automatically and implicitly declares it as a local variable with datatype INTEGER. The scope of this index is the loop itself; you cannot reference the loop index outside the loop.
+* Expressions used in the range scheme (both for lowest and highest bounds) are evaluated once, when the loop starts. The range is not reevaluated during the exe‐cution of the loop. If you make changes within the loop to the variables that you used to determine the FOR loop range, those changes will have no effect.
+* Never change the values of either the loop index or the range boundary from within the loop. This is an extremely bad programming practice. PL/SQL will either produce a compile error or ignore your instructions; in either case, you’ll have problems.
+* Use the REVERSE keyword to force the loop to decrement from the upper bound to the lower bound. You must still make sure that the first value in the range specification (the lowest number in lowest number .. highest number) is less than the second value. Do not reverse the order in which you specify these values when you use the REVERSE keyword.
+
+##### Examples of Numeric FOR Loops
+
+These examples demonstrate some variations of the numeric FOR loop syntax:
+
+* The loop executes 10 times; loop_counter starts at 1 and ends at 10:
+
+```sql
+FOR loop_counter IN 1 .. 10
+LOOP
+	... executable statements ...
+END LOOP;
+```
+
+* The loop executes 10 times; loop_counter starts at 10 and ends at 1:
+
+```sql
+FOR loop_counter IN REVERSE 1 .. 10
+LOOP
+	... executable statements ...
+END LOOP;
+```
+
+* Here is a loop that doesn’t execute even once. I specified REVERSE, so the loop index, loop_counter, will start at the highest value and end with the lowest. I then mistakenly concluded that I should switch the order in which I list the highest and lowest bounds:
+
+```sql
+FOR loop_counter IN REVERSE 10 .. 1
+LOOP
+	/* This loop body will never execute even once! */
+	... executable statements ...
+END LOOP;
+```
+
+Even when you specify a REVERSE direction, you must still list the lowest bound before the highest bound. If the first number is greater than the second number, the body of the loop will not execute at all. If the lowest and highest bounds have the same value, the loop will execute just once.
+
+* The loop executes for a range determined by the values in the variable and expression:
+
+```sql
+FOR calc_index IN start_period_number ..
+	LEAST (end_period_number, current_period)
+LOOP
+	... executable statements ...
+END LOOP;
+```
+
+In this example, the number of times the loop will execute is determined at runtime. The boundary values are evaluated once, before the loop executes, and then applied for the duration of loop execution.
+
+
+##### The Cursor FOR Loop
+
 The cursor FOR loop has the same basic structure, but in this case you supply an explicit cursor or SELECT statement in place of the low-high integer range:
 
 ```sql
@@ -589,7 +647,57 @@ END display_multiple_years;
 
 ```
 
-- The While loop
+You should use a cursor FOR loop whenever you need to unconditionally fetch all rows from a cursor (i.e., there are no EXITs or EXIT WHENs inside the loop that cause early termination). Let’s take a look at how you can use the cursor FOR loop to streamline your code and reduce opportunities for error.
+
+##### Examples of Cursor FOR Loops
+
+Suppose I need to update the bills for all pets staying in my pet hotel, the Share-a-Din-Din Inn. The following example contains an anonymous block that uses a cursor, occupancy_cur, to select the room number and pet ID number for all occupants of the Inn. The procedure update_bill adds any new changes to that pet’s room charges:
+
+```sql
+1	DECLARE
+2		CURSOR occupancy_cur IS
+3			SELECT pet_id, room_number
+4			FROM occupancy WHERE occupied_dt = TRUNC (SYSDATE);
+5		occupancy_rec occupancy_cur%ROWTYPE;
+6	BEGIN
+7		OPEN occupancy_cur;
+8		LOOP
+9			FETCH occupancy_cur INTO occupancy_rec;
+10			EXIT WHEN occupancy_cur%NOTFOUND;
+11				update_bill 
+12					(occupancy_rec.pet_id, occupancy_rec.room_number);
+13		END LOOP;
+14		CLOSE occupancy_cur;
+15	END;
+
+```
+
+This code leaves nothing to the imagination. In addition to defining the cursor (line 2), you must explicitly declare the record for the cursor (line 5), open the cursor (line 7), start up an infinite loop (line 8), fetch a row from the cursor set into the record (line 9), check for an end-of-data condition with the %NOTFOUND cursor attribute (line 10), and finally perform the update (line 11). When you are all done, you have to remember
+to close the cursor (line 14).
+
+If I convert this PL/SQL block to use a cursor FOR loop, then I have:
+
+```sql
+DECLARE
+	CURSOR occupancy_cur IS
+		SELECT pet_id, room_number
+		FROM occupancy WHERE occupied_dt = TRUNC (SYSDATE);
+BEGIN
+	FOR occupancy_rec IN occupancy_cur
+	LOOP
+		update_bill (occupancy_rec.pet_id, occupancy_rec.room_number);
+	END LOOP;
+END;
+```
+
+Here you see the beautiful simplicity of the cursor FOR loop! Gone is the declaration of the record. Gone are the OPEN, FETCH, and CLOSE statements. Gone is the need to check the %NOTFOUND attribute. Gone are the worries of getting everything right. Instead, you say to PL/SQL, in effect:
+
+> You and I both know that I want each row, and I want to dump that row into a record that matches the cursor. Take care of that for me, will you?
+
+And PL/SQL does take care of it, just the way any modern programming language should.
+
+
+##### The While loop
 
 The WHILE loop is very similar to the simple loop; a critical difference is that it checks the termination condition up front. It may not even execute its body a single time:
 
@@ -721,3 +829,48 @@ BEGIN
 	result := DBMS_PIPE.send_message (pipename);
 END;
 ```
+
+
+##### Loop Labels
+
+```sql
+<<year_loop>>
+WHILE year_number <= 1995
+LOOP
+	<<month_loop>>
+	FOR month_number IN 1 .. 12
+	LOOP
+		...
+	END LOOP month_loop;
+	year_number := year_number + 1;
+END LOOP year_loop;
+```
+
+The loop label is potentially useful in several ways:
+
+* When you have written a loop with a large body (say, one that starts at line 50, ends on line 725, and has 16 nested loops inside it), use a loop label to tie the end of the loop back explicitly to its start. This visual tag will make it easier for a developer to maintain and debug the program. Without the loop label, it can be very difficult to keep track of which LOOP goes with which END LOOP.
+* You can use the loop label to qualify the name of the loop indexing variable (either a record or a number). Again, this can be helpful for  readability. Here is an example:
+
+```sql
+<<year_loop>>
+FOR year_number IN 1800..1995
+LOOP
+	<<month_loop>>
+	FOR month_number IN 1 .. 12
+	LOOP
+		IF year_loop.year_number = 1900 THEN ... END IF;
+	END LOOP month_loop;
+END LOOP year_loop;
+```
+
+* When you have nested loops, you can use the label both to improve readability and to increase control over the execution of your loops. You can, in fact, stop the execution of a specific named outer loop by adding a loop label after the EXIT keyword in the EXIT statement of a loop, as follows:
+
+`EXIT loop_label;`
+`EXIT loop_label WHEN condition;`
+
+While it is possible to use loop labels in this fashion, I recommend that you avoid it. It leads to very unstructured logic (quite similar to GOTOs) that is hard to debug. If you feel that you need to insert code like this, you should consider restructuring your loop, and possibly switching from a FOR loop to a simple or WHILE loop.
+
+
+#### The CONTINUE Statement
+
+
