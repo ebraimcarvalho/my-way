@@ -523,3 +523,201 @@ END;
 ```
 
 With this approach, if I encounter an error in any single section, I use the GOTO to bypass all remaining validation checks. Because I do not have to do anything at the termination of the procedure, I place a NULL statement after the label because at least one executable statement is required there. Even though NULL does nothing, it is still an executable statement.
+
+#### Loop Statements
+
+- The simple loop
+
+It’s called simple for a reason: it starts simply with the LOOP keyword and ends with the END LOOP statement. The loop will terminate if you execute an EXIT, EXIT WHEN, or RETURN within the body of the loop (or if an exception is raised):
+
+```sql
+/* File on web: loop_examples.sql */
+PROCEDURE display_multiple_years (
+	start_year_in IN PLS_INTEGER
+	,end_year_in IN PLS_INTEGER
+)
+IS
+	l_current_year PLS_INTEGER := start_year_in;
+BEGIN
+	LOOP
+		EXIT WHEN l_current_year > end_year_in;
+		display_total_sales (l_current_year);
+		l_current_year := l_current_year + 1;
+	END LOOP;
+END display_multiple_years;
+
+```
+
+- The For loop
+
+Oracle offers a numeric and a cursor FOR loop. With the numeric FOR loop, you specify the start and end integer value and PL/SQL does the rest of the work for you, iterating through each intermediate value and then terminating the loop:
+
+```sql
+/* File on web: loop_examples.sql */
+PROCEDURE display_multiple_years (
+	start_year_in IN PLS_INTEGER
+	,end_year_in IN PLS_INTEGER
+)
+IS
+BEGIN
+	FOR l_current_year IN start_year_in .. end_year_in
+	LOOP
+		display_total_sales (l_current_year);
+	END LOOP;
+END display_multiple_years;
+
+```
+
+The cursor FOR loop has the same basic structure, but in this case you supply an explicit cursor or SELECT statement in place of the low-high integer range:
+
+```sql
+/* File on web: loop_examples.sql */
+PROCEDURE display_multiple_years (
+	start_year_in IN PLS_INTEGER
+	,end_year_in IN PLS_INTEGER
+)
+IS
+BEGIN
+	FOR sales_rec IN (
+		SELECT *
+		FROM sales_data
+		WHERE year BETWEEN start_year_in AND end_year_in)
+	LOOP
+		display_total_sales (l_current_year);
+	END LOOP;
+END display_multiple_years;
+
+```
+
+- The While loop
+
+The WHILE loop is very similar to the simple loop; a critical difference is that it checks the termination condition up front. It may not even execute its body a single time:
+
+```sql
+/* File on web: loop_examples.sql */
+PROCEDURE display_multiple_years (
+	start_year_in IN PLS_INTEGER
+	,end_year_in IN PLS_INTEGER
+)
+IS
+	l_current_year PLS_INTEGER := start_year_in;
+BEGIN
+	WHILE (l_current_year <= end_year_in)
+	LOOP
+		display_total_sales (l_current_year);
+		l_current_year := l_current_year + 1;
+	END LOOP;
+END display_multiple_years;
+
+```
+
+##### Terminating a Simple Loop: EXIT and EXIT WHEN
+
+```sql
+LOOP
+	balance_remaining := account_balance (account_id);
+	IF balance_remaining < 1000
+	THEN
+		EXIT;
+	ELSE
+		apply_balance (account_id, balance_remaining);
+	END IF;
+END LOOP;
+
+
+LOOP
+	/* Calculate the balance */
+	balance_remaining := account_balance (account_id);
+	
+	/* Embed the IF logic into the EXIT statement */
+	EXIT WHEN balance_remaining < 1000;
+	
+	/* Apply balance if still executing the loop */
+	apply_balance (account_id, balance_remaining);
+END LOOP;
+```
+
+Notice that the second form doesn’t require an IF statement to determine when it should exit. Instead, that conditional logic is embedded inside the EXIT WHEN statement. So when should you use EXIT WHEN, and when is the stripped-down EXIT more appropriate?
+
+* EXIT WHEN is best used when there is a single conditional expression that determines whether or not a loop should terminate. The previous example demonstrates this scenario clearly.
+* In situations with multiple conditions for exiting or when you need to set a “return value” coming out of the loop based on different conditions, you are probably better off using an IF or CASE statement, with EXIT statements in one or more of the clauses.
+
+The following example demonstrates a preferred use of EXIT. It is taken from a function
+that determines if two files are equal (i.e., contain the same content):
+```sql
+
+	...
+	IF (end_of_file1 AND end_of_file2)
+	THEN
+		retval := TRUE;
+		EXIT;
+	ELSIF (checkline != againstline)
+	THEN
+		retval := FALSE;
+		EXIT;
+	ELSIF (end_of_file1 OR end_of_file2)
+	THEN
+		retval := FALSE;
+		EXIT;
+	END IF;
+END LOOP;
+```
+
+##### The Intentionally Infinite Loop
+
+Some programs, such as system monitoring tools, are not designed to be executed on demand but should always be running. In such cases, you may actually want to use an infinite loop:
+
+```sql
+LOOP
+	data_gathering_procedure;
+END LOOP;
+```
+
+Here, data_gathering_procedure goes out and, as you’d guess, gathers data about the system. As anyone who has accidentally run such an infinite loop can attest, it’s likely that the loop will consume large portions of the CPU. The solution for this, in addition to ensuring that your data gathering is performed as efficiently as possible, is to pause between iterations:
+
+```sql
+LOOP
+	data_gathering_procedure;
+	DBMS_LOCK.sleep(10); -- do nothing for 10 seconds
+END LOOP;
+```
+
+##### Terminating an Intentionally Infinite Loop
+
+The best solution that I’ve come up with is to insert into the loop a kind of “command interpreter” that uses the database’s built-in interprocess communication, known as a database pipe:
+
+```sql
+DECLARE
+	pipename CONSTANT VARCHAR2(12) := 'signaler';
+	result INTEGER;
+	pipebuf VARCHAR2(64);
+BEGIN
+	/* create private pipe with a known name */
+	result := DBMS_PIPE.create_pipe(pipename);
+	LOOP
+		data_gathering_procedure;
+		DBMS_LOCK.sleep(10);
+		/* see if there is a message on the pipe */
+		IF DBMS_PIPE.receive_message(pipename, 0) = 0
+		THEN
+			/* interpret the message and act accordingly */
+			DBMS_PIPE.unpack_message(pipebuf);
+			EXIT WHEN pipebuf = 'stop';
+		END IF;
+	END LOOP;
+END;
+
+```
+
+The DBMS_PIPE calls should have little impact on the overall CPU load.
+A simple companion program can then kill the looping program by sending a “stop” message down the pipe:
+
+```sql
+DECLARE
+	pipename VARCHAR2 (12) := 'signaler';
+	result INTEGER := DBMS_PIPE.create_pipe (pipename);
+BEGIN
+	DBMS_PIPE.pack_message ('stop');
+	result := DBMS_PIPE.send_message (pipename);
+END;
+```
