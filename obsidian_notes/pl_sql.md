@@ -481,3 +481,45 @@ There are several restrictions on the GOTO statement:
 
 Contrary to popular opinion (including mine), the GOTO statement can come in handy.
 There are cases where a GOTO statement can simplify the logic in your program. On the other hand, because PL/SQL provides so many different control constructs and modularization techniques, you can almost always find a better way to do something than with a GOTO.
+
+
+#### NULL Statement
+
+```sql
+IF :report_mgr.selection = 'DETAIL'
+THEN
+	exec_detail_report;
+ELSE
+	NULL; -- Do nothing
+END IF;
+
+```
+
+In some cases, you can pair NULL with GOTO to avoid having to execute additional statements. If you ever do use GOTO, however, you should remember that when you GOTO a label, at least one executable statement must follow that label. In the following example, I use a GOTO statement to quickly move to the end of my program if the state of my data indicates that no further processing is required:
+
+```sql
+PROCEDURE process_data (data_in IN orders%ROWTYPE,
+data_action IN VARCHAR2)
+IS
+	status INTEGER;
+BEGIN
+	-- First in series of validations.
+	IF data_in.ship_date IS NOT NULL
+	THEN
+		status := validate_shipdate (data_in.ship_date);
+		IF status != 0 THEN GOTO end_of_procedure; END IF;
+	END IF;
+	-- Second in series of validations.
+	IF data_in.order_date IS NOT NULL
+	THEN
+		status := validate_orderdate (data_in.order_date);
+		IF status != 0 THEN GOTO end_of_procedure; END IF;
+	END IF;
+	... more validations ...
+	<<end_of_procedure>>
+	NULL;
+END;
+
+```
+
+With this approach, if I encounter an error in any single section, I use the GOTO to bypass all remaining validation checks. Because I do not have to do anything at the termination of the procedure, I place a NULL statement after the label because at least one executable statement is required there. Even though NULL does nothing, it is still an executable statement.
