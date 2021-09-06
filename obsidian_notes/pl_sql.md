@@ -311,5 +311,173 @@ END IF;
 
 #### Case statements
 
+```sql
+CASE employee_type
+WHEN 'S' THEN
+	award_salary_bonus(employee_id);
+WHEN 'H' THEN
+	award_hourly_bonus(employee_id);
+WHEN 'C' THEN
+	award_commissioned_bonus(employee_id);
+ELSE
+	RAISE invalid_employee_type;
+END CASE;
 
+/*
+This CASE statement has an explicit ELSE clause; however, the ELSE is optional. When
+you do not explicitly specify an ELSE clause of your own, PL/SQL implicitly uses the
+following:
+*/
+ELSE
+	RAISE CASE_NOT_FOUND;
+	
+/*
+A searched CASE statement is a perfect fit for the problem of implementing the bonus
+logic. For example:
+*/
 
+CASE
+WHEN salary >= 10000 AND salary <=20000 THEN
+	give_bonus(employee_id, 1500);
+WHEN salary > 20000 AND salary <= 40000 THEN
+	give_bonus(employee_id, 1000);
+WHEN salary > 40000 THEN
+	give_bonus(employee_id, 500);
+ELSE
+	give_bonus(employee_id, 0);
+END CASE;
+
+```
+
+#### Case Expressions
+
+CASE expressions take the following two forms:
+
+```sql
+Simple_Case_Expression :=
+	CASE expression
+	WHEN result1 THEN
+		result_expression1
+	WHEN result2 THEN
+		result_expression2
+	...
+	ELSE
+		result_expression_else
+	END;
+	
+Searched_Case_Expression :=
+	CASE
+	WHEN expression1 THEN
+		result_expression1
+	WHEN expression2 THEN
+		result_expression2
+	...
+	ELSE
+		result_expression_else
+	END;
+
+```
+
+Following is an example of a simple CASE expression being used with the DBMS_OUTPUT
+package to output the value of a Boolean variable. (Recall that the PUT_LINE
+program is not overloaded to handle Boolean types.) In this example, the CASE expression
+converts the Boolean value into a character string, which PUT_LINE can then
+handle:
+
+```sql
+DECLARE
+	boolean_true BOOLEAN := TRUE;
+	boolean_false BOOLEAN := FALSE;
+	boolean_null BOOLEAN;
+	FUNCTION boolean_to_varchar2 (flag IN BOOLEAN) RETURN VARCHAR2 IS
+	BEGIN
+		RETURN
+			CASE flag
+				WHEN TRUE THEN 'True'
+				WHEN FALSE THEN 'False'
+				ELSE 'NULL'
+			END;
+	END;
+BEGIN
+	DBMS_OUTPUT.PUT_LINE(boolean_to_varchar2(boolean_true));
+	DBMS_OUTPUT.PUT_LINE(boolean_to_varchar2(boolean_false));
+	DBMS_OUTPUT.PUT_LINE(boolean_to_varchar2(boolean_null));
+END;
+
+```
+
+A searched CASE expression can be used to implement my bonus logic, returning the
+proper bonus value for any given salary:
+
+```sql
+DECLARE
+	salary NUMBER := 20000;
+	employee_id NUMBER := 36325;
+	PROCEDURE give_bonus (emp_id IN NUMBER, bonus_amt IN NUMBER) IS
+	BEGIN
+		DBMS_OUTPUT.PUT_LINE(emp_id);
+		DBMS_OUTPUT.PUT_LINE(bonus_amt);
+	END;
+BEGIN
+	give_bonus(employee_id,
+		CASE
+			WHEN salary >= 10000 AND salary <= 20000 THEN 1500
+			WHEN salary > 20000 AND salary <= 40000 THEN 1000
+			WHEN salary > 40000 THEN 500
+			ELSE 0
+		END);
+END;
+
+```
+
+You can use a CASE expression anywhere you can use any other type of expression or
+value. The following example uses a CASE expression to compute a bonus amount,
+multiplies that amount by 10, and assigns the result to a variable that is displayed via
+DBMS_OUTPUT:
+
+```sql
+DECLARE
+	salary NUMBER := 20000;
+	employee_id NUMBER := 36325;
+	bonus_amount NUMBER;
+BEGIN
+	bonus_amount :=
+		CASE
+			WHEN salary >= 10000 AND salary <= 20000 THEN 1500
+			WHEN salary > 20000 AND salary <= 40000 THEN 1000
+			WHEN salary > 40000 THEN 500
+			ELSE 0
+		END * 10;
+	DBMS_OUTPUT.PUT_LINE(bonus_amount);
+END;
+
+```
+
+#### GOTO Statement
+
+The GOTO statement performs unconditional branching to another executable statement
+in the same execution section of a PL/SQL block.
+
+The general format for a GOTO statement is:
+`GOTO label_name;`
+where label_name is the name of a label identifying the target statement. This GOTO
+label is defined in the program as follows:
+`<<label_name>>`
+
+```sql
+BEGIN
+	GOTO second_output;
+	DBMS_OUTPUT.PUT_LINE('This line will never execute.');
+	<<second_output>>
+	DBMS_OUTPUT.PUT_LINE('We are here!');
+END;
+```
+
+There are several restrictions on the GOTO statement:
+
+* At least one executable statement must follow a label.
+* The target label must be in the same scope as the GOTO statement.
+* The target label must be in the same part of the PL/SQL block as the GOTO.
+
+Contrary to popular opinion (including mine), the GOTO statement can come in handy.
+There are cases where a GOTO statement can simplify the logic in your program. On the other hand, because PL/SQL provides so many different control constructs and modularization techniques, you can almost always find a better way to do something than with a GOTO.
