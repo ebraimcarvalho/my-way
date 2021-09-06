@@ -873,4 +873,55 @@ While it is possible to use loop labels in this fashion, I recommend that you av
 
 #### The CONTINUE Statement
 
+Use this statement to exit the current iteration of a loop, and immediately continue on to the next iteration of that loop.
 
+```sql
+BEGIN
+	FOR l_index IN 1 .. 10
+	LOOP
+		CONTINUE WHEN MOD (l_index, 2) = 0;
+		DBMS_OUTPUT.PUT_LINE ('Loop index = ' || TO_CHAR (l_index));
+	END LOOP;
+END;
+/
+```
+
+The output is:
+Loop index = 1
+Loop index = 3
+Loop index = 5
+Loop index = 7
+Loop index = 9
+
+You can also use CONTINUE to terminate an inner loop and proceed immediately to the next iteration of an outer loop’s body. To do this, you will need to give names to your loops using labels. Here is an example:
+
+```sql
+BEGIN
+	<<outer>>
+	FOR outer_index IN 1 .. 5
+	LOOP
+		DBMS_OUTPUT.PUT_LINE (
+			'Outer index = ' || TO_CHAR (outer_index));
+		<<inner>>
+		FOR inner_index IN 1 .. 5
+		LOOP
+			DBMS_OUTPUT.PUT_LINE (
+			' Inner index = ' || TO_CHAR (inner_index));
+			CONTINUE outer;
+		END LOOP inner;
+	END LOOP outer;
+END;
+/
+```
+
+The  output is:
+Outer index = 1
+Inner index = 1
+Outer index = 2
+Inner index = 1
+Outer index = 3
+Inner index = 1
+Outer index = 4
+Inner index = 1
+Outer index = 5
+Inner index = 1
