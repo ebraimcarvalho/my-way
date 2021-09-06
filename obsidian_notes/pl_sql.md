@@ -925,3 +925,103 @@ Outer index = 4
 Inner index = 1
 Outer index = 5
 Inner index = 1
+
+```sql
+-- best practices with continue statement
+
+LOOP
+	EXIT WHEN exit_condition_met;
+	CONTINUE WHEN condition1;
+	CONTINUE WHEN condition2;
+	setup_steps_here;
+	IF condition4 THEN
+		action4_executed;
+		CONTINUE;
+	END IF;
+	IF condition5 THEN
+		action5_executed;
+		CONTINUE; -- Not strictly required.
+	END IF;
+END LOOP;
+```
+
+#### Tips for Iterative Processing
+
+* Use understandable Names for Loop Indexes
+
+Use names that self-document the purposes of variables and loops. That way, other people will understand your code, and you will remember
+what your own code does when you review it three months later.
+
+* The proper way to say goodbye
+
+One important and fundamental principle in structured programming is “one way in, one way out”; that is, a program should have a single point of entry and a single point of exit. A single point of entry is not an issue with PL/SQL: no matter what kind of loop you are using, there is always only one entry point into the loop—the first executable statement following the LOOP keyword. It is quite possible, however, to construct loops that have multiple exit paths. Avoid this practice. Having multiple ways of terminating a loop results in code that is much harder to debug and maintain.
+
+* Do not use EXIT or EXIT WHEN statements within FOR and WHILE loops. You should use a FOR loop only when you want to iterate through all the values (integer or record) specified in the range. An EXIT inside a FOR loop disrupts this process and subverts the intent of that structure. A WHILE loop, on the other hand, specifies its termination condition in the WHILE statement itself.
+
+* Do not use the RETURN or GOTO statements within a loop—again, these cause the premature, unstructured termination of the loop. It can be tempting to use these constructs because in the short run they appear to reduce the amount of time spent writing code. In the long run, however, you (or the person left to clean up your mess) will spend more time trying to understand, enhance, and fix your code over time.
+
+##### Obtaining Information About FOR Loop Execution
+
+```sql
+DECLARE
+	book_count PLS_INTEGER := 0;
+BEGIN
+	FOR book_rec IN books_cur (author_in => 'FEUERSTEIN,STEVEN')
+	LOOP
+		... process data ...
+		book_count := books_cur%ROWCOUNT;
+	END LOOP;
+	IF book_count > 10 THEN ...
+```
+
+#### SQL Statement as Loop
+
+I need to write a program to move the information for pets who have checked out of
+the pet hotel from the occupancy table to the occupancy_history table.
+
+```sql
+DECLARE
+	CURSOR checked_out_cur IS
+		SELECT pet_id, name, checkout_date
+		FROM occupancy WHERE checkout_date IS NOT NULL;
+BEGIN
+	FOR checked_out_rec IN checked_out_cur
+	LOOP
+		INSERT INTO occupancy_history (pet_id, name, checkout_date)
+		VALUES (checked_out_rec.pet_id, checked_out_rec.name,
+		checked_out_rec.checkout_date);
+		DELETE FROM occupancy WHERE pet_id = checked_out_rec.pet_id;
+	END LOOP;
+END;
+```
+
+This code does the trick. But was it necessary to do it this way? I can express precisely the same logic and get the same result with nothing more than an INSERT-SELECT FROM followed by a DELETE, as shown here:
+
+```sql
+BEGIN
+	INSERT INTO occupancy_history (pet_id, NAME, checkout_date)
+		SELECT pet_id, NAME, checkout_date
+		FROM occupancy WHERE checkout_date IS NOT NULL;
+	DELETE FROM occupancy WHERE checkout_date IS NOT NULL;
+END;
+```
+
+What are the advantages to this approach? I have written less code, and my code will run more efficiently because I have reduced the number of context switches (moving back and forth between the PL/SQL and SQL execution engines). I execute just a single INSERT and a single DELETE.
+
+PL/SQL offers more flexibility as well. Suppose, for example, that I want to transfer as many of the rows as possible, and simply write a message to the error log for any transfers of individual rows that fail. In this case, I really do need to rely on the cursor FOR loop, but with the added functionality of an exception section:
+
+```sql
+BEGIN
+	FOR checked_out_rec IN checked_out_cur
+	LOOP
+		BEGIN
+			INSERT INTO occupancy_history ...
+			DELETE FROM occupancy ...
+		EXCEPTION
+			WHEN OTHERS THEN
+				log_checkout_error (checked_out_rec);
+		END;
+	END LOOP;
+END;
+;
+```
