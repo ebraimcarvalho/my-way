@@ -1025,3 +1025,9 @@ BEGIN
 END;
 ;
 ```
+
+#### Exception Handlers
+
+In the PL/SQL language, errors of any kind are treated as exceptions—situations that should not occur—in your program. The exception handler mechanism allows you to cleanly separate your error-processing code from your executable statements. It also provides an event-driven model, as opposed to a linear code model, for processing errors. In other words, no matter how a particular exception is raised, it is handled by the same exception handler in the exception section. The processing in the current PL/SQL block’s execution section halts, and control is transferred to the separate exception section of the current block, if one exists, to handle the exception. You cannot return to that block after you finish handling the exception.
+
+![Exception Handler](exception_handler.png "Exception Handler")
