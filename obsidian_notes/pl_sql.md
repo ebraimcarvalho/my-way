@@ -1031,3 +1031,49 @@ END;
 In the PL/SQL language, errors of any kind are treated as exceptions—situations that should not occur—in your program. The exception handler mechanism allows you to cleanly separate your error-processing code from your executable statements. It also provides an event-driven model, as opposed to a linear code model, for processing errors. In other words, no matter how a particular exception is raised, it is handled by the same exception handler in the exception section. The processing in the current PL/SQL block’s execution section halts, and control is transferred to the separate exception section of the current block, if one exists, to handle the exception. You cannot return to that block after you finish handling the exception.
 
 ![Exception Handler](exception_handler.png "Exception Handler")
+
+
+##### Declariong Named Exceptions
+
+Your program might need to trap and handle errors such as “negative balance in account”
+or “call date cannot be in the past.” While different in nature from “division by zero,” these errors are still exceptions to normal processing and should be handled gracefully by your program. You must do so yourself by declaring an exception in the declaration section of your
+PL/SQL block. You declare an exception by listing the name of the exception you want
+to raise in your program followed by the keyword EXCEPTION:
+
+`exception_name EXCEPTION;`
+
+```sql
+PROCEDURE calc_annual_sales
+	(company_id_in IN company.company_id%TYPE)
+IS
+	invalid_company_id EXCEPTION;
+	negative_balance EXCEPTION;
+	duplicate_company BOOLEAN;
+BEGIN
+	... body of executable statements ...
+EXCEPTION
+	WHEN NO_DATA_FOUND -- system exception
+	THEN
+		...
+	WHEN invalid_company_id
+	THEN
+	
+	WHEN negative_balance
+	THEN
+		...
+END;
+```
+
+The names for exceptions are similar in format to (and “read” just like) Boolean variable names, but can be referenced in only two ways:
+
+*  In a RAISE statement in the execution section of the program (to raise the exception), as in:
+
+`RAISE invalid_company_id;`
+
+* In the WHEN clauses of the exception section (to handle the raised exception), as in:
+
+`WHEN invalid_company_id THEN`
+
+
+##### Using EXCEPTION_INIT
+
