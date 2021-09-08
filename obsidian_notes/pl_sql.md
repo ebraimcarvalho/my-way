@@ -1077,3 +1077,88 @@ The names for exceptions are similar in format to (and “read” just like) Boo
 
 ##### Using EXCEPTION_INIT
 
+EXCEPTION_INIT is a compile-time command or pragma used to associate a name with an internal error code. EXCEPTION_INIT instructs the compiler to associate an identifier, declared as an EXCEPTION, with a specific error number. Once you have made that association, you can then raise that exception by name and write an explicit WHEN handler that traps the error.
+
+```sql
+PROCEDURE my_procedure
+IS
+	invalid_month EXCEPTION;
+	PRAGMA EXCEPTION_INIT (invalid_month, −1843);
+BEGIN
+	...
+EXCEPTION
+	WHEN invalid_month THEN
+```
+
+Let’s look at another example. In the following program code, I declare and associate an exception for this error:
+
+```sql
+ORA-2292 integrity constraint (OWNER.CONSTRAINT) violated - 
+child record found.
+```
+
+This error occurs if I try to delete a parent row while it still has existing child rows. (A child row is a row with a foreign key reference to the parent table.) The code to declare the exception and associate it with the error code looks like this:
+
+```sql
+PROCEDURE delete_company (company_id_in IN NUMBER)
+IS
+	/* Declare the exception. */
+	still_have_employees EXCEPTION;
+	/* Associate the exception name with an error number. */
+	PRAGMA EXCEPTION_INIT (still_have_employees, −2292);
+BEGIN
+	/* Try to delete the company. */
+	DELETE FROM company
+	WHERE company_id = company_id_in;
+EXCEPTION
+	/* If child records were found, this exception is raised! */
+	WHEN still_have_employees
+	THEN
+		DBMS_OUTPUT.PUT_LINE
+			('Please delete employees for company first.');
+END;
+```
+
+Recommend that you centralize your usage of EXCEPTION_INIT into packages so that the definitions of exceptions are not scattered throughout your code. I don’t want to have to remember what the code is for this error, and it would be silly to define my pragmas in 20 different programs. So instead I predefine my own system exceptions in my own dynamic SQL package:
+
+```sql
+CREATE OR REPLACE PACKAGE dynsql
+IS
+	invalid_table_name EXCEPTION;
+		PRAGMA EXCEPTION_INIT (invalid_table_name, −903);
+	invalid_identifier EXCEPTION;
+		PRAGMA EXCEPTION_INIT (invalid_identifier, −904);
+```
+
+and now I can trap for these errors in any program as follows:
+
+`WHEN dynsql.invalid_identifier THEN ...`
+
+Avoid hardcoding these literals directly into your application; instead, build (or generate) a package that assigns names to those error numbers. Here is an example of such a package:
+
+```sql
+PACKAGE errnums
+IS
+	en_too_young CONSTANT NUMBER := −20001;
+	exc_too_young EXCEPTION;
+	PRAGMA EXCEPTION_INIT (exc_too_young, −20001);
+	en_sal_too_low CONSTANT NUMBER := −20002;
+	exc_sal_too_low EXCEPTION;
+	PRAGMA EXCEPTION_INIT (exc_sal_too_low , −20002);
+END errnums;
+```
+
+By relying on such a package, I can write code like the following, without embedding the actual error number in the logic:
+```sql
+PROCEDURE validate_emp (birthdate_in IN DATE)
+IS
+	min_years CONSTANT PLS_INTEGER := 18;
+BEGIN
+	IF ADD_MONTHS (SYSDATE, min_years * 12 * −1) < birthdate_in
+	THEN
+		RAISE_APPLICATION_ERROR
+		(errnums.en_too_young,
+		'Employee must be at least ' || min_years || ' old.');
+	END IF;
+END;
+```
