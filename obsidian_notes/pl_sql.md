@@ -1162,3 +1162,42 @@ BEGIN
 	END IF;
 END;
 ```
+
+Suppose that your program generates an unhandled exception for error ORA-6511. Looking up this error, you find that it is associated with the CURSOR_ALREADY_OPEN exception. Locate thePL/SQL block in which the  error occurs and add an exception handler for CURSOR_ALREADY_OPEN, as shown here:
+
+```sql
+EXCEPTION
+	WHEN CURSOR_ALREADY_OPEN
+	THEN
+		CLOSE my_cursor;
+END;
+```
+
+Of course, you would be even better off analyzing your code to determine proactively
+which of the predefined exceptions might occur. You could then decide which of those exceptions you want to handle specifically, which should be covered by the WHEN OTHERS clause (discussed later in this chapter), and which would best be left unhandled.
+
+Consider the following example of the exception overdue_balance declared in the procedure
+check_account. The scope of that exception is the check_account procedure, and nothing else:
+
+```sql
+PROCEDURE check_account (company_id_in IN NUMBER)
+IS
+	overdue_balance EXCEPTION;
+BEGIN
+	... executable statements ...
+	LOOP
+		...
+		IF ... THEN
+		RAISE overdue_balance;
+		END IF;
+	END LOOP;
+EXCEPTION
+	WHEN overdue_balance THEN ...
+END;
+
+```
+
+I can RAISE the overdue_balance inside the check_account procedure, but I cannot raise that exception from a program that calls check_account. Any identifiers—including exceptions—declared inside check_account are invisible outside of that program.
+
+##### The RAISE Statement
+
