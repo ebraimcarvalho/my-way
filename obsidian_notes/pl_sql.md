@@ -1199,5 +1199,90 @@ END;
 
 I can RAISE the overdue_balance inside the check_account procedure, but I cannot raise that exception from a program that calls check_account. Any identifiers—including exceptions—declared inside check_account are invisible outside of that program.
 
-##### The RAISE Statement
+##### The RAISE Statement 
 
+The RAISE statement can take one of three forms:
+
+```sql
+RAISE exception_name;
+RAISE package_name.exception_name;
+RAISE;
+```
+
+```sql
+DECLARE
+	invalid_id EXCEPTION; -- All IDs must start with the letter 'X'.
+	id_value VARCHAR2(30);
+BEGIN
+	id_value := id_for ('SMITH');
+	IF SUBSTR (id_value, 1, 1) != 'X'
+	THEN
+		RAISE invalid_id;
+	END IF;
+	...
+END;
+
+-- and then raising a system exception:
+
+BEGIN
+	IF total_sales = 0
+	THEN
+		RAISE ZERO_DIVIDE; -- Defined in STANDARD package
+	ELSE
+		RETURN (sales_percentage_calculation (my_sales, total_sales));
+	END IF;
+END;
+
+
+-- exception declared inside a package
+
+IF days_overdue (isbn_in, borrower_in) > 365
+THEN
+	RAISE overdue_pkg.book_is_lost;
+END IF;
+```
+
+##### Using RAISE_APPLICATION_ERROR
+
+The advantage of using RAISE_APPLICATION_ERROR instead of RAISE (which can also raise an application-specific, explicitly declared exception) is that you can associate an error message with the exception.
+
+```sql
+PROCEDURE raise_by_language (code_in IN PLS_INTEGER)
+IS
+	l_message error_table.error_string%TYPE;
+BEGIN
+	SELECT error_string
+	INTO l_message
+	FROM error_table
+	WHERE error_number = code_in
+	AND string_language = USERENV ('LANG');
+	RAISE_APPLICATION_ERROR (code_in, l_message);
+END;
+```
+
+
+#### Building an Effective Error Management Architecture
+
+Here are the some of the challenges you will encounter:
+
+
+* The EXCEPTION is an odd kind of structure in PL/SQL. A variable declared to be EXCEPTION can only be raised and handled. It has at most two characteristics: an error code and an error message. You cannot pass an exception as an argument to a program; you cannot associate other attributes with an exception.
+
+* It is very difficult to reuse exception-handling code. Directly related to the previous challenge is another fact: you cannot pass an exception as an argument; you end up cutting and pasting handler code, which is certainly not an optimal way to write programs.
+* There is no formal way to specify which exceptions a program may raise. With Java, on the other hand, this information becomes part of the specification of the program. The consequence is that you must look inside the program implementation to see what might be raised—or hope for the best.
+* Oracle does not provide any way for you to organize and categorize your application-specific exceptions. It simply sets aside (for the most part) the 1,000 error codes between −20,999 and −20,000. You are left to manage those values.
+
+It is extremely important that you establish a consistent strategy and architecture for error handling in your application before you write any code. To do that, you must answer questions like these:
+
+* How and when do I log errors so that they can be reviewed and corrected? Should I write information to a file, to a database table, and/or to the screen?
+* How and when do I report the occurrence of errors back to the user? How much information should the user see and have to keep track of? How do I transform often obscure database error messages into text that is understandable to my users?
+* Should I include an exception-handling section in every one of my PL/SQL blocks?
+* Should I have an exception-handling section only in the top-level or outermost blocks?
+* How should I manage my transactions when errors occur?
+
+
+Here are some general principles you may want to consider:
+
+* When an error occurs in your code, obtain as much information as possible about the context in which the error was raised. You are better off with more information than you really need, rather than with less. You can then propagate the exception to outer blocks, picking up more information as you go.
+* Avoid hiding errors with handlers that look like WHEN error THEN NULL; (or, even worse, WHEN OTHERS THEN NULL;). There may be a good reason for you to write code like this, but make sure it is really what you want and document the usage so that others will be aware of it.
+* Rely on the default error mechanisms of PL/SQL whenever possible. Avoid writing programs that return status codes to the host environment or calling blocks. The only time you will want to use status codes is if the host environment cannot gracefully handle Oracle errors (in which case, you might want to consider switching your host environment!).
