@@ -1246,6 +1246,17 @@ END IF;
 
 The advantage of using RAISE_APPLICATION_ERROR instead of RAISE (which can also raise an application-specific, explicitly declared exception) is that you can associate an error message with the exception.
 
+Here’s the header for this procedure (defined in package DBMS_STANDARD):
+
+```sql
+PROCEDURE RAISE_APPLICATION_ERROR (
+	num binary_integer,
+	msg varchar2,
+	keeperrorstack boolean default FALSE);
+```
+
+where num is the error number and must be a value between −20,999 and −20,000 (just think: Oracle needs all the rest of those negative integers for its own exceptions!); msg is the error message and must be no more than 2,000 characters in length (any text beyond that limit will be ignored); and keeperrorstack indicates whether you want to add the error to any already on the stack (TRUE) or replace the existing errors (the default, FALSE).
+
 ```sql
 PROCEDURE raise_by_language (code_in IN PLS_INTEGER)
 IS
@@ -1257,6 +1268,137 @@ BEGIN
 	WHERE error_number = code_in
 	AND string_language = USERENV ('LANG');
 	RAISE_APPLICATION_ERROR (code_in, l_message);
+END;
+```
+
+##### Handling Exceptions
+
+```sql
+DECLARE
+	... declarations ...
+BEGIN
+	... executable statements ...
+[ EXCEPTION
+	... exception handlers ... ]
+END;
+
+-- The syntax for an exception handler is as follows:
+
+WHEN exception_name [ OR exception_name ... ]
+THEN executable statements
+```
+
+Example:
+
+```sql
+CREATE OR REPLACE PROCEDURE proc1 IS
+BEGIN
+	DBMS_OUTPUT.put_line ('running proc1');
+	RAISE NO_DATA_FOUND;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE proc2 IS
+	l_str VARCHAR2 (30) := 'calling proc1';
+BEGIN
+	DBMS_OUTPUT.put_line (l_str);
+	proc1;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE proc3 IS
+BEGIN
+	DBMS_OUTPUT.put_line ('calling proc2');
+	proc2;
+EXCEPTION
+	WHEN OTHERS
+	THEN
+		DBMS_OUTPUT.put_line ('Error stack at top level:');
+		DBMS_OUTPUT.put_line (DBMS_UTILITY.format_error_backtrace);
+END;
+/
+
+SQL> SET SERVEROUTPUT ON
+SQL> BEGIN
+2 DBMS_OUTPUT.put_line ('Proc3 -> Proc2 -> Proc1 backtrace');
+3 proc3;
+4 END;
+5 /
+```
+
+Output:
+
+Proc3 -> Proc2 -> Proc1 backtrace
+calling proc2
+calling proc1
+running proc1
+Error stack at top level:
+ORA-06512: at "SCOTT.PROC1", line 4
+ORA-06512: at "SCOTT.PROC2", line 5
+ORA-06512: at "SCOTT.PROC3", line 4
+
+You can, within a single WHEN clause, combine multiple exceptions together with an OR operator, just as you would combine multiple Boolean expressions:
+
+```sql
+WHEN invalid_company_id OR negative_balance
+THEN
+```
+
+You can also combine application and system exception names in a single handler:
+
+```sql
+WHEN balance_too_low OR ZERO_DIVIDE OR DBMS_LDAP.INVALID_SESSION
+THEN
+```
+
+You cannot, however, use the AND operator because only one exception can be raised at a time.
+
+#### Example of exception propagation
+
+![Exception Propagation](exception_propagation.png "Exception Proagation")
+
+![Exception Propagation 2](exception_propagation_2.png "Exception Proagation 2")
+
+
+##### Continue past exceptions
+
+Consider the following scenario: I need to write a procedure that performs a series of DML statements against a variety of tables (delete from one table, update another, insert into a final table). My first pass at writing this  rocedure might produce code like the following:
+
+```sql
+PROCEDURE change_data IS
+BEGIN
+	DELETE FROM employees WHERE ... ;
+	UPDATE company SET ... ;
+	INSERT INTO company_history SELECT * FROM company WHERE ... ;
+END;
+```
+
+This procedure certainly contains all the appropriate DML statements. But one of the requirements for this program is that, although these statements are executed in sequence, they are logically independent of each other. In other words, even if the DELETE fails, I want to go on and perform the UPDATE and INSERT.
+
+With the current version of change_data, I can’t make sure that all three DML statements will at least be attempted. If an exception is raised from the DELETE, for example, the entire program’s execution will halt, and control will be passed to the exception section, if there is one. The remaining SQL statements won’t be executed.
+
+How can I get the exception to be raised and handled without terminating the program as a whole? The solution is to place the DELETE within its own PL/SQL block. Consider this next version of the change_data program:
+
+```sql
+PROCEDURE change_data IS
+BEGIN
+	BEGIN
+		DELETE FROM employees WHERE ... ;
+	EXCEPTION
+		WHEN OTHERS THEN log_error;
+	END;
+	
+	BEGIN
+		UPDATE company SET ... ;
+	EXCEPTION
+		WHEN OTHERS THEN log_error;
+	END;
+	
+	BEGIN
+		INSERT INTO company_history SELECT * FROM company WHERE ... ;
+	EXCEPTION
+		WHEN OTHERS THEN log_error;
+	END;
 END;
 ```
 
@@ -1286,3 +1428,10 @@ Here are some general principles you may want to consider:
 * When an error occurs in your code, obtain as much information as possible about the context in which the error was raised. You are better off with more information than you really need, rather than with less. You can then propagate the exception to outer blocks, picking up more information as you go.
 * Avoid hiding errors with handlers that look like WHEN error THEN NULL; (or, even worse, WHEN OTHERS THEN NULL;). There may be a good reason for you to write code like this, but make sure it is really what you want and document the usage so that others will be aware of it.
 * Rely on the default error mechanisms of PL/SQL whenever possible. Avoid writing programs that return status codes to the host environment or calling blocks. The only time you will want to use status codes is if the host environment cannot gracefully handle Oracle errors (in which case, you might want to consider switching your host environment!).
+
+I suggest that you meet this challenge by taking the following steps:
+
+1. Study and understand how error raising and handling work in PL/SQL. It is not all completely intuitive. A prime example: an exception raised in the declaration section will not be handled by the exception section of that block.
+2. Decide on the overall error management approach you will take in your application. Where and when do you handle errors? What information do you need to save, and how will you do that? How are exceptions propagated to the host environment? How will you handle deliberate, unfortunate, and unexpected errors?
+3. Build a standard framework to be used by all developers; that framework will include underlying tables, packages, and perhaps object types, along with a welldefined process for using these elements. Don’t resign yourself to PL/SQL’s limitations. Work around them by enhancing the error management model.
+4. Create templates that everyone on your team can use, making it easier to follow the standard than to write one’s own error-andling code.
