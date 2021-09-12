@@ -1435,3 +1435,8 @@ I suggest that you meet this challenge by taking the following steps:
 2. Decide on the overall error management approach you will take in your application. Where and when do you handle errors? What information do you need to save, and how will you do that? How are exceptions propagated to the host environment? How will you handle deliberate, unfortunate, and unexpected errors?
 3. Build a standard framework to be used by all developers; that framework will include underlying tables, packages, and perhaps object types, along with a welldefined process for using these elements. Don’t resign yourself to PL/SQL’s limitations. Work around them by enhancing the error management model.
 4. Create templates that everyone on your team can use, making it easier to follow the standard than to write one’s own error-andling code.
+
+
+#### Data Pl/SQL
+
+
