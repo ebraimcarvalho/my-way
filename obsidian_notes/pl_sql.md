@@ -1448,7 +1448,7 @@ Naming Your Program Data:
 2. Establish consistent, sensible naming conventions
 
 
-Declaring a Variable
+##### Declaring a Variable
 
 ```sql
 DECLARE
@@ -1472,5 +1472,98 @@ DECLARE
 The DEFAULT syntax (see l_right_now in the previous example) and the assignment operator syntax (see l_favorite_flavor in the previous example) are equivalent and can be used interchangeably. So which should you use? I like to use the assignment operator (:=) to set default values for constants, and the DEFAULT syntax for variables. In the case of a constant, the assigned value is not really a default but an initial (and unchanging) value, so the DEFAULT syntax feels misleading to me.
 
 
-Declaring Constants
+##### Declaring Constants
+
+
+There are just two differences between declaring a variable and declaring a constant: for a constant, you include the CONSTANT keyword, and you must supply a default value (which isn’t really a default at all, but rather is the only value). So, the syntax for the declaration of a constant is:
+
+`name CONSTANT datatype [NOT NULL] := | DEFAULT default_value;`
+
+Here are some examples of declarations of constants:
+
+```sql
+DECLARE
+	-- The current year number; it's not going to change during my session.
+	l_curr_year CONSTANT PLS_INTEGER :=
+	TO_NUMBER (TO_CHAR (SYSDATE, 'YYYY'));
+	-- Using the DEFAULT keyword
+	l_author CONSTANT VARCHAR2(100) DEFAULT 'Bill Pribyl';
+	-- Declare a complex datatype as a constant-
+	-- this isn't just for scalars!
+	l_steven CONSTANT person_ot :=
+		person_ot ('HUMAN', 'Steven Feuerstein', 175,
+			TO_DATE ('09-23-1958', 'MM-DD-YYYY') );
+```
+
+
+##### The NOT NULL Clause
+
+`company_name VARCHAR2(60) NOT NULL DEFAULT 'PCS R US';`
+
+
+##### Anchored Declarations
+
+
+PL/SQL offers two kinds of anchoring:
+
+* Scalar anchoring
+Use the %TYPE attribute to define your variable based on a table’s column or some other PL/SQL scalar variable.
+
+`l_company_id company.company_id%TYPE;`
+
+* Record anchoring
+Use the %ROWTYPE attribute to define your record structure based on a table or a predefined PL/SQL explicit cursor.
+
+`l_book book%ROWTYPE;`
+
+Suppose that I want to query a single row of information from the book table. Rather than declare individual variables for each column in the table (which, of course, I should do with %TYPE), I can simply rely on %ROWTYPE:
+
+```sql
+DECLARE
+	l_book book%ROWTYPE;
+BEGIN
+	SELECT * INTO l_book
+	FROM book
+	WHERE isbn = '1-56592-335-9';
+	process_book (l_book);
+END;
+```
+
+
+You can also anchor against PL/SQL variables; this is usually done to avoid redundant declarations of the same hardcoded datatype. In this case, the best practice is to create a “reference” variable in a package and then reference that package variable in %TYPE statements. (You could also create SUBTYPEs in your package; this topic is covered later in the chapter.) The following example shows just a portion of a package intended to make it easier to work with Oracle Advanced Queuing (AQ):
+
+```sql
+/* File on web: aq.pkg */
+PACKAGE aq
+IS
+/* Standard datatypes for use with Oracle AQ. */
+	v_msgid RAW (16);
+	SUBTYPE msgid_type IS v_msgid%TYPE;
+	v_name VARCHAR2 (49);
+	SUBTYPE name_type IS v_name%TYPE;
+	...
+END aq;
+```
+
+Suppose now that I only want to retrieve the author and title from the book table. In this case, I build an explicit cursor and then %ROWTYPE against that cursor:
+
+```sql
+DECLARE
+	CURSOR book_cur IS
+		SELECT author, title FROM book
+		WHERE isbn = '1-56592-335-9';
+	l_book book_cur%ROWTYPE;
+BEGIN
+	OPEN book_cur;
+	FETCH book_cur INTO l_book; END;
+```
+
+
+##### Benefits of Anchored Declarations
+
+* Synchronization with database columns
+The PL/SQL variable “represents” database information in the program. If I declare explicitly and then change the structure of the underlying table, my program may not work properly.
+
+* Normalization of local variables
+The PL/SQL variable stores calculated values used throughout the application. What are the consequences of repeating (hardcoding) the same datatype and constraint for each declaration in all of our programs?
 
