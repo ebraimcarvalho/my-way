@@ -1567,3 +1567,55 @@ The PL/SQL variable “represents” database information in the program. If I d
 * Normalization of local variables
 The PL/SQL variable stores calculated values used throughout the application. What are the consequences of repeating (hardcoding) the same datatype and constraint for each declaration in all of our programs?
 
+
+##### Anchoring to NOT NULL Datatypes
+
+```sql
+DECLARE
+	max_available_date DATE NOT NULL :=
+	ADD_MONTHS (SYSDATE, 3);
+	last_ship_date max_available_date%TYPE;
+
+/* 
+The declaration of last_ship_date then fails to compile, with the following message:
+*/
+
+PLS_00218: a variable declared NOT NULL must have an initialization assignment.
+```
+
+If you use a NOT NULL variable in a %TYPE declaration, the new variable must have a default value provided. The same is not true, however, for variables declared with %TYPE where the source is a database column defined as NOT NULL. A NOT NULL constraint from a database table is not automatically transferred to a variable.
+
+
+##### Programmer-Defined Subtypes
+
+There are two kinds of subtypes, constrained and unconstrained:
+
+* Constrained subtype
+A subtype that restricts or constrains the values normally allowed by the datatype itself. POSITIVE is an example of a constrained subtype of BINARY_ INTEGER.
+
+```sql
+SUBTYPE POSITIVE IS BINARY_INTEGER RANGE 1 .. 2147483647;
+```
+
+A variable that is declared POSITIVE can store only integer values greater than zero.
+
+* Unconstrained subtype
+A subtype that does not restrict the values of the original datatype in variables declared with the subtype. FLOAT is an example of an unconstrained subtype of NUMBER. Its definition in the STANDARD package is:
+
+`SUBTYPE FLOAT IS NUMBER;`
+
+To make a subtype available, you first have to declare it in the declaration section of an anonymous PL/SQL block, procedure, function, or package. You’ve already seen the syntax for declaring a subtype used by PL/SQL in the STANDARD package. The general format of a subtype declaration is:
+
+`SUBTYPE subtype_name IS base_type;`
+
+where subtype_name is the name of the new subtype, and base_type is the datatype on which the subtype is based.
+
+Example:
+
+```sql
+PACKAGE utility
+AS
+	SUBTYPE big_string IS VARCHAR2(32767);
+	SUBTYPE big_db_string IS VARCHAR2(4000);
+END utility;
+```
