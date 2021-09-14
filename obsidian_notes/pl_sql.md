@@ -1440,3 +1440,37 @@ I suggest that you meet this challenge by taking the following steps:
 #### Program Data PL/SQL
 
 
+##### How declare program data
+
+Naming Your Program Data:
+
+1. Ensure that each name accurately reflects its usage and is understandable at a glance
+2. Establish consistent, sensible naming conventions
+
+
+Declaring a Variable
+
+```sql
+DECLARE
+	-- Simple declaration of numeric variable
+	l_total_count NUMBER;
+	-- Declaration of number that rounds to nearest hundredth (cent):
+	l_dollar_amount NUMBER (10,2);
+	-- A single datetime value, assigned a default value of the database
+	-- server's system clock. Also, it can never be NULL.
+	l_right_now DATE NOT NULL DEFAULT SYSDATE;
+	-- Using the assignment operator for the default value specification
+	l_favorite_flavor VARCHAR2(100) := 'Anything with chocolate, actually';
+	-- Two-step declaration process for associative array.
+	-- First, the type of table:
+	TYPE list_of_books_t IS TABLE OF book%ROWTYPE INDEX BY BINARY_INTEGER;
+	-- And now the specific list to be manipulated in this block:
+	oreilly_oracle_books list_of_books_t;
+
+```
+
+The DEFAULT syntax (see l_right_now in the previous example) and the assignment operator syntax (see l_favorite_flavor in the previous example) are equivalent and can be used interchangeably. So which should you use? I like to use the assignment operator (:=) to set default values for constants, and the DEFAULT syntax for variables. In the case of a constant, the assigned value is not really a default but an initial (and unchanging) value, so the DEFAULT syntax feels misleading to me.
+
+
+Declaring Constants
+
