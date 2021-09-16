@@ -1944,3 +1944,187 @@ Instead, to solve this particular problem, you can use a combination of RTRIM an
 
 ##### Regular Expression
 
+The general syntax for the REGEXP_LIKE function is:
+
+`REGEXP_LIKE (source_string, pattern [,match_modifier])`
+
+Where source_string is the character string to be searched, pattern is the regular expression pattern to search for in source_string, and match_modifier is one or more modifiers that apply to the search. If REGEXP_LIKE finds pattern in source_string, then it returns the Boolean TRUE; otherwise, it returns FALSE.
+
+```sql
+DECLARE
+	names VARCHAR2(60) := 'Anna,Matt,Joe,Nathan,Andrew,Jeff,Aaron';
+	names_adjusted VARCHAR2(61);
+	comma_delimited BOOLEAN;
+BEGIN
+	-- Look for the pattern
+	comma_delimited := REGEXP_LIKE(names,'^([a-z A-Z]*,)+([a-z A-Z]*){1}$');
+	-- Display the result
+	DBMS_OUTPUT.PUT_LINE(
+		CASE comma_delimited
+		WHEN true THEN 'We have a delimited list!'
+		ELSE 'The pattern does not match.'
+		END);
+END;
+
+-- The result is:
+-- We have a delimited list!
+```
+
+##### Locating a pattern
+
+You can use REGEXP_INSTR to locate occurrences of a pattern within a string. The general syntax for REGEXP_INSTR is:
+
+```sql
+REGEXP_INSTR (source_string, pattern [,beginning_position [,occurrence
+	[,return_option [,match_modifier [,subexpression]]]]])
+```
+
+For example, to find the first occurrence of a name beginning with the letter A and ending with a consonant, you might specify:
+
+```sql
+DECLARE
+	names VARCHAR2(60) := 'Anna,Matt,Joe,Nathan,Andrew,Jeff,Aaron';
+	names_adjusted VARCHAR2(61);
+	comma_delimited BOOLEAN;
+	j_location NUMBER;
+BEGIN
+	-- Look for the pattern
+	comma_delimited := REGEXP_LIKE(names,'^([a-z ]*,)+([a-z ]*)$', 'i');
+	-- Only do more if we do, in fact, have a comma-delimited list
+	IF comma_delimited THEN
+		j_location := REGEXP_INSTR(names, 'A[a-z]*[^aeiou],|A[a-z]*[^aeiou]$');
+		DBMS_OUTPUT.PUT_LINE(j_location);
+	END IF;
+END;
+```
+
+A[a-z ]*[^aeiou]
+
+I add [^aeiou] because I want my name to end with anything but a vowel. The caret ^ creates an exclusion set—any character except a vowel will match. Because I specify no quantifier, exactly one such nonvowel is required.
+
+While REGEXP_INSTR has its uses, I am often more interested in returning the text matching a pattern than I am in simply locating it.
+
+
+##### Extracting text matching a pattern
+
+Let’s use a different example to illustrate regular expression extraction. Phone numbers are a good example because they follow a pattern, but often there are several variations on this pattern. The phone number pattern includes the area code (three digits) followed by the exchange (three digits) followed by the local number (four digits). So, a phone number is a string of 10 digits. But there are many optional and alternative ways to represent the number. The area code may be enclosed within parentheses and is usually, but not always, separated from the rest of the phone number with a space, dot, or dash character. The exchange is also usually, but not always, separated from the rest of the phone number with a space, dot, or dash character. Thus, a legal phone number may include any of the following:
+
+>7735555253
+773-555-5253
+(773)555-5253
+(773) 555 5253
+773.555.5253
+
+The general syntax for REGEXP_SUBSTR is:
+
+```sql
+REGEXP_SUBSTR (source_string, pattern [,position [,occurrence
+	[,match_modifier [,subexpression]]]])
+```
+
+REGEXP_SUBSTR returns a string containing the portion of the source string matching the pattern or subexpression. If no matching pattern is found, a NULL is returned.
+
+```sql
+DECLARE
+	contact_info VARCHAR2(200) := '
+		address:
+		1060 W. Addison St.
+		Chicago, IL 60613
+		home 773-555-5253
+	';
+	phone_pattern VARCHAR2(90) :=
+		'\(?\d{3}\)?[[:space:]\.\-]?\d{3}[[:space:]\.\-]?\d{4}';
+BEGIN
+	DBMS_OUTPUT.PUT_LINE('The phone number is: '||
+	REGEXP_SUBSTR(contact_info,phone_pattern,1,1));
+END;
+-- This code shows me the phone number:
+-- The phone number is: 773-555-5253
+```
+
+##### Counting regular expression matches
+
+Sometimes, you just want a count of how many matches your regular expression has.
+
+`REGEXP_COUNT (source_string, pattern [,position [,match_modifier]])`
+
+```sql
+DECLARE
+	contact_info VARCHAR2(200) := '
+		address:
+		1060 W. Addison St.
+		Chicago, IL 60613
+		home 773-555-5253
+		work (312) 123-4567';
+	phone_pattern VARCHAR2(90) :=
+		'\(?(\d{3})\)?[[:space:]\.\-]?(\d{3})[[:space:]\.\-]?\d{4}';
+BEGIN
+	DBMS_OUTPUT.PUT_LINE('There are '
+		||REGEXP_COUNT(contact_info,phone_pattern)
+		||' phone numbers');
+END;
+
+-- The result is:
+-- There are 2 phone numbers
+```
+
+##### Replacing text
+
+Imagine that you’re faced with the problem of displaying a comma-delimited list of names two to a line. One way to do that is to replace every second comma with a newline character. Again, this is hard to do with standard REPLACE, but easy using REGEXP_REPLACE.
+
+`REGEXP_REPLACE (source_string, pattern [,replacement_string
+[,position [,occurrence [,match_modifier]])`
+
+```sql
+DECLARE
+	names VARCHAR2(60) := 'Anna,Matt,Joe,Nathan,Andrew,Jeff,Aaron';
+	names_adjusted VARCHAR2(61);
+	comma_delimited BOOLEAN;
+	extracted_name VARCHAR2(60);
+	name_counter NUMBER;
+BEGIN
+	-- Look for the pattern
+	comma_delimited := REGEXP_LIKE(names,'^([a-z ]*,)+([a-z ]*){1}$', 'i');
+	-- Only do more if we do, in fact, have a comma-delimited list
+	IF comma_delimited THEN
+		names := REGEXP_REPLACE(
+			names,
+			'([a-z A-Z]*),([a-z A-Z]*),',
+			'\1,\2' || chr(10) );
+	END IF;
+	DBMS_OUTPUT.PUT_LINE(names);
+END;
+```
+
+The output from this bit of code is:
+
+Anna,Matt
+Joe,Nathan
+Andrew,Jeff
+Aaron
+
+I can do even more! I can easily change the replacement text to use a tab (an ASCII 9) rather than a comma:
+
+```sql
+names := REGEXP_REPLACE(
+	names,
+	'([a-z A-Z]*),([a-z A-Z]*),',
+	'\1' || chr(9) || '\2' || chr(10) );
+	
+/*
+And now I get my results in two nice, neat columns:
+Anna 	Matt
+Joe 	Nathan
+Andrew 	Jeff
+Aaron
+*/
+```
+
+##### Working with Empty Strings
+
+Oracle database treats empty strings as NULLs. This is contrary to the ISO SQL standard, which recognizes the difference between an empty string and a string variable that is NULL.
+
+```sql
+IF (user_entered_name <> name_from_database)
+	OR (user_entered_name IS NULL) THEN
+```
