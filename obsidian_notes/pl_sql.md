@@ -1885,3 +1885,62 @@ Matt.............Joe
 */
 ```
 
+
+##### Trimming
+
+What LPAD and RPAD giveth, TRIM, LTRIM, and RTRIM taketh away. For example:
+
+```sql
+DECLARE
+	a VARCHAR2(40) := 'This sentence has too many periods......';
+	b VARCHAR2(40) := 'The number 1';
+BEGIN
+	DBMS_OUTPUT.PUT_LINE( RTRIM(a,'.') );
+	DBMS_OUTPUT.PUT_LINE(
+	LTRIM(b, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz')
+	);
+END;
+```
+
+The output is:
+
+This sentence has too many periods
+1
+
+The default is to trim spaces from the beginning or end of the string. Specifying RTRIM(a) is the same as asking for RTRIM(a,‘ ’). The same goes for LTRIM(a) and LTRIM(a,‘ ’).
+
+TRIM works a bit differently from LTRIM and RTRIM, as you can see:
+
+```sql
+DECLARE
+	x VARCHAR2(30) := '.....Hi there!.....';
+BEGIN
+	DBMS_OUTPUT.PUT_LINE( TRIM(LEADING '.' FROM x) );
+	DBMS_OUTPUT.PUT_LINE( TRIM(TRAILING '.' FROM x) );
+	DBMS_OUTPUT.PUT_LINE( TRIM(BOTH '.' FROM x) );
+	-- The default is to trim from both sides
+	DBMS_OUTPUT.PUT_LINE( TRIM('.' FROM x) );
+	-- The default trim character is the space:
+	DBMS_OUTPUT.PUT_LINE( TRIM(x) );
+END;
+```
+
+The output is:
+
+Hi there!.....
+.....Hi there!
+Hi there!
+Hi there!
+.....Hi there!.....
+
+It’s one function, yet you can use it to trim from either side or from both sides. However, you can specify only a single character to remove. You cannot, for example, write:
+
+`TRIM(BOTH ',.;' FROM x)`
+
+Instead, to solve this particular problem, you can use a combination of RTRIM and LTRIM:
+
+`RTRIM(LTRIM(x,',.;'),',.;')`
+
+
+##### Regular Expression
+
