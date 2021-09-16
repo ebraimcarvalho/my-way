@@ -1619,3 +1619,88 @@ AS
 	SUBTYPE big_db_string IS VARCHAR2(4000);
 END utility;
 ```
+
+
+#### Strings
+
+Fixed-length Variable-length
+Database character set CHAR VARCHAR2
+National character set NCHAR NVARCHAR2
+
+You will rarely need or want to use the fixed-length CHAR and NCHAR datatypes in Oracle-based applications; in fact, I recommend that you never use these types unless there is a specific requirement for fixed-length strings.
+
+
+##### VARCHAR2
+
+`variable_name VARCHAR2 (max_length [CHAR | BYTE]);`
+
+If you omit the CHAR or BYTE qualifier when declaring a VARCHAR2 variable, then whether the size is in characters or bytes depends on the NLS_LENGTH_SEMANTICS initialization parameter. You can determine your current setting by querying NLS_SESSION_PARAMETERS.
+
+Examples:
+
+```sql
+DECLARE
+	small_string VARCHAR2(4);
+	line_of_text VARCHAR2(2000);
+	feature_name VARCHAR2(100 BYTE); -- 100-byte string
+	emp_name VARCHAR2(30 CHAR); -- 30-character string
+```
+
+The maximum length allowed for PL/SQL VARCHAR2 variables is 32,767 bytes. Note, however, that SQL supports this maximum size only if the MAX_SQL_STRING_SIZE initialization parameter is set to EXTENDED; the default value is STANDARD.
+
+
+##### Specifying String Constants
+
+```sql
+-- 'Brighten the corner where you are.'
+-- 'Aren''t you glad you''re learning PL/SQL with O''Reilly?'
+-- q'!Aren't you glad you're learning PL/SQL with O'Reilly?!'
+-- q'{Aren't you glad you're learning PL/SQL with O'Reilly?}'
+```
+
+##### Using Nonprintable Characters
+
+The built-in CHR function is especially valuable when you need to make reference to a nonprintable character in your code. Suppose you have to build a report that displays the address of a company. A company can have up to four address strings (in addition to city, state, and zip code). Your boss wants each address string to start on a new line. You can do that by concatenating all the address lines together into one long text value and using CHR to insert linefeeds where desired. The location in the standard ASCII collating sequence for the linefeed character is 10, so you can code:
+
+```sql
+SELECT name || CHR(10)
+	|| address1 || CHR(10)
+	|| address2 || CHR(10)
+	|| city || ', ' || state || ' ' || zipcode
+	AS company_address
+FROM company
+```
+
+The results will end up looking like: 
+COMPANY_ADDRESS
+|----------------------
+Harold Henderson
+22 BUNKER COURT
+
+WYANDANCH, MN 66557
+
+What? You say your boss doesn’t want to see any blank lines? No problem. You can eliminate those with a bit of cleverness involving the NVL2 function:
+
+```sql
+SELECT name
+	|| NVL2(address1, CHR(10) || address1, '')
+	|| NVL2(address2, CHR(10) || address2, '')
+	|| CHR(10) || city || ', ' || state || ' ' || zipcode
+	AS company_address
+FROM company
+```
+
+Now the query returns a single formatted column per company. The NVL2 function returns the third argument when the first is NULL, and otherwise returns the second argument. In this example, when address1 is NULL, the empty string (‘’) is returned, and likewise for the other address columns. In this way, blank address lines are not returned.
+
+The ASCII function, in essence, does the reverse of CHR: it returns the decimal representation of a given character in the database character set. For example, execute the following code to display the decimal code for the letter J:
+
+```sql
+BEGIN
+	DBMS_OUTPUT.PUT_LINE(ASCII('J'));
+END;
+```
+
+and you’ll find that, in UTF-8 at least, the underlying representation of J is the value 74.
+
+
+##### Concatenating Strings
