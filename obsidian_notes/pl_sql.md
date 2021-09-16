@@ -1829,3 +1829,59 @@ BEGIN
 	)
 END;
 ```
+
+To extract the final 10 characters of a string:
+
+`SUBSTR('Brighten the corner where you are',-10)`
+
+`INSTR('Brighten the corner where you are','re',-1,2)`
+
+The result is 24. The fourth parameter, a 2, requests the second occurrence of “re”. The third parameter is −1, so the search begins at the last character of the string (the first character prior to the closing quote). The search progresses backward toward the beginning, past the “re” at the end of “are” (the first occurrence), until reaching the occurrence of “re” at the end of “where”.
+
+There is one subtle case in which INSTR with a negative position will search forward. Here’s an example:
+
+`INSTR('Brighten the corner where you are','re',-2,1)`
+
+The −2 starting position means that the search begins with the r in “are”. The result is 32. Beginning from the r in “are”, INSTR looks forward to see whether it is pointing at an occurrence of “re”. And it is, so INSTR returns the current position in the string, which happens to be the 32nd character.
+
+##### Padding
+
+Occasionally it’s helpful to force strings to be a certain size. You can use LPAD and RPAD to add spaces (or some other character) to either end of a string in order to make the string a specific length. The following example uses the two functions to display a list of names two-up in a column, with the leftmost name being flush left and the rightmost name appearing flush right:
+
+```sql
+DECLARE
+	a VARCHAR2(30) := 'Jeff';
+	b VARCHAR2(30) := 'Eric';
+	c VARCHAR2(30) := 'Andrew';
+	d VARCHAR2(30) := 'Aaron';
+	e VARCHAR2(30) := 'Matt';
+	f VARCHAR2(30) := 'Joe';
+BEGIN
+	DBMS_OUTPUT.PUT_LINE( RPAD(a,10) || LPAD(b,10) );
+	DBMS_OUTPUT.PUT_LINE( RPAD(c,10) || LPAD(d,10) );
+	DBMS_OUTPUT.PUT_LINE( RPAD(e,10) || LPAD(f,10) );
+END;
+
+/*
+The output is:
+Jeff 			Eric
+Andrew 		   Aaron
+Matt 			 Joe
+*/
+```
+
+The default padding character is the space. If you like, you can specify a fill character as the third argument. Change the lines of code to read:
+
+```sql
+DBMS_OUTPUT.PUT_LINE( RPAD(a,10,'.') || LPAD(b,10,'.') );
+DBMS_OUTPUT.PUT_LINE( RPAD(c,10,'.') || LPAD(d,10,'.') );
+DBMS_OUTPUT.PUT_LINE( RPAD(e,10,'.') || LPAD(f,10,'.') );
+
+/*
+And the output changes to:
+Jeff............Eric
+Andrew.........Aaron
+Matt.............Joe
+*/
+```
+
