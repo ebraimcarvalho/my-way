@@ -1704,3 +1704,128 @@ and you’ll find that, in UTF-8 at least, the underlying representation of J is
 
 
 ##### Concatenating Strings
+
+There are two mechanisms for concatenating strings: the CONCAT function and the concatenation operator, represented by two vertical bar characters (||).
+
+CONCAT ('abc', 'defg') --> 'abcdefg'
+CONCAT (NULL, 'def') --> 'def'
+CONCAT ('ab', NULL) --> 'ab'
+CONCAT (NULL, NULL) --> NULL
+
+Notice that you can concatenate only two strings with the database function. With the concatenation operator, you can combine several strings. For example:
+
+```sql
+DECLARE
+	x VARCHAR2(100);
+BEGIN
+	x := 'abc' || 'def' || 'ghi';
+	DBMS_OUTPUT.PUT_LINE(x);
+END;
+```
+
+The output is: abcdefghi
+
+To perform the identical concatenation using CONCAT, you would need to nest one call to CONCAT inside another:
+
+`x := CONCAT(CONCAT('abc','def'),'ghi');`
+
+##### Dealing with Case
+
+Forcing a string to all upper- or lowercase
+
+```sql
+DECLARE
+	name1 VARCHAR2(30) := 'Andrew Sears';
+	name2 VARCHAR2(30) := 'ANDREW SEARS';
+BEGIN
+	IF LOWER(name1) = LOWER(name2) THEN
+		DBMS_OUTPUT.PUT_LINE('The names are the same.');
+	END IF;
+END;
+```
+
+Capitalizing each word in a string
+
+A third case-related function, after UPPER and LOWER, is INITCAP. This function forces the initial letter of each word in a string to uppercase, and all remaining letters to lowercase. For example, if I write code like this:
+
+```sql
+DECLARE
+	name VARCHAR2(30) := 'MATT williams';
+BEGIN
+	DBMS_OUTPUT.PUT_LINE(INITCAP(name));
+END;
+```
+
+The output will be: Matt Williams
+
+
+##### Traditional Searching, Extracting, and Replacing
+
+The INSTR function returns the character position of a substring within a larger string. The following code finds the locations of all the commas in a list of names:
+
+```sql
+DECLARE
+	names VARCHAR2(60) := 'Anna,Matt,Joe,Nathan,Andrew,Aaron,Jeff';
+	comma_location NUMBER := 0;
+BEGIN
+	LOOP
+		comma_location := INSTR(names,',',comma_location+1);
+		EXIT WHEN comma_location = 0;
+		DBMS_OUTPUT.PUT_LINE(comma_location);
+	END LOOP;
+END;
+```
+
+The output is:
+5
+10
+14
+21
+28
+34
+
+The first argument to INSTR is the string to search. The second is the substring to look for, in this case a comma. The third argument specifies the character position at which to begin looking. After each comma is found, the loop begins looking again one character further down the string. When no match is found, INSTR returns zero, and the loop ends.
+
+Let’s extract the names instead. For that, I’ll use the SUBSTR function:
+
+```sql
+DECLARE
+	names VARCHAR2(60) := 'Anna,Matt,Joe,Nathan,Andrew,Aaron,Jeff';
+	names_adjusted VARCHAR2(61);
+	comma_location NUMBER := 0;
+	prev_location NUMBER := 0;
+BEGIN
+	-- Stick a comma after the final name
+	names_adjusted := names || ',';
+	LOOP
+		comma_location := INSTR(names_adjusted,',',comma_location+1);
+		EXIT WHEN comma_location = 0;
+		DBMS_OUTPUT.PUT_LINE(
+			SUBSTR(names_adjusted,
+			prev_location+1,
+			comma_location-prev_location-1));
+		prev_location := comma_location;
+	END LOOP;
+END;
+```
+
+The list of names that I get is:
+Anna
+Matt
+Joe
+Nathan
+Andrew
+Aaron
+Jeff
+
+All this searching and extracting is fairly tedious. Sometimes I can reduce the complexity of my code by cleverly using some of the built-in functions. Let’s try the REPLACE function to swap those commas with newlines:
+
+```sql
+DECLARE
+	names VARCHAR2(60) := 'Anna,Matt,Joe,Nathan,Andrew,Aaron,Jef';
+BEGIN
+	DBMS_OUTPUT.PUT_LINE(
+		REPLACE(names, ',', chr(10))
+	)
+END;
+```
