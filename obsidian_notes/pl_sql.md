@@ -2370,3 +2370,52 @@ BEGIN
 		|| months_of_service || ' months');
 END;
 ```
+
+
+##### Conversions
+
+PL/SQL supports the following functions to convert strings to dates and timestamps:
+
+`TO_DATE(string[, format_mask[, nls_language]])`
+
+Converts a character string to a value of type DATE.
+
+`TO_DATE(number[, format_mask[, nls_language]])`
+
+Converts a number representing a Julian date into a value of type DATE.
+
+`TO_TIMESTAMP(string[, format_mask[, nls_language]])`
+
+Converts a character string to a value of type TIMESTAMP.
+
+`TO_TIMESTAMP_TZ(string[, format_mask[, nls_language]])`
+
+Converts a character string to a value of type TIMESTAMP WITH TIME ZONE. Also use this function when your target is TIMESTAMP WITH LOCAL TIME
+ZONE.
+
+```sql
+DECLARE
+	dt DATE;
+	ts TIMESTAMP;
+	tstz TIMESTAMP WITH TIME ZONE;
+	tsltz TIMESTAMP WITH LOCAL TIME ZONE;
+BEGIN
+	dt := TO_DATE('12/26/2005','mm/dd/yyyy');
+	ts := TO_TIMESTAMP('24-Feb-2002 09.00.00.50 PM');
+	tstz := TO_TIMESTAMP_TZ('06/2/2002 09:00:00.50 PM EST',
+	'mm/dd/yyyy hh:mi:ssxff AM TZD');
+	tsltz := TO_TIMESTAMP_TZ('06/2/2002 09:00:00.50 PM EST',
+	'mm/dd/yyyy hh:mi:ssxff AM TZD');
+	DBMS_OUTPUT.PUT_LINE(dt);
+	DBMS_OUTPUT.PUT_LINE(ts);
+	DBMS_OUTPUT.PUT_LINE(tstz);
+	DBMS_OUTPUT.PUT_LINE(tsltz);
+END;
+/*
+The output is:
+	26-DEC-05
+	24-FEB-02 09.00.00.500000 PM
+	02-JUN-02 09.00.00.500000 PM −05:00
+	02-JUN-02 09.00.00.500000 PM
+*/
+```
