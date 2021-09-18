@@ -2128,3 +2128,55 @@ Oracle database treats empty strings as NULLs. This is contrary to the ISO SQL s
 IF (user_entered_name <> name_from_database)
 	OR (user_entered_name IS NULL) THEN
 ```
+
+
+#### Numbers
+
+```sql
+DECLARE
+	x NUMBER;
+	-- NUMBER(precision, scale)
+	fixed_point NUMBER(9,2) -- 9999999.99
+
+DECLARE
+	loop_counter PLS_INTEGER;
+	days_in_standard_year CONSTANT PLS_INTEGER := 365;
+	emp_vacation_days PLS_INTEGER DEFAULT 14;
+```
+
+The PLS_INTEGER datatype was designed for speed, are represented using your hardware platform’s native integer format. I recommend that you consider using PLS_INTEGER whenever you’re faced with intensive integer arithmetic. You’ll gain the greatest efficiency when you use PLS_INTEGER for integer arithmetic (and for loop counters) in cases where you can avoid multiple conversions to and from the NUMBER type. When this datatype is used in integer arithmetic, the resulting values are rounded to whole numbers, as shown in this example:
+
+```sql
+DECLARE
+	int1 PLS_INTEGER;
+	int2 PLS_INTEGER;
+	int3 PLS_INTEGER;
+	nbr NUMBER;
+BEGIN
+	int1 := 100;
+	int2 := 49;
+	int3 := int2/int1;
+	nbr := int2/int1;
+	DBMS_OUTPUT.PUT_LINE('integer 49/100 =' || TO_CHAR(int3));
+	DBMS_OUTPUT.PUT_LINE('number 49/100 =' || TO_CHAR(nbr));
+	int2 := 50;
+	int3 := int2/int1;
+	nbr := int2/int1;
+	DBMS_OUTPUT.PUT_LINE('integer 50/100 =' || TO_CHAR(int3));
+	DBMS_OUTPUT.PUT_LINE('number 50/100 =' || TO_CHAR(nbr));
+END;
+
+/*
+This gives the following output:
+integer 49/100 =0
+number 49/100 =.49
+integer 50/100 =1
+number 50/100 =.5
+*/
+```
+
+##### The SIMPLE_INTEGER Type
+
+The SIMPLE_INTEGER datatype was introduced in Oracle Database 11g. This datatype is a performance-enhanced version of PLS_INTEGER with a few caveats. But it does not support NULL values or check for overflow conditions.
+
+>To avoid ambiguity and possible errors involving implicit conversions, I recommend explicit conversions, such as with the functions TO_NUMBER, TO_BINARY_FLOAT, and TO_BINARY_DOUBLE.
