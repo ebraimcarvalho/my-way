@@ -2180,3 +2180,51 @@ number 50/100 =.5
 The SIMPLE_INTEGER datatype was introduced in Oracle Database 11g. This datatype is a performance-enhanced version of PLS_INTEGER with a few caveats. But it does not support NULL values or check for overflow conditions.
 
 >To avoid ambiguity and possible errors involving implicit conversions, I recommend explicit conversions, such as with the functions TO_NUMBER, TO_BINARY_FLOAT, and TO_BINARY_DOUBLE.
+
+Use TO_NUMBER whenever you need to convert character string representations of numbers into their corresponding numeric values. Invoke TO_NUMBER as follows:
+
+`TO_NUMBER(string [,format [,nls_params]])`
+
+The TO_CHAR function is the converse of TO_NUMBER, and converts numbers to their character representations. Using an optional format mask, you can be quite specific about the form those character representations take. Invoke TO_CHAR as follows:
+
+`TO_CHAR(number [,format [,nls_params]])`
+
+The CAST function is used to convert numbers to strings and vice versa. The general format of the CAST function is as follows:
+
+`CAST (expression AS datatype)`
+
+CAST has the disadvantage of not supporting the use of number format models. An advantage of CAST, however, is that it is part of the ISO SQL standard, whereas the TO_CHAR and TO_NUMBER functions are not. If writing 100% ANSI-compliant code is important to you, you should investigate the use of CAST. Otherwise, I recommend using the traditional TO_NUMBER and TO_CHAR functions.
+
+Explicit conversions also make your intent clear to other programmers, making your code more selfdocumenting and easier to understand. When you use an implicit conversion you are giving up some of that control. You should always know when conversions are taking place, and the best way to do that is to code them explicitly.
+
+`a := TO_NUMBER('123.400' || TO_CHAR(999));`
+
+```sql
+/*
+Table 9-6. Numeric operators and precedence
+Operator 		Operation 					Precedence
+** 				Exponentiation 				1
++ 				Identity 					2
+− 				Negation 					2
+* 				Multiplication 				3
+/ 				Division 					3
++ 				Addition 					4
+− 				Subtraction 				4
+= 				Equality 					5
+< 				Less than 					5
+> 				Greater than 				5
+<= 				Less than or equal to 		5
+>= 				Greater than or equal to 	5
+<>, !=, ~=, ^= 	Not equal 					5
+IS NULL 		Nullity 					5
+BETWEEN 		Inclusive range 			5
+NOT 			Logical negation 			6
+AND 			Conjunction 				7
+OR 				Inclusion 					8
+*/
+```
+
+There are four different numeric functions that perform rounding and truncation actions:
+
+CEIL, FLOOR, ROUND, and TRUNC.
+
