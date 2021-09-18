@@ -2293,3 +2293,80 @@ With such an abundance of riches, I won’t blame you one bit if you ask for som
 
 • When adding or subtracting years and months, you get different behavior from using ADD_MONTHS, which operates on values of type DATE, than from using interval arithmetic on the timestamp types.
 
+
+##### Getting the Current Date and Time
+
+```sql
+Function 			Time zone 			Datatype returned
+CURRENT_DATE 		Session 			DATE
+CURRENT_TIMESTAMP 	Session 			TIMESTAMP WITH TIME ZONE
+LOCALTIMESTAMP 		Session 			TIMESTAMP
+SYSDATE 			Database server 	DATE
+SYSTIMESTAMP 		Database server 	TIMESTAMP WITH TIME ZONE
+```
+
+So which function should you use in a given situation? The answer depends on several factors, which you should probably consider in the following order:
+
+1. Whether you are using a release prior to Oracle8i Database or need to maintain compatibility with such a release. In either case, your choice is simple: use SYSDATE.
+2. Whether you are interested in the time on the database server or for your session. If for your session, then use a function that returns the session time zone. If for the database server, then use a function that returns the database time zone.
+3. Whether you need the time zone to be returned as part of the current date and time. If so, then call either SYSTIMESTAMP or CURRENT_TIMESTAMP.
+
+
+If you decide to use a function that returns the time in the session time zone, be certain that you have correctly specified your session time zone. The functions SESSIONTIMEZONE and DBTIMEZONE will report your session and database time zones, respectively. To report on the time in the database time zone, you must alter your session time zone to DBTIMEZONE and then use one of the session time zone functions. The following example illustrates some of these functions:
+
+```sql
+BEGIN
+	DBMS_OUTPUT.PUT_LINE('Session Timezone='||SESSIONTIMEZONE);
+	DBMS_OUTPUT.PUT_LINE('Session Timestamp='||CURRENT_TIMESTAMP);
+	DBMS_OUTPUT.PUT_LINE('DB Server Timestamp='||SYSTIMESTAMP);
+	DBMS_OUTPUT.PUT_LINE('DB Timezone='||DBTIMEZONE);
+	EXECUTE IMMEDIATE 'ALTER SESSION SET TIME_ZONE=DBTIMEZONE';
+	DBMS_OUTPUT.PUT_LINE('DB Timestamp='||CURRENT_TIMESTAMP);
+	-- Revert session time zone to local setting
+	EXECUTE IMMEDIATE 'ALTER SESSION SET TIME_ZONE=LOCAL';
+END;
+
+/*
+The output is:
+	Session Timezone=-04:00
+	Session Timestamp=23-JUN-08 12.48.44.656003000 PM −04:00
+	DB Server Timestamp=23-JUN-08 11.48.44.656106000 AM −05:00
+	DB Timezone=+00:00
+	DB Timestamp=23-JUN-08 04.48.44.656396000 PM +00:00
+*/
+```
+
+The database supports two interval datatypes. Both were introduced in Oracle9i Database, and both conform to the ISO SQL standard:
+
+INTERVAL YEAR TO MONTH
+
+Allows you to define an interval of time in terms of years and months.
+
+INTERVAL DAY TO SECOND
+
+Allows you to define an interval of time in terms of days, hours, minutes, and seconds (including fractional seconds).
+
+```sql
+DECLARE
+	start_date TIMESTAMP;
+	end_date TIMESTAMP;
+	service_interval INTERVAL YEAR TO MONTH;
+	years_of_service NUMBER;
+	months_of_service NUMBER;
+BEGIN
+	-- Normally, we would retrieve start and end dates from a database.
+	start_date := TO_TIMESTAMP('29-DEC-1988','dd-mon-yyyy');
+	end_date := TO_TIMESTAMP ('26-DEC-1995','dd-mon-yyyy');
+	
+	-- Determine and display years and months of service
+	service_interval := (end_date - start_date) YEAR TO MONTH;
+	DBMS_OUTPUT.PUT_LINE(service_interval);
+	
+	-- Use the new EXTRACT function to grab individual
+	-- year and month components.
+	years_of_service := EXTRACT(YEAR FROM service_interval);
+	months_of_service := EXTRACT(MONTH FROM service_interval);
+	DBMS_OUTPUT.PUT_LINE(years_of_service || ' years and '
+		|| months_of_service || ' months');
+END;
+```
