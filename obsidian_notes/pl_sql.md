@@ -2228,3 +2228,68 @@ There are four different numeric functions that perform rounding and truncation 
 
 CEIL, FLOOR, ROUND, and TRUNC.
 
+
+#### Dates and Timestamps
+
+The four datetime datatypes are:
+
+DATE 
+
+Stores a date and time, resolved to the second. Does not include time zone.
+
+TIMESTAMP
+
+Stores a date and time without respect to time zone. Except for being able to resolve time to the billionth of a second (nine decimal places of precision), TIMESTAMP is the equivalent of DATE. 
+
+TIMESTAMP WITH TIME ZONE
+
+Stores the time zone along with the date and time value, allowing up to nine decimal places of precision.
+
+TIMESTAMP WITH LOCAL TIME ZONE
+
+Stores a date and time with up to nine decimal places of precision. This datatype is sensitive to time zone differences. Values of this type are automatically converted between the database time zone and the local (session) time zone. When values are stored in the database, they are converted to the database time zone, but the local (session) time zone is not stored. When a value is retrieved from the database, that value is converted from the database time zone to the local (session) time zone.
+
+##### Declaring Datetime Variables
+
+Use the following syntax to declare a datetime variable:
+
+`var_name [CONSTANT] datetime_type [{:= | DEFAULT} initial_value]`
+
+Replace datetime_type with any one of the following:
+
+```sql
+/*
+DATE
+TIMESTAMP [(precision)]
+TIMESTAMP [(precision)] WITH TIME ZONE
+TIMESTAMP [(precision)] WITH LOCAL TIME ZONE
+*/
+
+DECLARE
+	hire_date TIMESTAMP (0) WITH TIME ZONE;
+	todays_date CONSTANT DATE := SYSDATE;
+	pay_date TIMESTAMP DEFAULT TO_TIMESTAMP('20050204','YYYYMMDD');
+```
+
+To specify a default initial_value, you can use a conversion function such as TO_TIMESTAMP, or you can use a date or timestamp literal.
+
+##### Choosing a Datetime Datatype
+
+With such an abundance of riches, I won’t blame you one bit if you ask for some guidance as to which datetime datatype to use when. To a large extent, the datatype you choose depends on the level of detail that you want to store:
+
+• Use one of the TIMESTAMP types if you need to track time down to a fraction of a second.
+
+• Use TIMESTAMP WITH LOCAL TIME ZONE if you want the database to automatically convert a time between the database and session time zones.
+
+• Use TIMESTAMP WITH TIME ZONE if you need to keep track of the session time zone in which the data was entered.
+
+• You can use TIMESTAMP in place of DATE. A TIMESTAMP that does not contain subsecond precision takes up 7 bytes of storage, just like a DATE datatype does. When your TIMESTAMP does contain subsecond data, it takes up 11 bytes of storage.
+
+• Use DATE when it’s necessary to maintain compatibility with an existing application written before any of the TIMESTAMP datatypes were introduced.
+
+• In general, you should use datatypes in your PL/SQL code that correspond to, or are at least compatible with, the underlying database tables. Think twice, for example, before reading a TIMESTAMP value from a table into a DATE variable, because you might lose information (in this case, the fractional seconds and perhaps the time zone).
+
+• If you’re using a version older than Oracle9i Database, then you have no choice but to use DATE.
+
+• When adding or subtracting years and months, you get different behavior from using ADD_MONTHS, which operates on values of type DATE, than from using interval arithmetic on the timestamp types.
+
