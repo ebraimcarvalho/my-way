@@ -11,3 +11,63 @@ Typical use cases:
 
 Informatica offers real time data integration, web services integration, business to business data integration, bi data edition, master data management and connectors for social media and Salesforce.
 
+#### Informatica PowerCenter Architecture
+
+1. Repository Service: Responsible for maintaining Informatica metadata and providing access of saame to other services;
+2. Integration Service: Responsible for the movement of data from sources to targets;
+3. Reporting Service: Enables the generation of reports;
+4. Nodes: Computing platform where the above services are executed;
+5. Powercenter Designer: User for creation of mappings between source and target;
+6. Workflow Manager: Used to create workflows and other task and their execution;
+7. Workflow Monitor: Used to monitor the execution of workflows;
+8. Repository Manager: Used to manage objects in repository
+
+![PowerCenter Architecture)](powercenter_architecture.png "PowerCenter")
+
+#### Informatica Domain
+
+It is a collection of nodes and services that can be categorized into folders and sub-folders based on the administration requirement.
+
+Node is a logical representation of a machine insede the domain, Node is required to run services and processes for Informatica. You can have multiple node in a domain.
+
+In a domain, you will also find a gateway node, that is responsible for receiving requests from different client tools and routing those requests to different nodes and services.
+
+There are two types of services in Domain:
+
+* Service manager: Maanages authentication, aauthorization and logging. Also runs application services on the nodes as well as manages users and groups;
+* Application services: Represents the server specific like integration service, repository service and reporting service, these services run on differente nodes based upon the configuration
+
+#### Informatica PowerCenter Repository
+
+Is a Relational Database, like Oracle, Sybase, SQL Server and it is managed by repository service, tht consists of dtabase tables that stores metadata.
+
+There are three Informatica Client tools availaable:
+
+1. Designer
+2. Workflow Monitor
+3. Workflow Manager
+
+These clientes can access to the repository using repository service only.
+
+A single repository service handles only one repository. Also, a repository service can execute on multiple nodes to increase the performance.
+
+The repository service use locks on the objects, so multiple users cannot modify the same object same time. You can enable version control in the repository.
+
+Objects created in the repository can have three state:
+
+* Valid: Syntax is correct according to Informatica, can be used in the execution of workflows;
+* Invalid: Those who does not adhere to the standard or rules specified.
+* Impacted: Those whose child objects are invalid.
+
+
+The mappings and objects that we create in these cliente tools are saved in the informatica repository which resides on the informatica server. So the cliente tools must have network connectivity to the server. PowerCenter client tools must have connectivity to the source/target systems
+
+* To connect to the integration service and repository service, PowerCenter client uses TCP/IP protocols and
+* To connect to the sources/targets PowerCenter client uses ODBC drivers.
+
+
+#### Repository Service
+
+Maintains the connections from PowerCenter clients to the PowerCenter repository. It is a separate multi-threaaded process, and it fetches, inserts and updates the metadata inside the repository, also responsible for maintaining consistency inside the repository metadata.
+
+#### Integration Service
