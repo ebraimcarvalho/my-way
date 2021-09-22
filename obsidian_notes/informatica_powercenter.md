@@ -71,3 +71,17 @@ The mappings and objects that we create in these cliente tools are saved in the 
 Maintains the connections from PowerCenter clients to the PowerCenter repository. It is a separate multi-threaaded process, and it fetches, inserts and updates the metadata inside the repository, also responsible for maintaining consistency inside the repository metadata.
 
 #### Integration Service
+
+Is the executing engine for the Informatica, this is the entity which executes the tasks that we create in Informatica. This is how it works:
+
+-  A user executes a workflow    
+-   Informatica instructs the integration service to execute the workflow    
+-   The integration service reads workflow details from the repository 
+-   Integration service starts execution of the tasks inside the workflow    
+-   Once execution is complete, the status of the task is updated i.e. failed, succeeded or aborted.    
+-   After completion of execution, session log and workflow log is generated.    
+-   This service is responsible for loading data into the target systems 
+-   The integration service also combines data from different sources
+
+So, in summary, Informatica integration service is a process residing on the Informatica server waiting for tasks to be assigned for the execution. When we execute a workflow, the integration service receives a notification to execute the workflow. Then the integration service reads the workflow to know the details like which tasks it has to execute like mappings & at what timings. Then the service reads the task details from the repository and proceeds with the execution.
+
