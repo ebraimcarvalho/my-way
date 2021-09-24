@@ -85,3 +85,11 @@ Is the executing engine for the Informatica, this is the entity which executes t
 
 So, in summary, Informatica integration service is a process residing on the Informatica server waiting for tasks to be assigned for the execution. When we execute a workflow, the integration service receives a notification to execute the workflow. Then the integration service reads the workflow to know the details like which tasks it has to execute like mappings & at what timings. Then the service reads the task details from the repository and proceeds with the execution.
 
+#### Source Definition
+
+Is an entity from where you pull the records, and then you store these records in temporary tables (staging tables) or Informatica transformation caches. Mapping design make a change in these data records and then load the transformed data in another tables structures, called target tables. In every Informatica mapping, there will always be a source and a target. To manager different sources and targets in Informatica, you have to use source analyzer and target designer.
+
+The source or target created/imported in Informatica can be reused any no of times in different mappings. Every mapping must have at least on loadable target. Otherwise mapping will be invalid. 
+
+**Performance tip** – To improve the performance of Relational Source tables, use indexes on the source database tables. On the target, tables disable or remove constraints and indexes for performance.
+
