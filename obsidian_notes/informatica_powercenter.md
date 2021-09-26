@@ -93,3 +93,13 @@ The source or target created/imported in Informatica can be reused any no of tim
 
 **Performance tip** – To improve the performance of Relational Source tables, use indexes on the source database tables. On the target, tables disable or remove constraints and indexes for performance.
 
+#### Stage Mapping
+
+A stage mapping is a mapping in where we create the replica of the source table. For Example, in a production system if you have an “employee” table then you can create an identical table “employee_stage” in ETL schema.
+
+Having a local stage table offers various advantages, like production downtime, won’t affect your ETL system because you have your own “employee_stage” table, instead of referring to production “employee” table. In a Production system, there can be other operations and processes which affect the performance. However, when you have replica staging table, only ETL processes will access it. This offers performance benefits.
+
+A Mapping must have at least a **source and a target**, you will add sources and targets to the mapping.
+
+**Note** – When you import any relational (database) table in a mapping, an additional object of source qualifier type will also be created. This source qualifier transformation is necessary and helps Informatica integration service to identify the source database table and its properties. Whenever you import a source table, source qualifier transformation will also be created. You should never delete a source qualifier object in a mapping.
+
