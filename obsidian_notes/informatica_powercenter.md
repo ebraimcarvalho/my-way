@@ -103,3 +103,46 @@ A Mapping must have at least a **source and a target**, you will add sources and
 
 **Note** – When you import any relational (database) table in a mapping, an additional object of source qualifier type will also be created. This source qualifier transformation is necessary and helps Informatica integration service to identify the source database table and its properties. Whenever you import a source table, source qualifier transformation will also be created. You should never delete a source qualifier object in a mapping.
 
+**Note** – mapping parameter and variable names always begin with `$$`.
+
+A session task in Informatica is required to run a mapping.
+
+Without a session task, you cannot execute or run a mapping and a session task can execute only a single mapping. So, there is a one to one relationship between a mapping and a session. A session task is an object with the help of which Informatica gets to know how and where to execute a mapping and at which time. Sessions cannot be executed independently, a session must be added to a workflow. In session object cache properties can be configured and also advanced performance optimization configuration.
+
+#### Joiner Transformation
+
+-   Always prefer to perform joins in the database if possible, as database joins are faster than joins created in Informatica joiner transformation.
+    
+-   Sort the data before joining if possible, as it decreases the disk I/O performed during joining.
+    
+-   Make the table with less no of rows as master table.
+    
+
+#### Lookup Transformation
+
+-   Create an index for the column in a lookup table which is used in lookup condition. Since the lookup table will be queried for looking up the matching data, adding an index would increase the performance.
+    
+-   If possible, instead of using lookup transformation use join in the database. As database joins are faster, performance will be increased.
+    
+-   Delete unnecessary columns from the lookup table and keep only the required columns. This will bring down the overhead of fetching the extra columns from the database.
+    
+
+#### Filter Transformation
+
+-   Use filter transformation as early as possible inside the mapping. If the unwanted data can be discarded early in the mapping, it would increase the throughput.’
+    
+-   Use source qualifier to filter the data. You can also use source qualifier [SQL](https://www.guru99.com/sql.html) override to filter the records, instead of using filter transformation.
+    
+
+#### Aggregator Transformation
+
+-   Filter the data before aggregating it. If you are using filter transformation in the mapping, then filter the data before using aggregator as it will reduce the unnecessary aggregation operation.
+    
+-   Limit the no of ports used in the aggregator transformation. This will reduce the volume of data that aggregator transformation stores inside the cache.
+    
+
+#### Source Qualifier  Transformation
+
+-   Bring only the required columns from the source. Most of the times not all the columns of the source table are required, so bring only the required fields by deleting the unnecessary columns.
+    
+-   Avoid using order by clause inside the source qualifier [SQL](https://www.guru99.com/sql.html) override. The order by clause requires additional processing and performance can be increased by avoiding it.
