@@ -2420,6 +2420,3 @@ The output is:
 */
 ```
 
-
-https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grzhaznbyatx/b/training/o/
-}cDxk;FtZ-IW6Pa8bG+X
