@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>teste_engenharia_de_dados_a3data_ebraim</title>
+<title>teste_engenharia_de_dados_a3data_ebraim_c</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -14076,10 +14076,10 @@ only showing top 5 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[154]:</div>
+<div class="prompt input_prompt">In&nbsp;[168]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python"><pre><span></span><span class="n">full_data</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s1">&#39;nome_produto&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;mais_comprados&quot;</span><span class="p">),</span> <span class="nb">sum</span><span class="p">(</span><span class="s2">&quot;quantidade&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;total_itens&quot;</span><span class="p">),</span> <span class="n">format_number</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="s2">&quot;valor&quot;</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;valor_total&quot;</span><span class="p">),</span> <span class="n">format_number</span><span class="p">(</span><span class="n">avg</span><span class="p">(</span><span class="s2">&quot;valor&quot;</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;media_valor&quot;</span><span class="p">)</span> <span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">desc</span><span class="p">(</span><span class="s2">&quot;mais_comprados&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<div class=" highlight hl-python"><pre><span></span><span class="n">full_data</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">full_data</span><span class="o">.</span><span class="n">estado</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="s1">&#39;São Paulo&#39;</span><span class="p">,</span> <span class="s1">&#39;Minas Gerais&#39;</span><span class="p">,</span> <span class="s1">&#39;Santa Catarina&#39;</span><span class="p">,</span> <span class="s1">&#39;Rio Grande do Sul&#39;</span><span class="p">,</span> <span class="s1">&#39;Paraná&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s1">&#39;nome_produto&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;mais_comprados&quot;</span><span class="p">),</span> <span class="nb">sum</span><span class="p">(</span><span class="s2">&quot;quantidade&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;total_itens&quot;</span><span class="p">),</span> <span class="n">format_number</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="s2">&quot;valor&quot;</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;valor_total&quot;</span><span class="p">),</span> <span class="n">format_number</span><span class="p">(</span><span class="n">avg</span><span class="p">(</span><span class="s2">&quot;valor&quot;</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;media_valor&quot;</span><span class="p">)</span> <span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">desc</span><span class="p">(</span><span class="s2">&quot;mais_comprados&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14096,55 +14096,14 @@ only showing top 5 rows
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>+--------------------+--------------+-----------+------------+-----------+
-|        nome_produto|mais_comprados|total_itens| valor_total|media_valor|
-+--------------------+--------------+-----------+------------+-----------+
-|Alcool em Gel 70%...|            36|        387|    1,931.13|      53.64|
-|Notebook Asus Int...|            29|        268|1,230,361.20|  42,426.25|
-|Monitor LG 19 pol...|            28|        276|  161,211.60|   5,757.56|
-+--------------------+--------------+-----------+------------+-----------+
+<pre>+--------------------+--------------+-----------+-----------+-----------+
+|        nome_produto|mais_comprados|total_itens|valor_total|media_valor|
++--------------------+--------------+-----------+-----------+-----------+
+|Alcool em Gel 70%...|            26|        280|   1,397.20|      53.74|
+|Notebook Asus Int...|            14|        134| 615,180.60|  43,941.47|
+|Monitor LG 19 pol...|            14|         96|  56,073.60|   4,005.26|
++--------------------+--------------+-----------+-----------+-----------+
 only showing top 3 rows
-
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[130]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-python"><pre><span></span><span class="n">full_data</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">full_data</span><span class="o">.</span><span class="n">estado</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="s1">&#39;São Paulo&#39;</span><span class="p">,</span> <span class="s1">&#39;Minas Gerais&#39;</span><span class="p">,</span> <span class="s1">&#39;Santa Catarina&#39;</span><span class="p">,</span> <span class="s1">&#39;Rio Grande do Sul&#39;</span><span class="p">,</span> <span class="s1">&#39;Paraná&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>+-----------+--------------------+--------------------+-------------+-----------+-----------+-----------+----------+------+-----------+-------------+------------------+--------------------+------------+
-|cod_produto|        nome_produto|   categoria_produto|valor_produto|cod_usuario|cod_produto|data_compra|quantidade| valor|cod_usuario|data_cadastro|      faixa_etaria|              cidade|      estado|
-+-----------+--------------------+--------------------+-------------+-----------+-----------+-----------+----------+------+-----------+-------------+------------------+--------------------+------------+
-|          9|     Microoondas 35L|    Eletrodomesticos|        389.1|       2009|          9| 2021-06-13|         8|3112.8|       2009|   2020-05-12|Entre 28 a 36 anos|               Bicas|Minas Gerais|
-|          4|      Mochila Targus|Material de escri...|         58.9|       3248|          4| 2018-12-27|        20|1178.0|       3248|   2021-05-15|Entre 62 a 70 anos|              Itueta|Minas Gerais|
-|         13|Kit 3 barras de c...|           Alimentos|          9.9|       1691|         13| 2021-07-19|        10|  99.0|       1691|   2021-07-10|Entre 10 a 15 anos|              Guaíra|   São Paulo|
-|         15|Alcool em Gel 70%...| Produtos de limpeza|         4.99|       3090|         15| 2018-11-19|        10|  49.9|       3090|   2019-04-08|Entre 50 a 61 anos|Santa Bárbara do ...|Minas Gerais|
-|         13|Kit 3 barras de c...|           Alimentos|          9.9|        479|         13| 2021-07-05|         9|  89.1|        479|   2020-02-09|Entre 50 a 61 anos|          Ubaporanga|Minas Gerais|
-+-----------+--------------------+--------------------+-------------+-----------+-----------+-----------+----------+------+-----------+-------------+------------------+--------------------+------------+
-only showing top 5 rows
 
 </pre>
 </div>
@@ -14245,6 +14204,107 @@ only showing top 20 rows
 <h1 id="FIM!">FIM!<a class="anchor-link" href="#FIM!">&#182;</a></h1>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[165]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">nbconvert</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Requirement already satisfied: nbconvert in /usr/local/lib/python3.7/dist-packages (5.6.1)
+Requirement already satisfied: traitlets&gt;=4.2 in /usr/local/lib/python3.7/dist-packages (from nbconvert) (5.1.1)
+Requirement already satisfied: defusedxml in /usr/local/lib/python3.7/dist-packages (from nbconvert) (0.7.1)
+Requirement already satisfied: testpath in /usr/local/lib/python3.7/dist-packages (from nbconvert) (0.5.0)
+Requirement already satisfied: pygments in /usr/local/lib/python3.7/dist-packages (from nbconvert) (2.6.1)
+Requirement already satisfied: jupyter-core in /usr/local/lib/python3.7/dist-packages (from nbconvert) (4.9.1)
+Requirement already satisfied: nbformat&gt;=4.4 in /usr/local/lib/python3.7/dist-packages (from nbconvert) (5.1.3)
+Requirement already satisfied: bleach in /usr/local/lib/python3.7/dist-packages (from nbconvert) (4.1.0)
+Requirement already satisfied: pandocfilters&gt;=1.4.1 in /usr/local/lib/python3.7/dist-packages (from nbconvert) (1.5.0)
+Requirement already satisfied: entrypoints&gt;=0.2.2 in /usr/local/lib/python3.7/dist-packages (from nbconvert) (0.3)
+Requirement already satisfied: jinja2&gt;=2.4 in /usr/local/lib/python3.7/dist-packages (from nbconvert) (2.11.3)
+Requirement already satisfied: mistune&lt;2,&gt;=0.8.1 in /usr/local/lib/python3.7/dist-packages (from nbconvert) (0.8.4)
+Requirement already satisfied: MarkupSafe&gt;=0.23 in /usr/local/lib/python3.7/dist-packages (from jinja2&gt;=2.4-&gt;nbconvert) (2.0.1)
+Requirement already satisfied: jsonschema!=2.5.0,&gt;=2.4 in /usr/local/lib/python3.7/dist-packages (from nbformat&gt;=4.4-&gt;nbconvert) (4.3.3)
+Requirement already satisfied: ipython-genutils in /usr/local/lib/python3.7/dist-packages (from nbformat&gt;=4.4-&gt;nbconvert) (0.2.0)
+Requirement already satisfied: attrs&gt;=17.4.0 in /usr/local/lib/python3.7/dist-packages (from jsonschema!=2.5.0,&gt;=2.4-&gt;nbformat&gt;=4.4-&gt;nbconvert) (21.4.0)
+Requirement already satisfied: importlib-resources&gt;=1.4.0 in /usr/local/lib/python3.7/dist-packages (from jsonschema!=2.5.0,&gt;=2.4-&gt;nbformat&gt;=4.4-&gt;nbconvert) (5.4.0)
+Requirement already satisfied: importlib-metadata in /usr/local/lib/python3.7/dist-packages (from jsonschema!=2.5.0,&gt;=2.4-&gt;nbformat&gt;=4.4-&gt;nbconvert) (4.10.1)
+Requirement already satisfied: pyrsistent!=0.17.0,!=0.17.1,!=0.17.2,&gt;=0.14.0 in /usr/local/lib/python3.7/dist-packages (from jsonschema!=2.5.0,&gt;=2.4-&gt;nbformat&gt;=4.4-&gt;nbconvert) (0.18.1)
+Requirement already satisfied: typing-extensions in /usr/local/lib/python3.7/dist-packages (from jsonschema!=2.5.0,&gt;=2.4-&gt;nbformat&gt;=4.4-&gt;nbconvert) (3.10.0.2)
+Requirement already satisfied: zipp&gt;=3.1.0 in /usr/local/lib/python3.7/dist-packages (from importlib-resources&gt;=1.4.0-&gt;jsonschema!=2.5.0,&gt;=2.4-&gt;nbformat&gt;=4.4-&gt;nbconvert) (3.7.0)
+Requirement already satisfied: webencodings in /usr/local/lib/python3.7/dist-packages (from bleach-&gt;nbconvert) (0.5.1)
+Requirement already satisfied: packaging in /usr/local/lib/python3.7/dist-packages (from bleach-&gt;nbconvert) (21.3)
+Requirement already satisfied: six&gt;=1.9.0 in /usr/local/lib/python3.7/dist-packages (from bleach-&gt;nbconvert) (1.15.0)
+Requirement already satisfied: pyparsing!=3.0.5,&gt;=2.0.2 in /usr/local/lib/python3.7/dist-packages (from packaging-&gt;bleach-&gt;nbconvert) (3.0.7)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[166]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="o">%%</span><span class="n">shell</span>
+<span class="n">jupyter</span> <span class="n">nbconvert</span> <span class="o">--</span><span class="n">to</span> <span class="n">html</span> <span class="o">/</span><span class="n">content</span><span class="o">/</span><span class="n">teste_engenharia_de_dados_a3data_ebraim</span><span class="o">.</span><span class="n">ipynb</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[NbConvertApp] Converting notebook /content/teste_engenharia_de_dados_a3data_ebraim.ipynb to html
+[NbConvertApp] Writing 333657 bytes to /content/teste_engenharia_de_dados_a3data_ebraim.html
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[166]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre></pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
     </div>
   </div>
