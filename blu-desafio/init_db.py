@@ -7,7 +7,7 @@ with open('schema.sql') as f:
 
 cur = connection.cursor()
 
-cur.execute("INSERT INTO personagens (gender, hair_color, height, homeworld, mass, name, skin_color) VALUES (?,?,?,?,?,?,?)",('male', 'brown', '180', 'sim', '90', 'Ebraim', 'white'))
+cur.execute("INSERT INTO personagens (gender, hair_color, height, homeworld, mass, name, skin_color) VALUES (?,?,?,?,?,?,?)",('male', 'brown', '180', 'Earth', '90', 'Ebraim', 'white'))
 
 connection.commit()
 connection.close()

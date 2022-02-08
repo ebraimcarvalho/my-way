@@ -8,4 +8,4 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD ["python", "./app/main.py"]
+CMD python init_db.py && python main.py
