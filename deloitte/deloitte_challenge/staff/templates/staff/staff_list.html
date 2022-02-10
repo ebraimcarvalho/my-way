@@ -1,0 +1,17 @@
+{% extends "staff/base.html" %}
+
+{% block title %}Deloitte Staff 🐍{% endblock %}
+
+{% block content %}
+    {% for staff in staff_list %}
+        <article>
+            <h2 class="name_staff">
+                {{ staff.name }}
+            </h2>
+            <p class="date">
+                Publicado em {{ staff.created }} por {{ staff.name }}
+            </p>
+            <p>Departamento: {{ staff.department }}</p>
+        </article>
+    {% endfor %}
+{% endblock %}

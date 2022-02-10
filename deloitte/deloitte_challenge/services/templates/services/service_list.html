@@ -1,0 +1,19 @@
+{% extends "services/base.html" %}
+
+{% block title %}Deloitte Services 🐍{% endblock %}
+
+{% block content %}
+    {% for service in service_list %}
+        <article>
+            <h2>
+                <a href="{{ service.get_absolute_url }}">
+                    {{ service.title }}
+                </a>
+            </h2>
+            <p class="date">
+                Publicado em {{ service.created }} por {{ service.author }}
+            </p>
+            {{ service.body|linebreaks|truncatewords:10 }}
+        </article>
+    {% endfor %}
+{% endblock %}

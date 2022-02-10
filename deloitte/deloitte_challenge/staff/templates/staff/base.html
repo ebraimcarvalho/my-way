@@ -1,0 +1,26 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link href="{% static 'css/blog.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <h1>Deloitte Staff</h1>
+        <a href="/blog">Blog</a>
+        <a href="/services">Services</a>
+        <a href="/staff">Staff</a>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+
+</html>
