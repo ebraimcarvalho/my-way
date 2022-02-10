@@ -1,8 +1,8 @@
-Active learning!!!
-Read the code
-Manage time
-Block of study
-Google and documentation things
+- Active learning!!!
+- Read the code
+- Manage time
+- Block of study
+- Google and documentation things
 
 Data Engineering make data available for the end-user, for the purposes of analyttics, model building, app development, etc.
 
