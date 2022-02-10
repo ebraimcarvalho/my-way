@@ -42,9 +42,21 @@ Post.objects.filter(author__username='ebraim')
 
 #### Imagens da aplicação de
 
+Tela de Login
+
+<img title="Tela de Admin" alt="tela de admin" src="assets/login.jpeg">
+
 Tela de Admin
 
 <img title="Tela de Admin" alt="tela de admin" src="assets/admin.jpeg">
+
+Tela de Criação
+
+<img title="Tela de Admin" alt="tela de admin" src="assets/add.jpeg">
+
+Tela de Edição/Delete
+
+<img title="Tela de Admin" alt="tela de admin" src="assets/edit.jpeg">
 
 Tela de visualização do Blog
 
