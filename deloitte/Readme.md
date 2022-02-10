@@ -44,8 +44,20 @@ Post.objects.filter(author__username='ebraim')
 
 Tela de Admin
 
-![Alt text](https://github.com/ebraimcarvalho/my-way/blob/main/deloitte/assets/admin.jpeg "Tela de Admin")
-
-<img title="Tela de Admin" alt="tela de admin" src="https://github.com/ebraimcarvalho/my-way/blob/main/deloitte/assets/admin.jpeg">
-
 <img title="Tela de Admin" alt="tela de admin" src="assets/admin.jpeg">
+
+Tela de visualização do Blog
+
+<img title="Tela de Admin" alt="tela de admin" src="assets/blog.jpeg">
+
+Tela de visualização da postagem
+
+<img title="Tela de Admin" alt="tela de admin" src="assets/artigo.jpeg">
+
+Tela de visualização dos serviços
+
+<img title="Tela de Admin" alt="tela de admin" src="assets/services.jpeg">
+
+Tela de visualização dos funcionaários
+
+<img title="Tela de Admin" alt="tela de admin" src="assets/staff.jpeg">
