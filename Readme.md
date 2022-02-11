@@ -4,7 +4,7 @@
 - Block of study
 - Google and documentation things
 
-Data Engineering make data available for the end-user, for the purposes of analyttics, model building, app development, etc.
+*Data Engineering make data available for the end-user, for the purposes of analyttics, model building, app development, etc.*
 
 MOVE/STORE: Reliable Data FLow, Infrastructure, Pipelines, ETL, Structured and Unstructured data storage;
 
