@@ -23,6 +23,26 @@ db: List[User] = [
 def get_request_api_github(link):
     return requests.get(link, headers={'Authorization': f'token {API_KEY}'})
 
+def map_values_db_in_tuples_sorted_by_login():
+    mapping = [(user.login, user.contributions) for user in db]
+    mapping.sort(key=lambda x:x[0])
+    return mapping
+
+def group_by_login_sum_contributions(mapping):
+    result = [(key, sum(num for _, num in value))
+        for key, value in itertools.groupby(mapping, lambda x: x[0])]
+    result.sort(key=lambda x:x[1], reverse=True)
+    return result
+
+def generate_output(result):
+    output = []
+    for item in result:
+        output.append({
+            'login': item[0],
+            'contributions': item[1]
+        })
+    return output
+
 @app.get('/org/{org_name}/contributors')
 async def get_contributors(org_name: str):
     link_organization = f"https://api.github.com/users/{org_name}/repos"
@@ -40,51 +60,52 @@ async def get_contributors(org_name: str):
                             login=contrib['login'],
                             contributions=contrib['contributions']
                         ))
-        mapping = [(user.login, user.contributions) for user in db]
-        mapping.sort(key=lambda x:x[0])
-        result = [(key, sum(num for _, num in value))
-            for key, value in itertools.groupby(mapping, lambda x: x[0])]
-        result.sort(key=lambda x:x[1], reverse=True)
-        output = []
-        for item in result:
-            output.append({
-                'login': item[0],
-                'contributions': item[1]
-            })
+            else:
+               raise HTTPException(
+                status_code=404,
+                detail=f"Repository {repo['name']} from organization {org_name} can't be accessed"
+            ) 
+        mapping = map_values_db_in_tuples_sorted_by_login()
+        result = group_by_login_sum_contributions(mapping)
+        output = generate_output(result)
         return output
     return {
-        'erro': org_name
+        'erro': f"{org_name} can't be accessed! Please, check if this organization has a github account."
     }
 
 @app.get('/')
 async def hello():
     return {
-        "Hello": "Worlddd"
+        "Hello": "World!",
+        "Scalac": "Challenge"
     }
 
 @app.get('/get_users')
 async def get_users():
-    return db
+    mapping = map_values_db_in_tuples_sorted_by_login()
+    result = group_by_login_sum_contributions(mapping)
+    output = generate_output(result)
+    return output
 
 @app.post('/create_user/')
 async def get_users(user: User):
     db.append(user)
     return user
 
-@app.delete('/users/{user_id}')
-async def delete_user(user_id: int):
+@app.delete('/users/{user_login}')
+async def delete_user(user_login: str):
     for user in db:
-        if user_id == user.id:
+        if user_login == user.login:
             db.remove(user)
             return {'msg': "User deleted"}
     raise HTTPException(
         status_code=404,
-        detail=f"User with id {user_id} does not exists"
+        detail=f"User with login {user_login} does not exists!"
     )
 
-@app.get('/users/{item_id}')
-def get_item(item_id: int, name: Optional[str] = None):
+@app.get('/users/{user_login}')
+def get_item(user_login: str, name: Optional[str] = None):
     return {
-        "item_id": item_id,
+        "user_login": user_login,
         "name": name
     }
