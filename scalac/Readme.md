@@ -11,4 +11,4 @@
 
 ### Image example
 
-['Image example api working'](/assets/get_contributions_dadosfera.jpg)
+<img title="Image example api working" alt="Image example api working" src="assets/get_contributions_dadosfera.jpg">
