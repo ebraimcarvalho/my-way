@@ -41,6 +41,7 @@ def generate_output(result):
 
 @app.get('/org/{org_name}/contributors')
 async def get_contributors(org_name: str):
+    db.clear()
     link_organization = f"https://api.github.com/users/{org_name}/repos"
     repos = get_request_api_github(link_organization)
     if repos.status_code == 200:
