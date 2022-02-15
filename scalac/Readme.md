@@ -11,4 +11,12 @@
 
 ### Image example
 
-<img title="Image example api working" alt="Image example api working" src="assets/get_contributions_dadosfera.JPG">
+
+- Api Working with example organization Dadosfera
+
+<img title="Endpoints Documentation" alt="Image example api working" src="assets/get_contributions_dadosfera.JPG">
+
+
+- Documentation with endpoints and interactive mode
+
+<img title="Endpoints Documentation" alt="Endpoints Documentation" src="assets/api_docs.jpeg">

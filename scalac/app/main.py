@@ -13,10 +13,6 @@ db: List[User] = [
     User(
         login="ebraimcarvalho",
         contributions=5
-    ),
-    User(
-        login="ebraimcarvalho",
-        contributions=10
     )
 ]
 
@@ -109,3 +105,17 @@ def get_item(user_login: str, name: Optional[str] = None):
         "user_login": user_login,
         "name": name
     }
+
+@app.put('/users/{user_login}')
+def update_user(user_login: str, user_update: User):
+    for user in db:
+        if user_login == user.login:
+            if user_update.login is not None:
+                user.login = user_update.login
+            if user_update.contributions is not None:
+                user.contributions = user_update.contributions
+            return {'msg': "User updated!"}
+    raise HTTPException(
+        status_code=404,
+        detail=f"User with login {user_login} does not exists!"
+    )
