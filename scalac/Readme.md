@@ -11,4 +11,4 @@
 
 ### Image example
 
-['Image example api working']('./assets/get_contributions_dadosfera.jpg')
+['Image example api working'](/assets/get_contributions_dadosfera.jpg)
